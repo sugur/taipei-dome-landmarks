@@ -67,9 +67,35 @@
   }
   .print-btn:hover{background:var(--accent); color:#fff; border-color:var(--accent);}
   @media print{
+    @page{size:A4; margin:8mm;}
+    *{-webkit-print-color-adjust:exact !important; print-color-adjust:exact !important; color-adjust:exact !important;}
+    html, body{height:auto !important;}
     header p, .search-box, .hint, .print-row{display:none !important;}
-    .wrap{padding:0; max-width:100%;}
-    .record-card{box-shadow:none; border:none;}
+    .wrap{padding:0 !important; max-width:100% !important;}
+    header{margin-bottom:8px !important;}
+    header .main-title{font-size:1.45rem !important; margin:0 0 3px !important;}
+    header h1{font-size:1.1rem !important; margin:0 !important;}
+    .record-card{box-shadow:none !important; border:none !important; padding:6px !important;}
+    .record-head{margin-bottom:6px !important; padding-bottom:4px !important; gap:8px !important;}
+    .record-head .id{font-size:1.4rem !important;}
+    .record-head .group{font-size:0.85rem !important; padding:2px 10px !important;}
+    .phase-tabs-row{margin-bottom:4px !important;}
+    .phase-tab{font-size:0.85rem !important; padding:2px 8px !important;}
+    .scene{margin-bottom:3px !important; border-width:1px !important; border-radius:7px !important;}
+    .scene-title{padding:3px 8px !important; font-size:0.95rem !important; gap:6px !important;}
+    .scene-tag{padding:1px 7px !important; font-size:0.78rem !important; gap:4px !important;}
+    .scene-tag .dot{width:8px !important; height:8px !important;}
+    .field{padding:3px 7px !important;}
+    .field .label{font-size:0.73rem !important; margin-bottom:1px !important;}
+    .field .value{font-size:1.04rem !important; gap:3px !important;}
+    .field .value .value-logo{font-size:0.87rem !important;}
+    .field .value .value-12{font-size:0.7rem !important;}
+    .field .value .value-landmark{font-size:1.0rem !important;}
+    .field .value img.icon, .field .value svg.icon{width:17px !important; height:17px !important; max-width:17px !important;}
+    .field .value img.icon-standalone, .field .value svg.icon-standalone{width:28px !important; height:28px !important; max-width:28px !important;}
+    .field .value svg.icon-badge{width:31px !important; height:31px !important; max-width:31px !important;}
+    .v-formation-icon{width:28px !important; height:28px !important; max-width:28px !important; margin-top:2px !important;}
+    footer{font-size:0.85rem !important; margin-top:6px !important;}
   }
   .phase-placeholder{
     text-align:center; color:var(--sub); font-size:0.9rem; padding:30px 10px;
@@ -93,13 +119,13 @@
     font-size:0.72rem; font-weight:600; color:#333; flex:none;
   }
   .scene-tag .dot{width:9px; height:9px; border-radius:50%; flex:none;}
-  .field-grid{display:grid; align-items:start; grid-template-columns:100px 80px 1fr 1fr 1fr;}
+  .field-grid{display:grid; align-items:start; grid-template-columns:100px 96px 1fr 1fr 1fr;}
   .field{
     min-width:0; overflow:hidden; padding:10px 14px; border-left:1px solid var(--line);
   }
   .field:first-child{border-left:none;}
   .field .label{font-size:0.75rem; color:var(--sub); margin-bottom:2px;}
-  .field .value{font-size:0.95rem; font-weight:600; word-break:break-word; display:flex; align-items:flex-start; gap:6px; min-width:0;}
+  .field .value{font-size:1.14rem; font-weight:600; word-break:break-word; display:flex; align-items:flex-start; gap:6px; min-width:0;}
   .field .value .value-logo{font-size:16px; line-height:1.25;}
   .field .value .value-12{font-size:12px;}
   .field .value .value-landmark{font-size:1.235rem;}
@@ -117,10 +143,10 @@
     .record-head .group{font-size:0.7rem; padding:2px 8px;}
     .phase-tab{font-size:0.65rem; padding:3px 7px;}
     .scene-title{font-size:0.75rem; padding:6px 8px;}
-    .field-grid{grid-template-columns:52px 36px 1fr 1fr 1fr !important;}
+    .field-grid{grid-template-columns:52px 43.2px 1fr 1fr 1fr !important;}
     .field{padding:5px 5px;}
     .field .label{font-size:0.58rem; margin-bottom:1px;}
-    .field .value{font-size:0.68rem; gap:3px;}
+    .field .value{font-size:0.82rem; gap:3px;}
     .field .value .value-logo{font-size:0.68rem;}
     .field .value .value-12{font-size:0.6rem;}
     .field .value .value-landmark{font-size:0.88rem;}
@@ -310,6 +336,7 @@ document.getElementById('idInput').addEventListener('keydown', (e) => {
     if(v) render(v);
   }
 });
+
 </script>
 </body>
 </html>
