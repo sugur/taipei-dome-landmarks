@@ -99,7 +99,8 @@
     .v-formation-icon{width:25px !important; height:25px !important; max-width:25px !important; margin-top:2px !important;}
     footer{font-size:0.77rem !important; margin-top:5px !important;}
     .footer-left{font-size:0.6rem !important;}
-    .footer-row{font-size:0.864rem !important;}
+    .footer-note{font-size:0.839808rem !important;}
+    .footer-copyright{font-size:1.026432rem !important;}
     .field-grid{grid-template-columns:1fr 1fr 2fr 2fr 2fr !important;}
   }
   @media print and (max-width:600px){
@@ -120,13 +121,14 @@
     .field .value .value-logo{font-size:0.66rem !important;}
     .field .value .value-12{font-size:0.66rem !important;}
     .field .value .value-landmark{font-size:0.66rem !important;}
-    .field .value img.icon, .field .value svg.icon{width:12px !important; height:12px !important; max-width:12px !important;}
-    .field .value img.icon-standalone, .field .value svg.icon-standalone{width:20px !important; height:20px !important; max-width:20px !important;}
-    .field .value svg.icon-badge{width:22px !important; height:22px !important; max-width:22px !important;}
-    .v-formation-icon{width:20px !important; height:20px !important; max-width:20px !important; margin-top:1px !important;}
+    .field .value img.icon, .field .value svg.icon{width:14.4px !important; height:14.4px !important; max-width:14.4px !important;}
+    .field .value img.icon-standalone, .field .value svg.icon-standalone{width:24px !important; height:24px !important; max-width:24px !important;}
+    .field .value svg.icon-badge{width:26.4px !important; height:26.4px !important; max-width:26.4px !important;}
+    .v-formation-icon{width:24px !important; height:24px !important; max-width:24px !important; margin-top:1px !important;}
     footer{font-size:0.6rem !important; margin-top:4px !important;}
     .footer-left{font-size:0.5rem !important;}
-    .footer-row{font-size:0.72rem !important;}
+    .footer-note{font-size:0.69984rem !important;}
+    .footer-copyright{font-size:0.85536rem !important;}
   }
   .phase-placeholder{
     text-align:center; color:var(--sub); font-size:0.9rem; padding:30px 10px;
@@ -169,12 +171,14 @@
   .footer-left{font-size:0.72rem; line-height:1.5; text-align:left;}
   .footer-left > div{margin-bottom:2px;}
   .footer-left > div:last-child{margin-bottom:0;}
-  .footer-row{display:flex; justify-content:space-between; align-items:baseline; gap:12px; font-size:1.032rem;}
+  .footer-note{font-size:1.003104rem;}
+  .footer-copyright{font-size:1.226016rem;}
   .footer-left a{color:var(--accent); text-decoration:underline;}
   @media screen and (max-width:640px){
     .wrap{padding:12px 4px 40px;}
     .record-card{padding:8px !important;}
-    .footer-row{flex-wrap:wrap; font-size:0.888rem;}
+    .footer-note{font-size:0.863136rem;}
+    .footer-copyright{font-size:1.054944rem;}
     .footer-left{font-size:0.62rem;}
     header .main-title{font-size:1.2rem;}
     header h1{font-size:0.9rem;}
@@ -217,8 +221,8 @@
 
   <footer>
     <div class="footer-left">
-      <div class="footer-row"><span>&copy; 2026 唐偲瑋｜免費提供入經藏使用</span><span>製作: 唐偲瑋</span></div>
-      <div>歡迎分享改進建議 <a href="https://docs.google.com/forms/d/e/1FAIpQLScTqfStjVJn13FCYrXXv4nFTDqiFZt47fau7iOdovKNucQVLQ/viewform?usp=publish-editor" target="_blank" rel="noopener">問題回報</a></div>
+      <div class="footer-copyright">&copy; 2026 唐偲瑋</div>
+      <div class="footer-note">免費提供入經藏使用｜ 歡迎分享改進建議 <a href="https://docs.google.com/forms/d/e/1FAIpQLScTqfStjVJn13FCYrXXv4nFTDqiFZt47fau7iOdovKNucQVLQ/viewform?usp=publish-editor" target="_blank" rel="noopener">問題回報</a></div>
     </div>
   </footer>
 </div>
@@ -231,7 +235,7 @@ const V_FORMATION_IMG = 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBD
 const byId = {};
 DATA.forEach(r => byId[r.id] = r);
 
-document.getElementById('hintText').textContent = '輸入身分證編號（例如 1-49），查詢各隊形地標位置與區域，共 ' + DATA.length + ' 筆';
+document.getElementById('hintText').textContent = '輸入身分證（例如 1-49），查詢各隊形地標位置與波段區域，共 ' + DATA.length + ' 筆';
 
 const datalist = document.getElementById('idList');
 DATA.forEach(r => {
