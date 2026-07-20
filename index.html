@@ -78,10 +78,11 @@
     header .main-title{font-size:1.15rem !important; margin:0 0 1px !important;}
     header h1{font-size:0.85rem !important; margin:0 !important;}
     .record-card{box-shadow:none !important; border:none !important; padding:3px !important;}
-    .record-head{margin-bottom:2px !important; padding-bottom:2px !important; gap:6px !important;}
+    .record-header-row{display:flex !important; flex-direction:row-reverse !important; justify-content:space-between !important; align-items:center !important; gap:8px !important; margin-bottom:2px !important;}
+    .record-head{margin-bottom:0 !important; padding-bottom:2px !important; gap:6px !important;}
     .record-head .id{font-size:1.1rem !important;}
     .record-head .group{font-size:0.7rem !important; padding:1px 8px !important;}
-    .phase-tabs-row{margin-bottom:2px !important;}
+    .phase-tabs-row{margin-bottom:0 !important;}
     .phase-tab{font-size:0.68rem !important; padding:1px 7px !important;}
     .scene{margin-bottom:2px !important; border-width:1px !important; border-radius:7px !important;}
     .scene-title{padding:3px 8px !important; font-size:0.979rem !important; gap:6px !important;}
@@ -150,11 +151,13 @@
   }
   .title-tag-red{color:#4e342e;}
   .scene-tag{
-    display:inline-flex; align-items:center; gap:5px; background:#ffffff;
-    border:1px solid var(--line); border-radius:12px; padding:2px 10px;
+    display:inline-flex; align-items:center; background:#ffffff;
+    border:1px solid var(--line); border-radius:12px; padding:4px 10px;
     font-size:0.72rem; font-weight:600; color:#333; flex:none;
   }
   .scene-tag .dot{width:14px; height:14px; border-radius:50%; flex:none;}
+  .scene-tag .tag-text{line-height:1.35; text-align:left;}
+  .scene-tag .tag-line{display:flex; align-items:center; gap:5px;}
   .field-grid{display:grid; align-items:stretch; grid-template-columns:170px 140px 1.6fr 1fr 1fr;}
   .field{
     min-width:0; overflow:hidden; padding:10px 14px; border-left:1px solid var(--line);
@@ -182,28 +185,28 @@
   @media screen and (max-width:640px){
     .wrap{padding:12px 4px 40px;}
     .record-card{padding:8px !important;}
-    .footer-note{font-size:0.863136rem;}
-    .footer-copyright{font-size:0.863136rem;}
-    .footer-left{font-size:0.62rem;}
-    header .main-title{font-size:1.2rem;}
-    header h1{font-size:0.9rem;}
-    header p{font-size:0.7rem;}
-    .record-head .id{font-size:1.15rem;}
-    .record-head .group{font-size:0.7rem; padding:2px 8px;}
-    .phase-tab{font-size:0.65rem; padding:3px 7px;}
-    .scene-title{font-size:0.99rem; padding:6px 8px;}
+    .footer-note{font-size:0.7768224rem;}
+    .footer-copyright{font-size:0.7768224rem;}
+    .footer-left{font-size:0.558rem;}
+    header .main-title{font-size:1.08rem;}
+    header h1{font-size:0.81rem;}
+    header p{font-size:0.63rem;}
+    .record-head .id{font-size:1.035rem;}
+    .record-head .group{font-size:0.63rem; padding:2px 8px;}
+    .phase-tab{font-size:0.585rem; padding:3px 7px;}
+    .scene-title{font-size:0.891rem; padding:6px 8px;}
     .field-grid{grid-template-columns:90px 63px 1.6fr 1fr 1fr !important;}
     .field{padding:5px 5px;}
-    .field .label{font-size:0.58rem; margin-bottom:1px;}
-    .field .value{font-size:0.984rem; gap:3px;}
-    .field .value .value-logo{font-size:0.984rem;}
-    .field .value .value-12{font-size:0.984rem;}
-    .field .value .value-landmark{font-size:0.984rem;}
+    .field .label{font-size:0.42282rem; margin-bottom:1px;}
+    .field .value{font-size:0.717336rem; gap:3px;}
+    .field .value .value-logo{font-size:0.717336rem;}
+    .field .value .value-12{font-size:0.717336rem;}
+    .field .value .value-landmark{font-size:0.717336rem;}
     .field .value img.icon, .field .value svg.icon{width:22.464px; height:22.464px; max-width:22.464px;}
     .field .value img.icon-standalone, .field .value svg.icon-standalone{width:34.56px; height:34.56px; max-width:34.56px;}
     .v-formation-icon{width:28px; height:28px; max-width:28px;}
     .field .value svg.icon-badge{width:38.016px; height:38.016px; max-width:38.016px;}
-    .landmark-line-bar{width:48px; height:14px; font-size:0.48rem;}
+    .landmark-line-bar{width:48px; height:14px; font-size:0.432rem;}
   }
 </style>
 </head>
@@ -320,8 +323,9 @@ function waveLampTag(scene){
     if (!f || !f.value) return '';
     const m = f.value.match(/第[一二三四五六七八九十㇐]+波/);
     const wave = m ? m[0].replace('㇐','一') : '';
-    const text = wave ? (wave + '開黃色蓮花燈(聽到巴利文無量義經拿燈)') : '黃色蓮花燈';
-    return '<span class="scene-tag"><span class="dot" style="background:#f6c945"></span>' + escapeHtml(text) + '</span>';
+    const line1 = '聽到巴利文無量義經拿燈不開燈';
+    const line2 = wave ? (wave + '開黃色蓮花燈') : '開黃色蓮花燈';
+    return '<span class="scene-tag"><span class="tag-text"><span class="tag-line">' + escapeHtml(line1) + '</span><span class="tag-line"><span class="dot" style="background:#f6c945"></span>' + escapeHtml(line2) + '</span></span></span>';
   }
   const tag = STATIC_SCENE_TAGS[scene.title];
   if (!tag) return '';
@@ -362,8 +366,7 @@ function render(id){
   let html = '<div class="record-card">';
   const groupClass = 'group-' + rec.group;
   html += '<div class="print-row"><button class="print-btn" onclick="window.print()">下載PDF</button></div>';
-  html += '<div class="phase-tabs-row">' + phaseTabsHtml() + '</div>';
-  html += '<div class="record-head"><span class="id">' + escapeHtml(rec.id) + '</span><span class="group ' + groupClass + '">' + escapeHtml(rec.group) + '</span></div>';
+  html += '<div class="record-header-row"><div class="phase-tabs-row">' + phaseTabsHtml() + '</div><div class="record-head"><span class="id">' + escapeHtml(rec.id) + '</span><span class="group ' + groupClass + '">' + escapeHtml(rec.group) + '</span></div></div>';
 
   if (currentPhase !== 1) {
     const phName = PHASE_NAMES[currentPhase-1] || '';
