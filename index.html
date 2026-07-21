@@ -520,8 +520,8 @@ function fitPrintToOnePage(){
   }
   document.documentElement.style.fontSize = '';
   const pxPerMm = 96 / 25.4;
-  const HEADER_ALLOWANCE_PX = 48; // rough space reserved for the page header above the dual columns
-  const FOOTER_ALLOWANCE_PX = 32; // rough space reserved for the footer below the dual columns, so it doesn't spill to page 2
+  const HEADER_ALLOWANCE_PX = 60; // rough space reserved for the page header above the dual columns, plus any browser/OS-injected print header (e.g. iOS Safari adds a URL+date strip)
+  const FOOTER_ALLOWANCE_PX = 50; // rough space reserved for the footer below the dual columns, plus any browser/OS-injected page-number footer, so nothing spills to page 2
   const pageHeightPx = (210 - 6) * pxPerMm * 0.97 - HEADER_ALLOWANCE_PX - FOOTER_ALLOWANCE_PX; // A4 landscape height budget with small safety margin
   const naturalHeight = dual.scrollHeight;
   const BASE_SHRINK = 0.92; // mild safety shrink; most of the fit comes from the print font-size rules already
@@ -530,7 +530,7 @@ function fitPrintToOnePage(){
     const neededScale = pageHeightPx / naturalHeight;
     if (neededScale < scale) scale = neededScale;
   }
-  scale *= 0.95; // extra shrink margin, per request, to make sure everything (incl. header/footer) lands on one page
+  scale *= 0.88; // extra shrink margin, so it still lands on one page even on print pipelines (e.g. mobile Safari) that add their own header/footer chrome on top of ours
   // Shrink via the root font-size (rem-based sizing cascades down) instead
   // of zoom/transform. Both of those turned out to distort the 50/50 column
   // widths in this print engine (zoom's width-compensation math didn't
