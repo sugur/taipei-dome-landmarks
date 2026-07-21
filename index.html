@@ -102,7 +102,7 @@
     .phase-tabs-row{margin-bottom:0 !important;}
     .phase-tab{font-size:0.816rem !important; padding:1px 7px !important;}
     .scene{margin-bottom:2px !important; border-width:1px !important; border-radius:7px !important;}
-    .scene-title{padding:3px 8px !important; font-size:2.23305984rem !important; gap:6px !important;}
+    .scene-title{padding:3px 8px !important; font-size:2.009753856rem !important; gap:6px !important;}
     .scene-tag{padding:1px 7px !important; font-size:1.97074944rem !important; gap:4px !important;}
     .scene-tag .dot{width:8px !important; height:8px !important;}
     .field{padding:3px 7px !important; background:#ffffff !important;}
@@ -111,9 +111,9 @@
     .field .value .value-logo{font-size:2.560896rem !important;}
     .field .value .value-12{font-size:3.0730752rem !important;}
     .field .value .value-landmark{font-size:2.560896rem !important;}
-    .field .value img.icon, .field .value svg.icon{width:12.702096px !important; height:12.702096px !important; max-width:12.702096px !important;}
-    .field .value img.icon-standalone, .field .value svg.icon-standalone{width:19.847025px !important; height:19.847025px !important; max-width:19.847025px !important;}
-    .field .value svg.icon-badge{width:22.228668px !important; height:22.228668px !important; max-width:22.228668px !important;}
+    .field .value img.icon, .field .value svg.icon{width:12.702096px !important; height:12.702096px !important; max-width:12.702096px !important; flex:none !important;}
+    .field .value img.icon-standalone, .field .value svg.icon-standalone{width:19.847025px !important; height:19.847025px !important; max-width:19.847025px !important; flex:none !important;}
+    .field .value svg.icon-badge{width:22.228668px !important; height:22.228668px !important; max-width:22.228668px !important; flex:none !important;}
     .v-formation-icon{width:20px !important; height:20px !important; max-width:20px !important; margin-top:2px !important;}
     .landmark-line-bar{width:50.6px !important; height:8.91px !important; font-size:1.302884352rem !important;}
     footer{font-size:1.341648rem !important; margin-top:2px !important;}
@@ -123,7 +123,7 @@
     .field-grid{grid-template-columns:1fr 1fr 2.5fr 2fr 2fr !important;}
     .print-dual-head .id{font-size:2.6136rem !important;}
     .print-dual-head .group{font-size:2.35224rem !important; border-radius:20px !important; padding:3px 12px !important; display:inline-block !important;}
-    .print-dual-col-title{font-size:2.0072448rem !important;}
+    .print-dual-col-title{font-size:2.0072448rem !important; padding:2.7px !important; margin-bottom:2.7px !important;}
   }
   @media print and (max-width:600px){
     header .main-title{font-size:1.1rem !important; margin:0 0 2px !important;}
@@ -143,9 +143,9 @@
     .field .value .value-logo{font-size:0.792rem !important;}
     .field .value .value-12{font-size:0.792rem !important;}
     .field .value .value-landmark{font-size:0.792rem !important;}
-    .field .value img.icon, .field .value svg.icon{width:9.44784px !important; height:9.44784px !important; max-width:9.44784px !important;}
-    .field .value img.icon-standalone, .field .value svg.icon-standalone{width:15.7464px !important; height:15.7464px !important; max-width:15.7464px !important;}
-    .field .value svg.icon-badge{width:17.32104px !important; height:17.32104px !important; max-width:17.32104px !important;}
+    .field .value img.icon, .field .value svg.icon{width:9.44784px !important; height:9.44784px !important; max-width:9.44784px !important; flex:none !important;}
+    .field .value img.icon-standalone, .field .value svg.icon-standalone{width:15.7464px !important; height:15.7464px !important; max-width:15.7464px !important; flex:none !important;}
+    .field .value svg.icon-badge{width:17.32104px !important; height:17.32104px !important; max-width:17.32104px !important; flex:none !important;}
     .v-formation-icon{width:19px !important; height:19px !important; max-width:19px !important; margin-top:1px !important;}
     .landmark-line-bar{width:34.56px !important; height:5.77368px !important; font-size:0.34rem !important;}
     footer{font-size:0.6rem !important; margin-top:2px !important;}
@@ -153,9 +153,9 @@
     .footer-note{font-size:0.69984rem !important;}
     .footer-copyright{font-size:0.69984rem !important;}
     .print-dual-head{margin-bottom:1px !important;}
-    .print-dual-head .id{font-size:0.411642rem !important;}
-    .print-dual-head .group{font-size:0.3704778rem !important; padding:1px 10px !important;}
-    .print-dual-col-title{font-size:0.31473598464rem !important; padding:1px !important; margin-bottom:1px !important;}
+    .print-dual-head .id{font-size:0.59276448rem !important;}
+    .print-dual-head .group{font-size:0.533488032rem !important; padding:1px 10px !important;}
+    .print-dual-col-title{font-size:0.4532198178816rem !important; padding:1px !important; margin-bottom:1px !important;}
   }
   .phase-placeholder{
     text-align:center; color:var(--sub); font-size:0.9rem; padding:30px 10px;
@@ -538,7 +538,7 @@ function fitPrintToOnePage(){
   const isNarrowViewport = window.innerWidth > 0 && window.innerWidth <= 600;
   const HEADER_ALLOWANCE_PX = isNarrowViewport ? 60 : 25;
   const FOOTER_ALLOWANCE_PX = isNarrowViewport ? 50 : 18;
-  const EXTRA_SHRINK = isNarrowViewport ? 1.39392 : 0.7128; // mobile (手機板) body text enlarged further 1.1x; desktop (電腦版) body text shrunk further 0.8x per request
+  const EXTRA_SHRINK = isNarrowViewport ? 1.671504 : 0.7128; // mobile (手機板) body text enlarged further 1.2x; desktop (電腦版) body text shrunk further 0.8x per request
   const pageHeightPx = (210 - 2) * pxPerMm * 0.97 - HEADER_ALLOWANCE_PX - FOOTER_ALLOWANCE_PX; // A4 landscape height budget with small safety margin
   const naturalHeight = dual.scrollHeight;
   const BASE_SHRINK = isNarrowViewport ? 0.92 : 0.99; // mild safety shrink; most of the fit comes from the print font-size rules already
