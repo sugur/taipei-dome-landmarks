@@ -80,14 +80,14 @@
   .print-dual-col:last-child{padding-left:3mm;}
   .print-dual-col-title{background:var(--accent); color:#fff; text-align:center; font-weight:700; font-size:0.8rem; padding:3px; border-radius:6px; margin-bottom:3px;}
   @media print{
-    @page{size:A4 landscape; margin:3mm 3mm;}
+    @page{size:A4 landscape; margin:1mm 1mm;}
     *{-webkit-print-color-adjust:exact !important; print-color-adjust:exact !important; color-adjust:exact !important;}
     html, body{height:auto !important;}
     header p, .search-box, .hint, .print-row{display:none !important;}
     .wrap{padding:0 !important; max-width:100% !important;}
     header{margin-bottom:1px !important;}
-    header .main-title{font-size:1.45rem !important; margin:0 0 1px !important;}
-    header h1{font-size:0.95rem !important; margin:0 !important;}
+    header .main-title{font-size:2.2968rem !important; margin:0 0 1px !important;}
+    header h1{font-size:1.5048rem !important; margin:0 !important;}
     #result{display:none !important;}
     .print-dual{
       display:block !important; position:static !important; top:auto !important; left:auto !important;
@@ -97,32 +97,33 @@
     .record-card{box-shadow:none !important; border:none !important; padding:3px !important;}
     .record-header-row{display:flex !important; flex-direction:row-reverse !important; justify-content:space-between !important; align-items:center !important; gap:8px !important; margin-bottom:2px !important;}
     .record-head{margin-bottom:0 !important; padding-bottom:2px !important; gap:6px !important;}
-    .record-head .id{font-size:1.1rem !important;}
-    .record-head .group{font-size:0.7rem !important; padding:1px 8px !important;}
+    .record-head .id{font-size:1.32rem !important;}
+    .record-head .group{font-size:0.84rem !important; padding:1px 8px !important;}
     .phase-tabs-row{margin-bottom:0 !important;}
-    .phase-tab{font-size:0.68rem !important; padding:1px 7px !important;}
+    .phase-tab{font-size:0.816rem !important; padding:1px 7px !important;}
     .scene{margin-bottom:2px !important; border-width:1px !important; border-radius:7px !important;}
-    .scene-title{padding:3px 8px !important; font-size:0.979rem !important; gap:6px !important;}
-    .scene-tag{padding:1px 7px !important; font-size:0.72rem !important; gap:4px !important;}
+    .scene-title{padding:3px 8px !important; font-size:1.691712rem !important; gap:6px !important;}
+    .scene-tag{padding:1px 7px !important; font-size:1.0368rem !important; gap:4px !important;}
     .scene-tag .dot{width:8px !important; height:8px !important;}
     .field{padding:3px 7px !important; background:#ffffff !important;}
-    .field .label{font-size:0.68rem !important; margin-bottom:0px !important;}
-    .field .value{font-size:1.14rem !important; gap:2px !important;}
-    .field .value .value-logo{font-size:1.14rem !important;}
-    .field .value .value-12{font-size:1.14rem !important;}
-    .field .value .value-landmark{font-size:1.14rem !important;}
-    .field .value img.icon, .field .value svg.icon{width:12.96px !important; height:12.96px !important; max-width:12.96px !important;}
-    .field .value img.icon-standalone, .field .value svg.icon-standalone{width:20.25px !important; height:20.25px !important; max-width:20.25px !important;}
-    .field .value svg.icon-badge{width:22.68px !important; height:22.68px !important; max-width:22.68px !important;}
+    .field .label{font-size:0.9792rem !important; margin-bottom:0px !important;}
+    .field .value{font-size:1.7784rem !important; gap:2px !important;}
+    .field .value .value-logo{font-size:1.7784rem !important;}
+    .field .value .value-12{font-size:2.13408rem !important;}
+    .field .value .value-landmark{font-size:1.7784rem !important;}
+    .field .value img.icon, .field .value svg.icon{width:12.8304px !important; height:12.8304px !important; max-width:12.8304px !important;}
+    .field .value img.icon-standalone, .field .value svg.icon-standalone{width:20.0475px !important; height:20.0475px !important; max-width:20.0475px !important;}
+    .field .value svg.icon-badge{width:22.4532px !important; height:22.4532px !important; max-width:22.4532px !important;}
     .v-formation-icon{width:20px !important; height:20px !important; max-width:20px !important; margin-top:2px !important;}
-    .landmark-line-bar{width:46px !important; height:8.1px !important; font-size:0.34rem !important;}
-    footer{font-size:0.77rem !important; margin-top:2px !important;}
-    .footer-left{font-size:0.6rem !important; text-align:right !important;}
-    .footer-note{font-size:0.839808rem !important;}
-    .footer-copyright{font-size:0.839808rem !important;}
+    .landmark-line-bar{width:50.6px !important; height:8.91px !important; font-size:0.53856rem !important;}
+    footer{font-size:0.924rem !important; margin-top:2px !important;}
+    .footer-left{font-size:0.72rem !important; text-align:right !important;}
+    .footer-note{font-size:1.0077696rem !important;}
+    .footer-copyright{font-size:1.0077696rem !important;}
     .field-grid{grid-template-columns:1fr 1fr 2.5fr 2fr 2fr !important;}
-    .print-dual-head .id{font-size:1.5rem !important;}
-    .print-dual-head .group{font-size:1.35rem !important; border-radius:20px !important; padding:3px 12px !important; display:inline-block !important;}
+    .print-dual-head .id{font-size:2.376rem !important;}
+    .print-dual-head .group{font-size:2.1384rem !important; border-radius:20px !important; padding:3px 12px !important; display:inline-block !important;}
+    .print-dual-col-title{font-size:1.152rem !important;}
   }
   @media print and (max-width:600px){
     header .main-title{font-size:1.1rem !important; margin:0 0 2px !important;}
@@ -233,7 +234,7 @@
 <div class="wrap">
   <header>
     <div class="main-title">2026大巨蛋【無量義  法髓頌】經藏演繹</div>
-    <h1>第三聯區 ·  地標對照查詢系統 v8_0720</h1>
+    <h1>第三聯區 ·  地標對照查詢系統 v8_0721</h1>
   </header>
 
   <div class="search-box">
@@ -520,17 +521,26 @@ function fitPrintToOnePage(){
   }
   document.documentElement.style.fontSize = '';
   const pxPerMm = 96 / 25.4;
-  const HEADER_ALLOWANCE_PX = 60; // rough space reserved for the page header above the dual columns, plus any browser/OS-injected print header (e.g. iOS Safari adds a URL+date strip)
-  const FOOTER_ALLOWANCE_PX = 50; // rough space reserved for the footer below the dual columns, plus any browser/OS-injected page-number footer, so nothing spills to page 2
-  const pageHeightPx = (210 - 6) * pxPerMm * 0.97 - HEADER_ALLOWANCE_PX - FOOTER_ALLOWANCE_PX; // A4 landscape height budget with small safety margin
+  // Mobile browsers (narrow viewport, e.g. iOS Safari) tend to inject their
+  // own extra print header/footer chrome (URL+date, page numbers) that a
+  // desktop browser like Chrome/Edge never adds. We can't detect that chrome
+  // directly, but a narrow window width is a reasonable proxy for "probably
+  // mobile", so only reserve the extra safety margin in that case - otherwise
+  // desktop prints end up shrunk far more than necessary (tiny text, lots of
+  // wasted blank space on the page).
+  const isNarrowViewport = window.innerWidth > 0 && window.innerWidth <= 600;
+  const HEADER_ALLOWANCE_PX = isNarrowViewport ? 60 : 25;
+  const FOOTER_ALLOWANCE_PX = isNarrowViewport ? 50 : 18;
+  const EXTRA_SHRINK = isNarrowViewport ? 0.88 : 0.891; // desktop (電腦版) shrunk an extra 0.9x per request
+  const pageHeightPx = (210 - 2) * pxPerMm * 0.97 - HEADER_ALLOWANCE_PX - FOOTER_ALLOWANCE_PX; // A4 landscape height budget with small safety margin
   const naturalHeight = dual.scrollHeight;
-  const BASE_SHRINK = 0.92; // mild safety shrink; most of the fit comes from the print font-size rules already
+  const BASE_SHRINK = isNarrowViewport ? 0.92 : 0.99; // mild safety shrink; most of the fit comes from the print font-size rules already
   let scale = BASE_SHRINK;
   if (naturalHeight > 0) {
     const neededScale = pageHeightPx / naturalHeight;
     if (neededScale < scale) scale = neededScale;
   }
-  scale *= 0.88; // extra shrink margin, so it still lands on one page even on print pipelines (e.g. mobile Safari) that add their own header/footer chrome on top of ours
+  scale *= EXTRA_SHRINK; // extra shrink margin, so it still lands on one page even on print pipelines (e.g. mobile Safari) that add their own header/footer chrome on top of ours
   // Shrink via the root font-size (rem-based sizing cascades down) instead
   // of zoom/transform. Both of those turned out to distort the 50/50 column
   // widths in this print engine (zoom's width-compensation math didn't
