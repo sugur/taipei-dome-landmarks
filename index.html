@@ -330,7 +330,7 @@ const STATIC_SCENE_TAGS = {
   '14.骨隨捐贈 / 15.能捨一切諸難捨': { lines: ['OS 等九年了..開黃色蓮花燈放口袋', '能捨的最後一次「眾生根」後間奏拿燈'], dotLine: 0, color: '#f6c945' },
   '18.慈大校歌 / 19.小樹阿!': { text: ' 開綠色蓮花燈', color: '#3aa655' },
   '20.畢業組曲-成長 / 21.畢業組曲-感恩': { text: ' 開綠色蓮花燈(燈在口袋)', color: '#3aa655' },
-  '23.大愛讓世界亮起來 / 24.天空破了洞 / 25.用鼓掌的雙手做環保': { text: ' 開綠色蓮花燈', color: '#3aa655' },
+  '23.大愛讓世界亮起來 / 24.天空破了洞 / 25.用鼓掌的雙手做環保': { lines: ['大愛讓世界亮起來 開綠燈', '鼓掌的雙手做環保 開綠燈'], dotLines: [0,1], color: '#3aa655' },
   '26.說法品-代謝不住': { text: ' 開綠色蓮花燈(燈在口袋)', color: '#3aa655' },
   '27.功德品開經': { text: ' 白衣開黃色蓮花燈', color: '#f6c945' }
 };
@@ -363,9 +363,9 @@ function waveLampTag(scene){
   const tag = STATIC_SCENE_TAGS[scene.title];
   if (!tag) return '';
   if (tag.lines) {
-    const dotIdx = tag.dotLine !== undefined ? tag.dotLine : tag.lines.length - 1;
+    const dotIdxs = tag.dotLines !== undefined ? tag.dotLines : [tag.dotLine !== undefined ? tag.dotLine : tag.lines.length - 1];
     const lineHtml = tag.lines.map(function(line, i){
-      if (i === dotIdx) {
+      if (dotIdxs.indexOf(i) !== -1) {
         return '<span class="tag-line"><span class="dot" style="background:' + tag.color + '"></span><span class="dot-text">' + escapeHtml(line.trim()) + '</span></span>';
       }
       return '<span class="tag-line">' + escapeHtml(line.trim()) + '</span>';
@@ -541,12 +541,18 @@ function fitPrintToOnePage(){
   const pageHeightPx = (210 - 2) * pxPerMm * 0.97 - HEADER_ALLOWANCE_PX - FOOTER_ALLOWANCE_PX; // A4 landscape height budget with small safety margin
   const naturalHeight = dual.scrollHeight;
   const BASE_SHRINK = isNarrowViewport ? 0.92 : 0.99; // mild safety shrink; most of the fit comes from the print font-size rules already
-  let scale = BASE_SHRINK;
+  // EXTRA_SHRINK is applied to the *preferred* baseline scale first, then the
+  // result is still hard-capped by neededScale (the actual measured content
+  // height for THIS record). This guarantees the print always fits on one
+  // page no matter how many times the body text has been enlarged via
+  // EXTRA_SHRINK - if there's room, text renders at the enlarged size; if a
+  // particular record's content is too tall, it gets shrunk further so it
+  // never spills onto a second page.
+  let scale = BASE_SHRINK * EXTRA_SHRINK;
   if (naturalHeight > 0) {
     const neededScale = pageHeightPx / naturalHeight;
     if (neededScale < scale) scale = neededScale;
   }
-  scale *= EXTRA_SHRINK; // extra shrink margin, so it still lands on one page even on print pipelines (e.g. mobile Safari) that add their own header/footer chrome on top of ours
   // Shrink via the root font-size (rem-based sizing cascades down) instead
   // of zoom/transform. Both of those turned out to distort the 50/50 column
   // widths in this print engine (zoom's width-compensation math didn't
