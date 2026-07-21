@@ -152,6 +152,9 @@
     .footer-left{font-size:0.5rem !important;}
     .footer-note{font-size:0.69984rem !important;}
     .footer-copyright{font-size:0.69984rem !important;}
+    .print-dual-head .id{font-size:1.82952rem !important;}
+    .print-dual-head .group{font-size:1.646568rem !important;}
+    .print-dual-col-title{font-size:1.0036224rem !important;}
   }
   .phase-placeholder{
     text-align:center; color:var(--sub); font-size:0.9rem; padding:30px 10px;
@@ -325,7 +328,6 @@ const STATIC_SCENE_TAGS = {
   '07.點一盞燈': { text: ' 開黃色蓮花燈', color: '#f6c945' },
   '09.是諸眾生': { text: ' 開黃色蓮花燈', color: '#f6c945' },
   '14.骨隨捐贈 / 15.能捨一切諸難捨': { lines: ['OS 等九年了..開黃色蓮花燈放口袋', '能捨的最後一次「眾生根」後間奏拿燈'], dotLine: 0, color: '#f6c945' },
-  '16.說法品梵唄 / 17.大慈大悲無量義': { text: ' 開綠色蓮花燈(外手)', color: '#3aa655' },
   '18.慈大校歌 / 19.小樹阿!': { text: ' 開綠色蓮花燈', color: '#3aa655' },
   '20.畢業組曲-成長 / 21.畢業組曲-感恩': { text: ' 開綠色蓮花燈(燈在口袋)', color: '#3aa655' },
   '23.大愛讓世界亮起來 / 24.天空破了洞 / 25.用鼓掌的雙手做環保': { text: ' 開綠色蓮花燈', color: '#3aa655' },
@@ -535,7 +537,7 @@ function fitPrintToOnePage(){
   const isNarrowViewport = window.innerWidth > 0 && window.innerWidth <= 600;
   const HEADER_ALLOWANCE_PX = isNarrowViewport ? 60 : 25;
   const FOOTER_ALLOWANCE_PX = isNarrowViewport ? 50 : 18;
-  const EXTRA_SHRINK = isNarrowViewport ? 1.2672 : 0.7128; // mobile (手機板) body text enlarged further 1.2x; desktop (電腦版) body text shrunk further 0.8x per request
+  const EXTRA_SHRINK = isNarrowViewport ? 1.39392 : 0.7128; // mobile (手機板) body text enlarged further 1.1x; desktop (電腦版) body text shrunk further 0.8x per request
   const pageHeightPx = (210 - 2) * pxPerMm * 0.97 - HEADER_ALLOWANCE_PX - FOOTER_ALLOWANCE_PX; // A4 landscape height budget with small safety margin
   const naturalHeight = dual.scrollHeight;
   const BASE_SHRINK = isNarrowViewport ? 0.92 : 0.99; // mild safety shrink; most of the fit comes from the print font-size rules already
