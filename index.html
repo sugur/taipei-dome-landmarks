@@ -70,7 +70,7 @@
   .print-btn:hover{background:var(--accent); color:#fff; border-color:var(--accent);}
   .print-dual{
     display:block; position:absolute; top:-99999px; left:-99999px; visibility:hidden;
-    width:291mm; page-break-inside:avoid; break-inside:avoid;
+    width:289mm; page-break-inside:avoid; break-inside:avoid;
   }
   .print-dual-head{text-align:center; margin-bottom:4px;}
   .print-dual-head .id{font-size:1.1rem; font-weight:700; color:var(--accent); margin-right:8px;}
@@ -80,7 +80,7 @@
   .print-dual-col:last-child{padding-left:3mm;}
   .print-dual-col-title{background:var(--accent); color:#fff; text-align:center; font-weight:700; font-size:0.8rem; padding:3px; border-radius:6px; margin-bottom:3px;}
   @media print{
-    @page{size:A4 landscape; margin:1mm 1mm;}
+    @page{size:A4 landscape; margin-top:4mm; margin-right:4mm; margin-bottom:4mm; margin-left:4mm;}
     *{-webkit-print-color-adjust:exact !important; print-color-adjust:exact !important; color-adjust:exact !important;}
     html, body{height:auto !important;}
     header p, .search-box, .hint, .print-row{display:none !important;}
@@ -110,15 +110,15 @@
     .phase-tabs-row{margin-bottom:0 !important;}
     .phase-tab{font-size:0.816rem !important; padding:1px 7px !important;}
     .scene{margin-bottom:2px !important; border-width:1px !important; border-radius:7px !important;}
-    .scene-title{padding:3px 8px !important; font-size:1.8087784704rem !important; gap:6px !important;}
-    .scene-tag{padding:1px 7px !important; font-size:2.364899328rem !important; gap:4px !important;}
+    .scene-title{padding:3px 8px !important; font-size:1.98965631744rem !important; gap:6px !important;}
+    .scene-tag{padding:1px 7px !important; font-size:2.6013892608rem !important; gap:4px !important;}
     .scene-tag .dot{width:8px !important; height:8px !important;}
     .field{padding:3px 7px !important; background:#ffffff !important;}
     .field .label{font-size:1.184832rem !important; margin-bottom:0px !important;}
-    .field .value{font-size:2.7381100032rem !important; gap:2px !important;}
-    .field .value .value-logo{font-size:2.7381100032rem !important;}
-    .field .value .value-12{font-size:2.7381100032rem !important;}
-    .field .value .value-landmark{font-size:2.7381100032rem !important;}
+    .field .value{font-size:3.01192100352rem !important; gap:2px !important;}
+    .field .value .value-logo{font-size:3.01192100352rem !important;}
+    .field .value .value-12{font-size:3.01192100352rem !important;}
+    .field .value .value-landmark{font-size:3.01192100352rem !important;}
     .field .value img.icon, .field .value svg.icon{width:12.702096px !important; height:12.702096px !important; max-width:12.702096px !important; max-height:12.702096px !important; flex:none !important; object-fit:cover !important;}
     .field .value img.icon-standalone, .field .value svg.icon-standalone{width:19.847025px !important; height:19.847025px !important; max-width:19.847025px !important; max-height:19.847025px !important; flex:none !important; object-fit:cover !important;}
     .field .value svg.icon-badge{width:22.228668px !important; height:22.228668px !important; max-width:22.228668px !important; max-height:22.228668px !important; flex:none !important;}
@@ -566,7 +566,7 @@ function fitPrintToOnePage(){
   // considerably smaller usable-height factor (0.82 instead of the full
   // theoretical page height) bakes in a much bigger real-world safety
   // cushion so header + content + footer reliably fit together.
-  const pageHeightPx = (210 - 2) * pxPerMm * 0.82 - HEADER_ALLOWANCE_PX - FOOTER_ALLOWANCE_PX;
+  const pageHeightPx = (210 - 8) * pxPerMm * 0.82 - HEADER_ALLOWANCE_PX - FOOTER_ALLOWANCE_PX; // top+bottom margins are 4mm each now so nothing sits flush against the physical page edge
   const naturalHeight = dual.scrollHeight;
   const BASE_SHRINK = isNarrowViewport ? 0.92 : 0.99; // mild safety shrink; most of the fit comes from the print font-size rules already
   // EXTRA_SHRINK is applied to the *preferred* baseline scale first, then the
