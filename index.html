@@ -556,10 +556,17 @@ function fitPrintToOnePage(){
   const footerEl = document.querySelector('footer');
   const measuredHeaderPx = headerEl ? headerEl.offsetHeight : 0;
   const measuredFooterPx = footerEl ? footerEl.offsetHeight : 0;
-  const HEADER_ALLOWANCE_PX = measuredHeaderPx > 0 ? measuredHeaderPx * 1.15 : (isNarrowViewport ? 60 : 25);
-  const FOOTER_ALLOWANCE_PX = measuredFooterPx > 0 ? measuredFooterPx * 1.4 : (isNarrowViewport ? 50 : 18);
+  const HEADER_ALLOWANCE_PX = measuredHeaderPx > 0 ? measuredHeaderPx * 1.2 : (isNarrowViewport ? 60 : 25);
+  const FOOTER_ALLOWANCE_PX = measuredFooterPx > 0 ? measuredFooterPx * 1.6 : (isNarrowViewport ? 50 : 18);
   const EXTRA_SHRINK = isNarrowViewport ? 1.671504 : 0.7128; // mobile (手機板) body text enlarged further 1.2x; desktop (電腦版) body text shrunk further 0.8x per request
-  const pageHeightPx = (210 - 2) * pxPerMm * 0.93 - HEADER_ALLOWANCE_PX - FOOTER_ALLOWANCE_PX; // A4 landscape height budget with a larger safety margin - real printers/browsers often can't honor the requested 1mm @page margin exactly, so this leaves extra breathing room for the footer to always land on the same page
+  // Real browsers/printers routinely can't honor a requested 1mm @page margin
+  // exactly - many printer drivers silently enforce a larger minimum
+  // non-printable margin, which was causing header/dual/footer to still not
+  // all land on one page even with the allowances above. Using a
+  // considerably smaller usable-height factor (0.82 instead of the full
+  // theoretical page height) bakes in a much bigger real-world safety
+  // cushion so header + content + footer reliably fit together.
+  const pageHeightPx = (210 - 2) * pxPerMm * 0.82 - HEADER_ALLOWANCE_PX - FOOTER_ALLOWANCE_PX;
   const naturalHeight = dual.scrollHeight;
   const BASE_SHRINK = isNarrowViewport ? 0.92 : 0.99; // mild safety shrink; most of the fit comes from the print font-size rules already
   // EXTRA_SHRINK is applied to the *preferred* baseline scale first, then the
