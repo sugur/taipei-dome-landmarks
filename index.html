@@ -179,11 +179,11 @@
     .record-head .group{font-size:0.6rem !important; padding:1px 7px !important;}
     .phase-tab{font-size:0.6rem !important; padding:1px 6px !important;}
     .scene{margin-bottom:1px !important;}
-    .scene-title{padding:2px 6px !important; font-size:0.9501167808rem !important; gap:4px !important;}
+    .scene-title{padding:2.6px 7.8px !important; font-size:1.23515182904rem !important; gap:5.2px !important;}
     .scene-tag{padding:0px 5px !important; font-size:1.14048rem !important; gap:3px !important;}
     .scene-tag .dot{width:6px !important; height:6px !important;}
     .field{padding:2px 5px !important;}
-    .field .label{font-size:0.572rem !important; margin-bottom:0px !important;}
+    .field .label{font-size:0.6864rem !important; margin-bottom:0px !important;}
     .field .value{font-size:1.97074944rem !important; gap:2px !important;}
     .field .value .value-logo{font-size:1.97074944rem !important;}
     .field .value .value-12{font-size:1.97074944rem !important;}
@@ -192,7 +192,7 @@
     .field .value img.icon-standalone, .field .value svg.icon-standalone{width:15.7464px !important; height:15.7464px !important; max-width:15.7464px !important; max-height:15.7464px !important; flex:none !important; object-fit:cover !important;}
     .field .value svg.icon-badge{width:17.32104px !important; height:17.32104px !important; max-width:17.32104px !important; max-height:17.32104px !important; flex:none !important;}
     .v-formation-icon{width:19px !important; height:19px !important; max-width:19px !important; margin-top:1px !important;}
-    .landmark-line-bar{width:34.56px !important; height:5.77368px !important; font-size:0.408rem !important;}
+    .landmark-line-bar{width:29.376px !important; height:4.907628px !important; font-size:0.3468rem !important;}
     footer{font-size:0.72rem !important; margin-top:2px !important; padding:0 4mm !important; box-sizing:border-box !important;}
     .footer-left{font-size:0.6rem !important;}
     .footer-note{font-size:0.839808rem !important;}
@@ -725,7 +725,7 @@ function fitPrintToOnePage(){
   // that reserved band ate up roughly 90px worth of page height beyond our
   // own @page margin and our own header/footer. Desktop Chrome/Edge printing
   // doesn't add this, so it's only reserved for the narrow/mobile branch.
-  const OS_PRINT_CHROME_PX = isNarrowViewport ? 110 : 0;
+  const OS_PRINT_CHROME_PX = isNarrowViewport ? 55 : 0;
   const EXTRA_SHRINK = isNarrowViewport ? 1.671504 : 0.7128; // mobile (手機板) body text enlarged further 1.2x; desktop (電腦版) body text shrunk further 0.8x per request
   // Real browsers/printers routinely can't honor a requested 1mm @page margin
   // exactly - many printer drivers silently enforce a larger minimum
