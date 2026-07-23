@@ -168,36 +168,36 @@
     .print-dual-col-title{font-size:2.0072448rem !important; padding:1.5px 3px !important; margin-bottom:1.5px !important; line-height:1.15 !important;}
   }
   @media print and (max-width:600px){
-    header .main-title{font-size:2.400156rem !important; margin:0 0 2px !important;}
-    header h1{font-size:1.7297676rem !important;}
+    header .main-title{font-size:1.1rem !important; margin:0 0 2px !important;}
+    header h1{font-size:0.85rem !important;}
     .record-card{padding:3px !important;}
     .record-head{margin-bottom:3px !important; padding-bottom:2px !important; gap:6px !important;}
-    .record-head .id{font-size:1.32rem !important;}
-    .record-head .group{font-size:0.84rem !important; padding:1px 7px !important;}
-    .phase-tab{font-size:0.816rem !important; padding:1px 6px !important;}
+    .record-head .id{font-size:1rem !important;}
+    .record-head .group{font-size:0.6rem !important; padding:1px 7px !important;}
+    .phase-tab{font-size:0.6rem !important; padding:1px 6px !important;}
     .scene{margin-bottom:1px !important;}
-    .scene-title{padding:2px 6px !important; font-size:1.98965631744rem !important; gap:4px !important;}
-    .scene-tag{padding:0px 5px !important; font-size:2.6013892608rem !important; gap:3px !important;}
+    .scene-title{padding:2px 6px !important; font-size:0.791763984rem !important; gap:4px !important;}
+    .scene-tag{padding:0px 5px !important; font-size:0.9504rem !important; gap:3px !important;}
     .scene-tag .dot{width:6px !important; height:6px !important;}
     .field{padding:2px 5px !important;}
-    .field .label{font-size:1.184832rem !important; margin-bottom:0px !important;}
-    .field .value{font-size:3.01192100352rem !important; gap:2px !important;}
-    .field .value .value-logo{font-size:3.01192100352rem !important;}
-    .field .value .value-12{font-size:3.01192100352rem !important;}
-    .field .value .value-landmark{font-size:3.01192100352rem !important;}
+    .field .label{font-size:0.572rem !important; margin-bottom:0px !important;}
+    .field .value{font-size:1.6422912rem !important; gap:2px !important;}
+    .field .value .value-logo{font-size:1.6422912rem !important;}
+    .field .value .value-12{font-size:1.6422912rem !important;}
+    .field .value .value-landmark{font-size:1.6422912rem !important;}
     .field .value img.icon, .field .value svg.icon{width:9.44784px !important; height:9.44784px !important; max-width:9.44784px !important; max-height:9.44784px !important; flex:none !important; object-fit:cover !important;}
     .field .value img.icon-standalone, .field .value svg.icon-standalone{width:15.7464px !important; height:15.7464px !important; max-width:15.7464px !important; max-height:15.7464px !important; flex:none !important; object-fit:cover !important;}
     .field .value svg.icon-badge{width:17.32104px !important; height:17.32104px !important; max-width:17.32104px !important; max-height:17.32104px !important; flex:none !important;}
     .v-formation-icon{width:19px !important; height:19px !important; max-width:19px !important; margin-top:1px !important;}
-    .landmark-line-bar{width:34.56px !important; height:5.77368px !important; font-size:1.302884352rem !important;}
-    footer{font-size:1.341648rem !important; margin-top:2px !important; padding:0 4mm !important; box-sizing:border-box !important;}
-    .footer-left{font-size:1.04544rem !important;}
-    .footer-note{font-size:1.4632814592rem !important;}
-    .footer-copyright{font-size:1.75593775104rem !important;}
+    .landmark-line-bar{width:34.56px !important; height:5.77368px !important; font-size:0.408rem !important;}
+    footer{font-size:0.72rem !important; margin-top:2px !important; padding:0 4mm !important; box-sizing:border-box !important;}
+    .footer-left{font-size:0.6rem !important;}
+    .footer-note{font-size:0.839808rem !important;}
+    .footer-copyright{font-size:0.839808rem !important;}
     .print-dual-head{margin-bottom:1px !important;}
-    .print-dual-head .id{font-size:3.13632rem !important;}
-    .print-dual-head .group{font-size:2.822688rem !important; padding:1px 10px !important;}
-    .print-dual-col-title{font-size:2.0072448rem !important; padding:0.5px 3px !important; margin-bottom:0.5px !important;}
+    .print-dual-head .id{font-size:0.8535808512rem !important;}
+    .print-dual-head .group{font-size:0.76822276608rem !important; padding:1px 10px !important;}
+    .print-dual-col-title{font-size:0.54386378145792rem !important; padding:0.5px 3px !important; margin-bottom:0.5px !important;}
     .field-grid{grid-template-columns:1.2fr 1fr 2.5fr 2fr 2fr !important;}
   }
   .phase-placeholder{
@@ -545,11 +545,12 @@ function buildScenesHtml(rec, phase){
       const landmarkIcon2 = fields.find(f => f.label === '地標圖');
       const nearest = fields.find(f => f.label === '最近地標');
       if (formation && landmarkIcon2 && nearest) {
+        // Only the 編號 field (top of the scene, e.g. "1號 船") links to the
+        // diagram - 位置區域 just shows the person's role (海浪(站)/船身/...)
+        // and is plain text, no hyperlink.
         const posField = { label: '位置區域', value: formation.value };
         const idField = { label: '編號', value: '行願隊形' };
         if (xyImagesForGroup && xyImagesForGroup.xingyuan) {
-          posField.xyGroup = xyGroupNum;
-          posField.xyPhase = 'xingyuan';
           idField.xyGroup = xyGroupNum;
           idField.xyPhase = 'xingyuan';
           const xyName = XY_XINGYUAN_NAME[xyGroupNum];
