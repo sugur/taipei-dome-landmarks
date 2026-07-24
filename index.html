@@ -153,14 +153,14 @@
   .print-dual-col-title{background:var(--accent); color:#fff; text-align:center; font-weight:700; font-size:0.8rem; padding:3px; border-radius:6px; margin-bottom:3px;}
   .print-dual-footer{display:none;}
   @media print{
-    @page{size:A4 landscape; margin-top:4mm; margin-right:4mm; margin-bottom:4mm; margin-left:4mm;}
+    @page{size:A4 landscape; margin-top:4mm; margin-right:6mm; margin-bottom:4mm; margin-left:6mm;}
     *{-webkit-print-color-adjust:exact !important; print-color-adjust:exact !important; color-adjust:exact !important;}
     html, body{height:auto !important;}
     header p, .search-box, .hint, .print-row{display:none !important;}
     .wrap{padding:0 !important; max-width:100% !important;}
     header{margin-bottom:0px !important; padding-top:4px !important;}
-    header .main-title{font-size:1.32707386201086rem !important; margin:0 !important; line-height:1.1 !important;}
-    header h1{font-size:1.9926922752rem !important; margin:0 !important; line-height:1.1 !important;}
+    header .main-title{font-size:1.592488634413032rem !important; margin:0 !important; line-height:1.1 !important;}
+    header h1{font-size:1.59415382016rem !important; margin:0 !important; line-height:1.1 !important;}
     #result{display:none !important;}
     .print-dual{
       display:block !important; position:static !important; top:auto !important; left:auto !important;
@@ -214,6 +214,7 @@
     .print-dual-col-title{font-size:2.167824384rem !important; padding:0.972px 3px !important; margin-bottom:0.972px !important; line-height:0.7452 !important;}
   }
   @media print and (max-width:600px){
+    @page{margin-right:4mm; margin-left:4mm;}
     .footer-note-free{display:inline !important;}
     header .main-title{font-size:1.188rem !important; margin:0 0 2px !important;}
     header h1{font-size:1.02rem !important;}
@@ -811,7 +812,7 @@ function fitPrintToOnePage(){
   // weren't moving the needle. Reserving a small explicit margin here
   // directly tightens neededScale itself, guaranteed to help regardless of
   // which branch of the min() is binding.
-  const OS_PRINT_CHROME_PX = isNarrowViewport ? 55 : 20;
+  const OS_PRINT_CHROME_PX = isNarrowViewport ? 55 : 34;
   const EXTRA_SHRINK = isNarrowViewport ? 1.671504 : 0.7128; // mobile (手機板) body text enlarged further 1.2x; desktop (電腦版) body text shrunk further 0.8x per request
   // Real browsers/printers routinely can't honor a requested 1mm @page margin
   // exactly - many printer drivers silently enforce a larger minimum
