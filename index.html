@@ -157,7 +157,7 @@
     header p, .search-box, .hint, .print-row{display:none !important;}
     .wrap{padding:0 !important; max-width:100% !important;}
     header{margin-bottom:0px !important;}
-    header .main-title{font-size:3.110602176rem !important; margin:0 !important; line-height:1.1 !important;}
+    header .main-title{font-size:2.7995419584rem !important; margin:0 !important; line-height:1.1 !important;}
     header h1{font-size:2.490865344rem !important; margin:0 !important; line-height:1.1 !important;}
     #result{display:none !important;}
     .print-dual{
@@ -201,10 +201,10 @@
     .footer-note{display:none !important;}
     .footer-copyright{font-size:2.282719076352rem !important;}
     .field-grid{grid-template-columns:1.44fr 1fr 2.5fr 2fr 2fr !important;}
-    .print-dual-head .id{font-size:3.763584rem !important;}
-    .print-dual-head .group{font-size:2.438802432rem !important; border-radius:20px !important; padding:3px 12px !important; display:inline-block !important;}
+    .print-dual-head .id{font-size:3.3872256rem !important;}
+    .print-dual-head .group{font-size:2.1949221888rem !important; border-radius:20px !important; padding:3px 12px !important; display:inline-block !important;}
     .footer-note-free{display:none !important;}
-    .print-dual-col-title{font-size:2.167824384rem !important; padding:1.08px 3px !important; margin-bottom:1.08px !important; line-height:0.828 !important;}
+    .print-dual-col-title{font-size:2.167824384rem !important; padding:0.972px 3px !important; margin-bottom:0.972px !important; line-height:0.7452 !important;}
   }
   @media print and (max-width:600px){
     .footer-note-free{display:inline !important;}
@@ -783,7 +783,7 @@ function fitPrintToOnePage(){
   // cushion so header + content + footer reliably fit together.
   const totalPageHeightPx = (210 - 8) * pxPerMm * 0.82; // top+bottom margins are 4mm each now so nothing sits flush against the physical page edge
   const naturalHeight = dual.scrollHeight;
-  const BASE_SHRINK = isNarrowViewport ? 0.92 : 0.99; // mild safety shrink; most of the fit comes from the print font-size rules already
+  const BASE_SHRINK = isNarrowViewport ? 0.92 : 0.87; // desktop bumped down from 0.99: a real test PDF (record 2-66) showed the whole two-column block jumping wholesale to page 2 (inline-block columns can't fragment, so if content doesn't fit the space remaining after the header on page 1, the browser bumps the entire block rather than splitting it) - extra baseline shrink gives more headroom against that failure mode
   // EXTRA_SHRINK is applied to the *preferred* baseline scale first, then the
   // result is still hard-capped by neededScale (the actual measured content
   // height for THIS record). This guarantees the print always fits on one
