@@ -148,12 +148,12 @@
   .print-dual-cols{display:block; font-size:0;}
   .print-dual-cols::after{content:""; display:table; clear:both;}
   .print-dual-col{float:left; width:50%; box-sizing:border-box; font-size:1rem;}
-  .print-dual-col:first-child{border-right:1px solid var(--line); padding-right:3mm;}
-  .print-dual-col:last-child{padding-left:3mm;}
+  .print-dual-col:first-child{border-right:1px solid var(--line); padding-right:1.2mm;}
+  .print-dual-col:last-child{padding-left:1.2mm;}
   .print-dual-col-title{background:var(--accent); color:#fff; text-align:center; font-weight:700; font-size:0.8rem; padding:3px; border-radius:6px; margin-bottom:3px;}
   .print-dual-footer{display:none;}
   @media print{
-    @page{size:A4 landscape; margin-top:4mm; margin-right:6mm; margin-bottom:4mm; margin-left:6mm;}
+    @page{size:A4 landscape; margin-top:5.8mm; margin-right:7.8mm; margin-bottom:5.8mm; margin-left:7.8mm;}
     *{-webkit-print-color-adjust:exact !important; print-color-adjust:exact !important; color-adjust:exact !important;}
     html, body{height:auto !important;}
     header p, .search-box, .hint, .print-row{display:none !important;}
@@ -183,7 +183,7 @@
     .phase-tabs-row{margin-bottom:0 !important;}
     .phase-tab{font-size:1.17504rem !important; padding:1px 7px !important;}
     .scene{margin-bottom:2px !important; border-width:1px !important; border-radius:7px !important;}
-    .scene-title{padding:3px 8px !important; font-size:2.695765925453798rem !important; gap:6px !important;}
+    .scene-title{padding:2.622px 8px 3px 8px !important; font-size:2.695765925453798rem !important; gap:6px !important;}
     .scene-tag{padding:1px 7px !important; font-size:2.27569532534784rem !important; gap:4px !important;}
     .scene-tag .tag-text{line-height:1.08 !important;}
     .scene-tag .dot{width:8px !important; height:8px !important;}
@@ -214,7 +214,7 @@
     .print-dual-col-title{font-size:2.167824384rem !important; padding:0.972px 3px !important; margin-bottom:0.972px !important; line-height:0.7452 !important;}
   }
   @media print and (max-width:600px){
-    @page{margin-right:4mm; margin-left:4mm;}
+    @page{margin-top:4mm; margin-right:4mm; margin-bottom:4mm; margin-left:4mm;}
     .footer-note-free{display:inline !important;}
     header .main-title{font-size:1.188rem !important; margin:0 0 2px !important;}
     header h1{font-size:1.02rem !important;}
