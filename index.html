@@ -110,7 +110,20 @@
   .print-btn:hover{background:var(--accent); color:#fff; border-color:var(--accent);}
   .print-dual{
     display:block; position:absolute; top:-99999px; left:-99999px; visibility:hidden;
-    width:289mm; page-break-inside:avoid; break-inside:avoid;
+    width:289mm;
+    /* No page-break-inside:avoid here on purpose (see the matching note further
+       down, next to fitPrintToOnePage()'s print block): "avoid" tells the
+       browser to bump this WHOLE block to a fresh page rather than split it
+       whenever it doesn't fit the remaining space on the current page. Since
+       our JS already shrinks this block's font-size to fit within one page,
+       "avoid" only ever fires as a false positive - some print engines (seen
+       with Windows "Microsoft Print to PDF") apply their own pagination pass
+       that's stricter than our JS estimate, bump the entire block past the
+       header onto page 2, leaving page 1 almost blank, and then still can't
+       fit the (still full-size, now unconstrained-height) block on a single
+       page 2 either - producing a header-alone / content-split-across-2-pages
+       result instead of the single combined page we want.
+    */
   }
   .print-dual-head{text-align:center; margin-bottom:4px;}
   .print-dual-head .id{font-size:1.1rem; font-weight:700; color:var(--accent); margin-right:8px;}
