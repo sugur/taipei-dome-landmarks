@@ -146,7 +146,8 @@
      blank-page-1 bump kept happening even after removing "avoid" and floats.
      Dropping overflow:hidden removes that implicit constraint too. */
   .print-dual-cols{display:block; font-size:0;}
-  .print-dual-col{display:inline-block; vertical-align:top; width:50%; box-sizing:border-box; font-size:1rem;}
+  .print-dual-cols::after{content:""; display:table; clear:both;}
+  .print-dual-col{float:left; width:50%; box-sizing:border-box; font-size:1rem;}
   .print-dual-col:first-child{border-right:1px solid var(--line); padding-right:3mm;}
   .print-dual-col:last-child{padding-left:3mm;}
   .print-dual-col-title{background:var(--accent); color:#fff; text-align:center; font-weight:700; font-size:0.8rem; padding:3px; border-radius:6px; margin-bottom:3px;}
@@ -187,7 +188,7 @@
     .field{padding:3px 7px !important; background:#ffffff !important;}
     .field .label{font-size:1.70615808rem !important; margin-bottom:0px !important;}
     .field .value{font-size:2.66475494097027072rem !important; gap:2px !important;}
-    .field .value .value-logo{font-size:2.66475494097027072rem !important; line-height:0.95 !important;}
+    .field .value .value-logo{font-size:2.66475494097027072rem !important; line-height:0.75 !important;}
     .field .value .value-12{font-size:2.66475494097027072rem !important;}
     .field .value .value-landmark{font-size:2.66475494097027072rem !important;}
     .field .value img.icon, .field .value svg.icon{width:12.702096px !important; height:12.702096px !important; max-width:12.702096px !important; max-height:12.702096px !important; flex:none !important; object-fit:cover !important;}
@@ -202,7 +203,7 @@
     .footer-copyright{font-size:2.282719076352rem !important;}
     .field-grid{grid-template-columns:1.44fr 1fr 2.5fr 2fr 2fr !important;}
     .print-dual-head .id{font-size:3.3872256rem !important;}
-    .print-dual-head .group{font-size:2.1949221888rem !important; border-radius:20px !important; padding:3px 12px !important; display:inline-block !important;}
+    .print-dual-head .group{font-size:2.1949221888rem !important; border-radius:20px !important; padding:0px 12px !important; display:inline-block !important;}
     .footer-note-free{display:none !important;}
     .print-dual-col-title{font-size:2.167824384rem !important; padding:0.972px 3px !important; margin-bottom:0.972px !important; line-height:0.7452 !important;}
   }
