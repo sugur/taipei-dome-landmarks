@@ -136,7 +136,16 @@
      refuse to fragment across pages, treating it like an implicit "avoid").
      inline-block fragments across pages far more predictably, so switching
      the two columns to that instead of floats. */
-  .print-dual-cols{display:block; overflow:hidden; font-size:0;}
+  /* overflow:hidden used to be needed here to contain/clear the old floated
+     columns. Now that the columns are inline-block (see note above), it
+     serves no layout purpose - and overflow:hidden/auto on a container is a
+     well-known print gotcha in several engines: since the browser can't
+     represent "clip this box, but let it still fragment across pages", it
+     silently treats the whole clipped box as unsplittable, exactly like an
+     explicit page-break-inside:avoid would - which likely explains why the
+     blank-page-1 bump kept happening even after removing "avoid" and floats.
+     Dropping overflow:hidden removes that implicit constraint too. */
+  .print-dual-cols{display:block; font-size:0;}
   .print-dual-col{display:inline-block; vertical-align:top; width:50%; box-sizing:border-box; font-size:1rem;}
   .print-dual-col:first-child{border-right:1px solid var(--line); padding-right:3mm;}
   .print-dual-col:last-child{padding-left:3mm;}
@@ -172,8 +181,8 @@
     .phase-tabs-row{margin-bottom:0 !important;}
     .phase-tab{font-size:1.17504rem !important; padding:1px 7px !important;}
     .scene{margin-bottom:2px !important; border-width:1px !important; border-radius:7px !important;}
-    .scene-title{padding:3px 8px !important; font-size:2.72299588429676544rem !important; gap:6px !important;}
-    .scene-tag{padding:1px 7px !important; font-size:2.809500401664rem !important; gap:4px !important;}
+    .scene-title{padding:3px 8px !important; font-size:2.450696295867088896rem !important; gap:6px !important;}
+    .scene-tag{padding:1px 7px !important; font-size:2.5285503614976rem !important; gap:4px !important;}
     .scene-tag .dot{width:8px !important; height:8px !important;}
     .field{padding:3px 7px !important; background:#ffffff !important;}
     .field .label{font-size:1.70615808rem !important; margin-bottom:0px !important;}
