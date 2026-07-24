@@ -159,7 +159,7 @@
     header p, .search-box, .hint, .print-row{display:none !important;}
     .wrap{padding:0 !important; max-width:100% !important;}
     header{margin-bottom:0px !important; padding-top:4px !important;}
-    header .main-title{font-size:2.267628986304rem !important; margin:0 !important; line-height:1.1 !important;}
+    header .main-title{font-size:1.638362792606rem !important; margin:0 !important; line-height:1.1 !important;}
     header h1{font-size:1.9926922752rem !important; margin:0 !important; line-height:1.1 !important;}
     #result{display:none !important;}
     .print-dual{
@@ -223,7 +223,7 @@
     .record-head .group{font-size:0.864rem !important; padding:1px 7px !important;}
     .phase-tab{font-size:1.1232rem !important; padding:1px 6px !important;}
     .scene{margin-bottom:1px !important;}
-    .scene-title{padding:2.6px 7.8px !important; font-size:1.30432033146624rem !important; gap:5.2px !important;}
+    .scene-title{padding:2.08px 7.8px !important; font-size:1.30432033146624rem !important; gap:5.2px !important;}
     .scene-tag{padding:0px 5px !important; font-size:1.219401216rem !important; gap:3px !important;}
     .scene-tag .tag-text{line-height:1.08 !important;}
     .scene-tag .dot{width:6px !important; height:6px !important;}
@@ -558,6 +558,17 @@ function waveLampTag(scene){
 
 let currentId = null;
 let currentPhase = 1;
+// Browsers use document.title as the suggested filename when the print
+// dialog's "Save as PDF" option is used (which is how the 下載PDF button
+// works - it just calls window.print()). Remembering the ORIGINAL title so
+// it can be restored after printing, since printWithFilename() below
+// temporarily overwrites document.title to get a per-record filename.
+const ORIGINAL_TITLE = document.title;
+function printWithFilename(){
+  const idPart = currentId ? String(currentId).replace(/[\\/:*?"<>|]/g, '_') : '';
+  document.title = '第三聯區_地標對照表' + (idPart ? ('_' + idPart) : '');
+  window.print();
+}
 const PHASE_LABELS = ['一','二','三'];
 const PHASE_NAMES = ['序。慈善。醫療','醫療。教育。人文',''];
 const PHASE_SHORT_NAMES = ['序','醫療',''];
@@ -731,7 +742,7 @@ function render(id){
   }
   let html = '<div class="record-card">';
   const groupClass = 'group-' + rec.group;
-  html += '<div class="print-row"><button class="print-btn" onclick="window.print()">下載PDF</button></div>';
+  html += '<div class="print-row"><button class="print-btn" onclick="printWithFilename()">下載PDF</button></div>';
   html += '<div class="record-header-row"><div class="phase-tabs-row">' + phaseTabsHtml() + '</div><div class="record-head"><span class="id">' + escapeHtml(rec.id) + '</span><span class="group ' + groupClass + '">' + escapeHtml(rec.group) + '</span></div></div>';
   html += buildScenesHtml(rec, currentPhase);
   html += '</div>';
@@ -802,7 +813,7 @@ function fitPrintToOnePage(){
   // cushion so header + content + footer reliably fit together.
   const totalPageHeightPx = (210 - 8) * pxPerMm * 0.82; // top+bottom margins are 4mm each now so nothing sits flush against the physical page edge
   const naturalHeight = dual.scrollHeight;
-  const BASE_SHRINK = isNarrowViewport ? 0.92 : 0.735; // desktop: a real Edge/Skia test still came in under 1pt short of fitting the (now-inline) copyright line onto page 1, and different browsers land at slightly different margins - nudged down a bit further from 0.76 for cross-browser headroom
+  const BASE_SHRINK = isNarrowViewport ? 0.92 : 0.68; // desktop: kept coming in just 1-2pt short across different Chromium builds even after several small nudges - dropping this more decisively (0.735->0.68) to build real cross-browser headroom instead of chasing a hairline margin every time
   // EXTRA_SHRINK is applied to the *preferred* baseline scale first, then the
   // result is still hard-capped by neededScale (the actual measured content
   // height for THIS record). This guarantees the print always fits on one
@@ -853,6 +864,7 @@ function fitPrintToOnePage(){
 window.addEventListener('beforeprint', fitPrintToOnePage);
 window.addEventListener('afterprint', () => {
   document.documentElement.style.fontSize = '';
+  document.title = ORIGINAL_TITLE;
 });
 
 (function(){
