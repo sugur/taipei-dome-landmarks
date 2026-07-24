@@ -802,7 +802,15 @@ function fitPrintToOnePage(){
   // that reserved band ate up roughly 90px worth of page height beyond our
   // own @page margin and our own header/footer. Desktop Chrome/Edge printing
   // doesn't add this, so it's only reserved for the narrow/mobile branch.
-  const OS_PRINT_CHROME_PX = isNarrowViewport ? 55 : 0;
+  // Desktop used to assume 0 here (native Chrome/Edge printing adds no OS
+  // chrome), but several real Edge/Chrome tests kept landing just 1-3mm
+  // short of fitting the footer line onto page 1 even after repeatedly
+  // shrinking BASE_SHRINK - meaning neededScale (not BASE_SHRINK) was
+  // actually the binding constraint each time, so those BASE_SHRINK cuts
+  // weren't moving the needle. Reserving a small explicit margin here
+  // directly tightens neededScale itself, guaranteed to help regardless of
+  // which branch of the min() is binding.
+  const OS_PRINT_CHROME_PX = isNarrowViewport ? 55 : 20;
   const EXTRA_SHRINK = isNarrowViewport ? 1.671504 : 0.7128; // mobile (手機板) body text enlarged further 1.2x; desktop (電腦版) body text shrunk further 0.8x per request
   // Real browsers/printers routinely can't honor a requested 1mm @page margin
   // exactly - many printer drivers silently enforce a larger minimum
