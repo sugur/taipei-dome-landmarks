@@ -188,8 +188,8 @@
     .field{padding:3px 7px !important; background:#ffffff !important;}
     .field .label{font-size:1.70615808rem !important; margin-bottom:0px !important;}
     .field .value{font-size:2.66475494097027072rem !important; gap:2px !important;}
-    .field .value .value-logo{font-size:2.66475494097027072rem !important; line-height:0.75 !important;}
-    .field .value .value-12{font-size:2.66475494097027072rem !important;}
+    .field .value .value-logo{font-size:2.66475494097027072rem !important; line-height:0.6 !important;}
+    .field .value .value-12{font-size:2.66475494097027072rem !important; line-height:0.6 !important;}
     .field .value .value-landmark{font-size:2.66475494097027072rem !important;}
     .field .value img.icon, .field .value svg.icon{width:12.702096px !important; height:12.702096px !important; max-width:12.702096px !important; max-height:12.702096px !important; flex:none !important; object-fit:cover !important;}
     .field .value img.icon-standalone, .field .value svg.icon-standalone{width:19.847025px !important; height:19.847025px !important; max-width:19.847025px !important; max-height:19.847025px !important; flex:none !important; object-fit:cover !important;}
@@ -202,7 +202,8 @@
     .footer-note{display:none !important;}
     .footer-copyright{font-size:2.282719076352rem !important;}
     .field-grid{grid-template-columns:1.44fr 1fr 2.5fr 2fr 2fr !important;}
-    .print-dual-head .id{font-size:3.3872256rem !important;}
+    .print-dual-head{margin-bottom:0px !important;}
+    .print-dual-head .id{font-size:3.3872256rem !important; line-height:1 !important;}
     .print-dual-head .group{font-size:2.1949221888rem !important; border-radius:20px !important; padding:0px 12px !important; display:inline-block !important;}
     .footer-note-free{display:none !important;}
     .print-dual-col-title{font-size:2.167824384rem !important; padding:0.972px 3px !important; margin-bottom:0.972px !important; line-height:0.7452 !important;}
@@ -223,8 +224,8 @@
     .field{padding:2px 5px !important;}
     .field .label{font-size:0.82368rem !important; margin-bottom:0px !important;}
     .field .value{font-size:1.38942565318656rem !important; gap:2px !important;}
-    .field .value .value-logo{font-size:1.38942565318656rem !important;}
-    .field .value .value-12{font-size:1.38942565318656rem !important;}
+    .field .value .value-logo{font-size:1.38942565318656rem !important; line-height:0.6 !important;}
+    .field .value .value-12{font-size:1.38942565318656rem !important; line-height:0.6 !important;}
     .field .value .value-landmark{font-size:1.38942565318656rem !important;}
     .field .value img.icon, .field .value svg.icon{width:9.44784px !important; height:9.44784px !important; max-width:9.44784px !important; max-height:9.44784px !important; flex:none !important; object-fit:cover !important;}
     .field .value img.icon-standalone, .field .value svg.icon-standalone{width:17.32104px !important; height:17.32104px !important; max-width:17.32104px !important; max-height:17.32104px !important; flex:none !important; object-fit:cover !important;}
@@ -236,8 +237,8 @@
     .footer-left{font-size:0.6rem !important;}
     .footer-note{font-size:0.839808rem !important;}
     .footer-copyright{font-size:0.839808rem !important;}
-    .print-dual-head{margin-bottom:1px !important;}
-    .print-dual-head .id{font-size:0.8535808512rem !important;}
+    .print-dual-head{margin-bottom:0px !important;}
+    .print-dual-head .id{font-size:0.8535808512rem !important; line-height:1 !important;}
     .print-dual-head .group{font-size:0.76822276608rem !important; padding:1px 10px !important;}
     .print-dual-col-title{font-size:0.652636537749504rem !important; padding:0.5px 3px !important; margin-bottom:0.5px !important;}
     .field-grid{grid-template-columns:1.44fr 1fr 2.5fr 2fr 2fr !important;}
@@ -784,7 +785,7 @@ function fitPrintToOnePage(){
   // cushion so header + content + footer reliably fit together.
   const totalPageHeightPx = (210 - 8) * pxPerMm * 0.82; // top+bottom margins are 4mm each now so nothing sits flush against the physical page edge
   const naturalHeight = dual.scrollHeight;
-  const BASE_SHRINK = isNarrowViewport ? 0.92 : 0.87; // desktop bumped down from 0.99: a real test PDF (record 2-66) showed the whole two-column block jumping wholesale to page 2 (inline-block columns can't fragment, so if content doesn't fit the space remaining after the header on page 1, the browser bumps the entire block rather than splitting it) - extra baseline shrink gives more headroom against that failure mode
+  const BASE_SHRINK = isNarrowViewport ? 0.92 : 0.83; // desktop: floats now fragment correctly (see .print-dual-col), but a real test (record 2-50) still spilled roughly one field-row's worth onto page 2 - nudged down a bit further from 0.87 for headroom
   // EXTRA_SHRINK is applied to the *preferred* baseline scale first, then the
   // result is still hard-capped by neededScale (the actual measured content
   // height for THIS record). This guarantees the print always fits on one
