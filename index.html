@@ -159,7 +159,7 @@
     header p, .search-box, .hint, .print-row{display:none !important;}
     .wrap{padding:0 !important; max-width:100% !important;}
     header{margin-bottom:0px !important; padding-top:4px !important;}
-    header .main-title{font-size:2.51958776256rem !important; margin:0 !important; line-height:1.1 !important;}
+    header .main-title{font-size:2.267628986304rem !important; margin:0 !important; line-height:1.1 !important;}
     header h1{font-size:1.9926922752rem !important; margin:0 !important; line-height:1.1 !important;}
     #result{display:none !important;}
     .print-dual{
@@ -183,7 +183,7 @@
     .phase-tabs-row{margin-bottom:0 !important;}
     .phase-tab{font-size:1.17504rem !important; padding:1px 7px !important;}
     .scene{margin-bottom:2px !important; border-width:1px !important; border-radius:7px !important;}
-    .scene-title{padding:3px 8px !important; font-size:2.450696295867088896rem !important; gap:6px !important;}
+    .scene-title{padding:3px 8px !important; font-size:2.695765925453798rem !important; gap:6px !important;}
     .scene-tag{padding:1px 7px !important; font-size:2.27569532534784rem !important; gap:4px !important;}
     .scene-tag .tag-text{line-height:1.08 !important;}
     .scene-tag .dot{width:8px !important; height:8px !important;}
@@ -241,7 +241,7 @@
     .v-formation-icon{width:19px !important; height:19px !important; max-width:19px !important; margin-top:1px !important;}
     .icon-with-caption{gap:0.5px !important;}
     .landmark-line-bar{width:29.376px !important; height:4.907628px !important; font-size:0.3468rem !important; margin-top:0px !important;}
-    footer{font-size:0.72rem !important; margin-top:2px !important; padding:0 4mm !important; box-sizing:border-box !important; clear:both !important;}
+    footer{display:block !important; font-size:0.72rem !important; margin-top:2px !important; padding:0 4mm !important; box-sizing:border-box !important; clear:both !important;}
     .footer-left{font-size:0.6rem !important; line-height:1 !important;}
     .footer-note{font-size:0.839808rem !important;}
     .footer-copyright{font-size:0.839808rem !important;}
@@ -802,7 +802,7 @@ function fitPrintToOnePage(){
   // cushion so header + content + footer reliably fit together.
   const totalPageHeightPx = (210 - 8) * pxPerMm * 0.82; // top+bottom margins are 4mm each now so nothing sits flush against the physical page edge
   const naturalHeight = dual.scrollHeight;
-  const BASE_SHRINK = isNarrowViewport ? 0.92 : 0.76; // desktop: a real test PDF showed content itself finishing with ~20pt to spare on page 1, but the footer alone still spilled to page 2 - nudged down a bit further from 0.8 to pull the footer back onto the same page
+  const BASE_SHRINK = isNarrowViewport ? 0.92 : 0.735; // desktop: a real Edge/Skia test still came in under 1pt short of fitting the (now-inline) copyright line onto page 1, and different browsers land at slightly different margins - nudged down a bit further from 0.76 for cross-browser headroom
   // EXTRA_SHRINK is applied to the *preferred* baseline scale first, then the
   // result is still hard-capped by neededScale (the actual measured content
   // height for THIS record). This guarantees the print always fits on one
