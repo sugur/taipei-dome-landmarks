@@ -214,7 +214,7 @@
     .print-dual-col-title{font-size:2.167824384rem !important; padding:0.972px 3px !important; margin-bottom:0.972px !important; line-height:0.7452 !important;}
   }
   @media print and (max-width:600px){
-    @page{margin-top:4mm; margin-right:4mm; margin-bottom:4mm; margin-left:4mm;}
+    @page{margin-top:2mm; margin-right:2mm; margin-bottom:2mm; margin-left:2mm;}
     .footer-note-free{display:inline !important;}
     header .main-title{font-size:1.0692rem !important; margin:0 0 2px !important;}
     header h1{font-size:1.02rem !important;}
@@ -235,7 +235,7 @@
     .field .value .value-12{font-size:1.528368218505216rem !important;}
     .field .value .value-12.value-logo2{line-height:normal !important;}
     .value-logo2-line2{margin-top:-0.35em !important;}
-    .field .value .value-landmark{font-size:1.528368218505216rem !important;}
+    .field .value .value-landmark{font-size:1.528368218505216rem !important; line-height:0.95 !important;}
     .field .value img.icon, .field .value svg.icon{width:9.44784px !important; height:9.44784px !important; max-width:9.44784px !important; max-height:9.44784px !important; flex:none !important; object-fit:cover !important;}
     .field .value img.icon-standalone, .field .value svg.icon-standalone{width:17.32104px !important; height:17.32104px !important; max-width:17.32104px !important; max-height:17.32104px !important; flex:none !important; object-fit:cover !important;}
     .field .value svg.icon-badge{width:17.32104px !important; height:17.32104px !important; max-width:17.32104px !important; max-height:17.32104px !important; flex:none !important;}
@@ -864,12 +864,20 @@ function fitPrintToOnePage(){
   // before the page snapshot for printing is taken, leaving elements (like
   // our footer, which sits below the just-resized #printDual block) painted
   // at a stale/pre-resize position or missing from the printed output
-  // entirely. Forcing a synchronous layout read immediately after the
-  // font-size change makes the browser commit the new layout right away,
-  // before print pagination runs.
+  // entirely (confirmed on real iOS Safari test PDFs: the footer text is
+  // sometimes completely absent, not just mispositioned). A single
+  // offsetHeight read was not reliably enough to force WebKit to commit the
+  // new layout before its print snapshot - forcing several different reflow
+  // triggers (offsetHeight, getBoundingClientRect, and a second read after
+  // the first) gives the layout engine more chances to actually commit
+  // before pagination runs.
   void document.documentElement.offsetHeight;
+  void document.documentElement.getBoundingClientRect();
+  const dualEl = document.getElementById('printDual');
+  if (dualEl) { void dualEl.offsetHeight; void dualEl.getBoundingClientRect(); }
   const footerEl = document.querySelector('footer');
-  if (footerEl) void footerEl.offsetHeight;
+  if (footerEl) { void footerEl.offsetHeight; void footerEl.getBoundingClientRect(); }
+  void document.documentElement.offsetHeight;
 }
 window.addEventListener('beforeprint', fitPrintToOnePage);
 window.addEventListener('afterprint', () => {
