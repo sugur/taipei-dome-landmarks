@@ -127,8 +127,17 @@
   }
   .print-dual-head{text-align:center; margin-bottom:4px;}
   .print-dual-head .id{font-size:1.1rem; font-weight:700; color:var(--accent); margin-right:8px;}
-  .print-dual-cols{display:block; overflow:hidden;}
-  .print-dual-col{float:left; width:50%; box-sizing:border-box;}
+  /* Was float:left/float-based 2-column layout. Floats have long-standing,
+     unpredictable interactions with print pagination in several engines -
+     even after removing the explicit page-break-inside:avoid above, Windows'
+     "Microsoft Print to PDF" pipeline still bumped this whole floated block
+     to a fresh page whenever it didn't fit the remaining space on page 1
+     (floats form their own block-formatting-context that many print engines
+     refuse to fragment across pages, treating it like an implicit "avoid").
+     inline-block fragments across pages far more predictably, so switching
+     the two columns to that instead of floats. */
+  .print-dual-cols{display:block; overflow:hidden; font-size:0;}
+  .print-dual-col{display:inline-block; vertical-align:top; width:50%; box-sizing:border-box; font-size:1rem;}
   .print-dual-col:first-child{border-right:1px solid var(--line); padding-right:3mm;}
   .print-dual-col:last-child{padding-left:3mm;}
   .print-dual-col-title{background:var(--accent); color:#fff; text-align:center; font-weight:700; font-size:0.8rem; padding:3px; border-radius:6px; margin-bottom:3px;}
@@ -196,14 +205,14 @@
     .phase-tab{font-size:1.1232rem !important; padding:1px 6px !important;}
     .scene{margin-bottom:1px !important;}
     .scene-title{padding:2.6px 7.8px !important; font-size:1.6304004143328rem !important; gap:5.2px !important;}
-    .scene-tag{padding:0px 5px !important; font-size:1.368576rem !important; gap:3px !important;}
+    .scene-tag{padding:0px 5px !important; font-size:1.5054336rem !important; gap:3px !important;}
     .scene-tag .dot{width:6px !important; height:6px !important;}
     .field{padding:2px 5px !important;}
-    .field .label{font-size:0.6864rem !important; margin-bottom:0px !important;}
-    .field .value{font-size:2.364899328rem !important; gap:2px !important;}
-    .field .value .value-logo{font-size:2.364899328rem !important;}
-    .field .value .value-12{font-size:2.364899328rem !important;}
-    .field .value .value-landmark{font-size:2.364899328rem !important;}
+    .field .label{font-size:0.82368rem !important; margin-bottom:0px !important;}
+    .field .value{font-size:2.8378791936rem !important; gap:2px !important;}
+    .field .value .value-logo{font-size:2.8378791936rem !important;}
+    .field .value .value-12{font-size:2.8378791936rem !important;}
+    .field .value .value-landmark{font-size:2.8378791936rem !important;}
     .field .value img.icon, .field .value svg.icon{width:9.44784px !important; height:9.44784px !important; max-width:9.44784px !important; max-height:9.44784px !important; flex:none !important; object-fit:cover !important;}
     .field .value img.icon-standalone, .field .value svg.icon-standalone{width:17.32104px !important; height:17.32104px !important; max-width:17.32104px !important; max-height:17.32104px !important; flex:none !important; object-fit:cover !important;}
     .field .value svg.icon-badge{width:17.32104px !important; height:17.32104px !important; max-width:17.32104px !important; max-height:17.32104px !important; flex:none !important;}
