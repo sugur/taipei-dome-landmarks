@@ -561,7 +561,7 @@ function displayTitle(title, rec){
     const countryF = scene29 && scene29.fields.find(f => f.label === '國家');
     const country = countryF ? countryF.value : null;
     if (country === '台灣') return '29.功德品開經 [合掌]';
-    if (country === '美洲') return '29.功德品開經 [面向美洲的圓心]';
+    if (country === '美洲') return '29.功德品開經 [面向美洲的中心]';
     return '29.功德品開經 [面向各洲的圓心-拿燈]';
   }
   return SCENE_TITLE_OVERRIDES[title] || title;
@@ -616,6 +616,7 @@ function waveLampTag(scene, rec){
           escapeHtml('→') +
           '<span style="color:' + DEEP_BLUE + '">' + escapeHtml(' 拿燈') + '</span>' +
           escapeHtml('  ') +
+          '<br class="mobile-break">' +
           '<span style="color:' + ORANGE + '">' + escapeHtml('乾淨的地球') + '</span>' +
           escapeHtml('→') +
           '<span style="color:' + ORANGE + '">' + escapeHtml('燈舉高') + '</span>' +
@@ -637,12 +638,14 @@ function waveLampTag(scene, rec){
     const midColor = isBlue ? '#3aa655' : '#f6c945';
     const midText = isBlue ? '26破了洞: 「啊」→開綠燈(放口袋)' : '26破了洞: 「啊」→開黃燈(放口袋)';
     const lines = [
-      { text: '25大愛: 開綠燈', color: '#3aa655' },
+      { text: '25大愛: 開綠燈(拿燈)', color: '#3aa655' },
       { text: midText, color: midColor },
       { text: '27做環保: 開綠燈(放口袋)', color: '#3aa655' }
     ];
     const lineHtml = lines.map(function(l){
-      return '<span class="tag-line"><span class="dot" style="background:' + l.color + '"></span><span class="dot-text">' + escapeHtml(l.text) + '</span></span>';
+      let lt = escapeHtml(l.text);
+      lt = lt.replace('→', '<br class="mobile-break">→');
+      return '<span class="tag-line"><span class="dot" style="background:' + l.color + '"></span><span class="dot-text">' + lt + '</span></span>';
     }).join('');
     return '<span class="scene-tag"><span class="tag-text">' + lineHtml + '</span></span>';
   }
