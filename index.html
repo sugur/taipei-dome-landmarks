@@ -58,14 +58,16 @@
   .xy-value-col{display:flex; flex-direction:column;}
   .xy-hint{font-size:0.7502em; font-weight:400; color:#333; text-decoration:none; margin-top:1px;}
   @media print{
-    .footer-btn-row, .help-modal-overlay, .visitor-badge{display:none !important;}
+    .footer-btn-row, .help-modal-overlay, .visitor-badge, .other-link{display:none !important;}
     .xy-clickable{color:inherit !important; text-decoration:none !important; cursor:default !important;}
     .xy-hint{display:none !important;}
   }
   .visitor-badge{display:block; margin-top:4px; margin-left:0; opacity:0.7; font-size:0.85rem;}
   .visitor-badge img{height:22px; vertical-align:middle; margin-left:4px;}
+  .other-link{display:block; margin-top:6px; font-size:0.78rem; opacity:0.85;}
+  .other-link a{color:var(--accent); text-decoration:underline; font-weight:600;}
   .header-top{display:flex; align-items:center; justify-content:center; gap:10px;}
-  .header-logo{display:block; height:3.5rem; width:auto;}
+  .header-logo{display:block; height:4.2rem; width:auto;}
   @media print{ .header-logo{display:none !important;} }
   header{text-align:center; margin-bottom:20px;}
   header .main-title{font-size:1.428rem; margin:0 0 6px; color:var(--accent); font-weight:800;}
@@ -194,7 +196,7 @@
     .phase-tabs-row{margin-bottom:0 !important;}
     .phase-tab{font-size:1.17504rem !important; padding:1px 7px !important;}
     .scene{margin-bottom:2px !important; border-width:1px !important; border-radius:7px !important;}
-    .scene-title{padding:1.6px 8px 3px 8px !important; font-size:2.695765925453798rem !important; gap:6px !important;}
+    .scene-title{padding:0.8px 8px 1.5px 8px !important; font-size:2.695765925453798rem !important; gap:6px !important;}
     .scene-tag{padding:1px 7px !important; font-size:2.27569532534784rem !important; gap:4px !important;}
     .scene-tag .tag-text{line-height:1.08 !important;}
     .scene-tag .dot{width:8px !important; height:8px !important;}
@@ -235,7 +237,7 @@
     .record-head .group{font-size:0.864rem !important; padding:1px 7px !important;}
     .phase-tab{font-size:1.4949792rem !important; padding:1px 6px !important;}
     .scene{margin-bottom:1px !important;}
-    .scene-title{padding:0.99px 7.8px 2.08px 7.8px !important; font-size:1.30432033146624rem !important; gap:5.2px !important;}
+    .scene-title{padding:0.5px 7.8px 1px 7.8px !important; font-size:1.30432033146624rem !important; gap:5.2px !important;}
     .scene-tag{padding:0px 5px !important; font-size:1.219401216rem !important; gap:3px !important;}
     .scene-tag .tag-text{line-height:1.08 !important;}
     .scene-tag .dot{width:6px !important; height:6px !important;}
@@ -326,7 +328,7 @@
     header .main-title{font-size:1.08rem;}
     header h1{font-size:0.81rem;}
     header p{font-size:0.63rem;}
-    .header-logo{height:2.9rem;}
+    .header-logo{height:3.48rem;}
     .record-head .id{font-size:1.035rem;}
     .record-head .group{font-size:0.63rem; padding:2px 8px;}
     .phase-tab{font-size:0.585rem; padding:3px 7px;}
@@ -549,10 +551,10 @@ function numberBadgeSVG(id, centerColor, blueRing){
 
 const STATIC_SCENE_TAGS = {
   '04.開經偈': { text: ' 第二句彷若實境再「現」開綠燈', color: '#3aa655' },
-  '14.骨髓捐贈 / 15.能捨一切諸難捨': { lines: ['OS 等九年了..開黃燈(放口袋)', '能捨的最後一次「眾生根」後間奏拿燈'], dotLine: 0, color: '#f6c945' },
+  '14.骨髓捐贈 / 15.能捨一切諸難捨': { lines: ['OS 等九年了..開黃燈(口袋)', '能捨的最後一次「眾生根」後間奏拿燈'], dotLine: 0, color: '#f6c945' },
   '18.慈大校歌 / 19.小樹啊!': { text: ' 開綠燈(拿燈)', color: '#3aa655' },
-  '20.畢業組曲-成長 / 21.畢業組曲-感恩': { text: ' 開綠燈(放口袋)', color: '#3aa655' },
-  '28.代謝不住': { text: ' 開綠燈(放口袋)', color: '#3aa655' }
+  '20.畢業組曲-成長 / 21.畢業組曲-感恩': { text: ' 開綠燈(口袋)', color: '#3aa655' },
+  '28.代謝不住': { text: ' 開綠燈(口袋)', color: '#3aa655' }
 };
 
 const SCENE_TITLE_OVERRIDES = {
@@ -602,14 +604,14 @@ function waveLampTag(scene, rec){
     const m = f.value.match(/第[一二三四五六七八九十㇐]+波/);
     const wave = m ? m[0].replace('㇐','一') : '';
     const line1 = '聽到巴利文無量義經拿燈不開燈';
-    const line2 = wave ? (wave + ' 開黃色蓮花燈') : '開黃色蓮花燈';
+    const line2 = wave ? (wave + ' 開黃燈') : '開黃燈';
     return '<span class="scene-tag"><span class="tag-text"><span class="tag-line">' + escapeHtml(line1) + '</span><span class="tag-line"><span class="dot" style="background:#f6c945"></span><span class="dot-text">' + escapeHtml(line2) + '</span></span></span></span>';
   }
   if (scene.title === '28.代謝不住' && rec) {
     const isBlue = rec.group === 'A藍' || rec.group === 'B藍';
     const DEEP_BLUE = '#1a3a8f';
     const ORANGE = '#e07b1a';
-    const line1Html = '<span class="tag-line"><span class="dot" style="background:#3aa655"></span><span class="dot-text">開綠燈(放口袋)</span></span>';
+    const line1Html = '<span class="tag-line"><span class="dot" style="background:#3aa655"></span><span class="dot-text">開綠燈(口袋)</span></span>';
     const line2Html = isBlue
       ? ('<span class="tag-line">' +
           '<span style="color:' + DEEP_BLUE + '">' + escapeHtml('無量') + '</span>' +
@@ -645,11 +647,11 @@ function waveLampTag(scene, rec){
   if (scene.title === '25.大愛讓世界亮起來 / 26.天空破了洞 / 27.用鼓掌的雙手做環保' && rec) {
     const isBlue = rec.group === 'A藍' || rec.group === 'B藍';
     const midColor = isBlue ? '#3aa655' : '#f6c945';
-    const midText = isBlue ? '26破了洞: 「啊」→開綠燈(放口袋)' : '26破了洞: 「啊」→開黃燈(放口袋)';
+    const midText = isBlue ? '26破了洞: 「啊」→開綠燈(口袋)' : '26破了洞: 「啊」→開黃燈(口袋)';
     const lines = [
       { text: '25大愛: 開綠燈(拿燈)', color: '#3aa655' },
       { text: midText, color: midColor },
-      { text: '27做環保: 開綠燈(放口袋)', color: '#3aa655' }
+      { text: '27做環保: 開綠燈(口袋)', color: '#3aa655' }
     ];
     const lineHtml = lines.map(function(l){
       let lt = escapeHtml(l.text);
@@ -662,12 +664,12 @@ function waveLampTag(scene, rec){
     const areaF = scene.fields.find(f => f.label === '區域');
     const area = areaF ? areaF.value : '';
     const holdAreas = ['LOGO八瓣花瓣3', '蓮蓬內-慈濟', '蓮蓬外框'];
-    const text = holdAreas.indexOf(area) !== -1 ? '開黃燈(拿燈)' : '開黃燈(燈在口袋)';
+    const text = holdAreas.indexOf(area) !== -1 ? '開黃燈(拿燈)' : '開黃燈(口袋)';
     return '<span class="scene-tag"><span class="dot" style="background:#f6c945"></span><span class="dot-text">' + escapeHtml(text) + '</span></span>';
   }
   if (scene.title === '16.說法品梵唄 / 17.大慈大悲無量義') {
-    let txt = escapeHtml('OS：「向大體老師敬禮」 開綠燈(放口袋)'.trim());
-    txt = txt.replace('開綠燈(放口袋)', '<br class="mobile-break">開綠燈(放口袋)');
+    let txt = escapeHtml('OS：「向大體老師敬禮」 開綠燈(口袋)'.trim());
+    txt = txt.replace('開綠燈(口袋)', '<br class="mobile-break">開綠燈(口袋)');
     return '<span class="scene-tag"><span class="dot" style="background:#3aa655"></span><span class="dot-text">' + txt + '</span></span>';
   }
   const tag = STATIC_SCENE_TAGS[scene.title];
