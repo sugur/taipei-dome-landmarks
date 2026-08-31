@@ -757,7 +757,7 @@
          slightly taller - no separate height-cap change needed. */
       flex:1.0187; min-width:0; white-space:normal;
       overflow-wrap:break-word; word-break:break-word;
-      font-weight:700; font-size:10.47mm !important; color:#2f1f1c; line-height:1.2;
+      font-weight:700; font-size:10.1mm !important; color:#2f1f1c; line-height:1.2;
     }
     .dl2-icon-col{
       /* Width is now driven by the 隊形 caption instead of the icon +
@@ -1770,6 +1770,20 @@ function buildDl2CardMarkup(rec, printName){
   }
   const rows = [entries.slice(0, half), entries.slice(half)];
 
+  // Per request, a few scene titles show shortened/reformatted text on
+  // this compact card ONLY - the underlying scene.title (used for
+  // DL2_MERGE_GROUPS matching above, and everywhere else in the app) is
+  // untouched, so this is purely a display substitution applied per
+  // " / "-separated segment below, after merging has already happened.
+  const DL2_TITLE_DISPLAY_OVERRIDE = {
+    '02.生、老、病、死、六度': '02.生老 病死、六度',
+    '08.菜市場的五毛錢': '08.五毛錢',
+    '15.能捨一切諸難捨': '15.能捨一切諸...',
+    '17.大慈大悲無量義': '17.大慈大悲無量..',
+    '27.用鼓掌的雙手做環保': '27...雙手做環保',
+    '20.畢業組曲-成長': '20.畢業-成長',
+    '21.畢業組曲-感恩': '21.畢業-感恩'
+  };
   // Per request, each scene is now one horizontal line-item (icon + 場次
   // 標題/隊形 on the left, 地標 enlarged on the right) stacked vertically -
   // "01" then "02" then "03"... reading top-to-bottom - rather than the
@@ -1827,7 +1841,10 @@ function buildDl2CardMarkup(rec, printName){
     // normal) instead of ellipsis-truncating, so that manual break is no
     // longer needed to avoid a too-long second line; 六度 now just flows
     // with the rest of the text.
-    const titleHtml = escapeHtml(e.title).split(' / ').join('<br>');
+    const titleHtml = e.title.split(' / ')
+      .map(t => DL2_TITLE_DISPLAY_OVERRIDE[t] || t)
+      .map(t => escapeHtml(t))
+      .join('<br>');
     // Per request, column order is now 地標圖(icon, with 隊形 as a caption
     // underneath it) → 地標(location) → 標題(title) - title moved from the
     // front to the end.
