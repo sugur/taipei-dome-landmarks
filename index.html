@@ -125,6 +125,12 @@
     padding:18px; box-shadow:0 2px 10px rgba(0,0,0,0.04); margin-bottom:10px;
   }
   .search-row{display:flex; gap:10px;}
+  .multi-dl2-box{
+    background:var(--card); border:1px solid var(--line); border-radius:14px;
+    padding:14px 18px; box-shadow:0 2px 10px rgba(0,0,0,0.04); margin-bottom:10px;
+    display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap;
+  }
+  .multi-dl2-box-label{color:var(--sub); font-size:0.85rem;}
   input#idInput{
     flex:1; font-size:1.1rem; padding:12px 14px; border:1px solid var(--line);
     border-radius:10px; outline:none;
@@ -174,6 +180,13 @@
   .print-row{display:flex; justify-content:flex-end; margin-bottom:6px; gap:8px;}
   .print-btn-hint{text-align:right; font-size:0.8rem; color:#8a7a6d; margin:-3px 0 8px 0;}
   .print-btn-hint a{color:#8a6d3b; text-decoration:underline; cursor:pointer;}
+  .multi-dl2-row{margin-bottom:4px;}
+  .multi-dl2-row-inputs{display:flex; gap:8px;}
+  .multi-dl2-id, .multi-dl2-name{padding:8px 10px; font-size:0.95rem; border:1px solid var(--line); border-radius:8px; box-sizing:border-box; min-width:0;}
+  .multi-dl2-id{flex:1.2;}
+  .multi-dl2-name{flex:1;}
+  .multi-dl2-err{color:var(--danger); font-size:0.78rem; min-height:1.1em; margin:2px 2px 6px 2px;}
+  .multi-dl2-general-err{color:var(--danger); font-size:0.85rem; text-align:center; min-height:1.1em; margin-bottom:4px;}
   .print-btn{
     padding:5px 14px; border-radius:8px; font-size:0.8rem; cursor:pointer;
     border:1px solid var(--line); background:#fff; color:var(--accent); font-weight:600;
@@ -236,12 +249,15 @@
     display:block; position:absolute; top:-99999px; left:-99999px; visibility:hidden;
     width:289mm;
   }
+  .print-download3{
+    display:block; position:absolute; top:-99999px; left:-99999px; visibility:hidden;
+  }
   .print-dual-footer{display:none;}
   @media print{
     @page{size:A4 landscape; margin-top:5.0mm; margin-right:6.5mm; margin-bottom:5.0mm; margin-left:6.5mm;}
     *{-webkit-print-color-adjust:exact !important; print-color-adjust:exact !important; color-adjust:exact !important;}
     html, body{height:auto !important;}
-    header p, .search-box, .hint, .print-row, .print-btn-hint{display:none !important;}
+    header p, .search-box, .hint, .print-row, .print-btn-hint, .multi-dl2-box{display:none !important;}
     .wrap{padding:0 !important; max-width:100% !important;}
     header{margin-bottom:0px !important; padding-top:4px !important;}
     body:not(.cue-off) header .main-title{font-size:2.016mm !important; margin:0 !important; line-height:1.1 !important; display:inline !important; color:#3E2723 !important;}
@@ -567,8 +583,9 @@
      specificity + !important + later source order is enough for these
      rules to win when .dl2-mode is present. */
   @media print{
-    .print-download2{display:none !important;}
-    body.dl2-mode .print-dual, body.dl2-mode .print-phase3, body.dl2-mode .print-phase4{display:none !important;}
+    .print-download2, .print-download3{display:none !important;}
+    body.dl2-mode .print-dual, body.dl2-mode .print-phase3, body.dl2-mode .print-phase4, body.dl2-mode .print-download3{display:none !important;}
+    body.dl2-multi-mode .print-dual, body.dl2-multi-mode .print-phase3, body.dl2-multi-mode .print-phase4, body.dl2-multi-mode .print-download2{display:none !important;}
   }
   /* Moved out of @media print (but still applies during print too, since
      nothing here is print-only) so this geometry is already correct BEFORE
@@ -585,15 +602,19 @@
       visibility:visible !important;
       /* Occupy the top-left corner of the (portrait, via
          applyDl2PortraitPage()) A4 page - width narrowed a bit further
-         per request (was a clean quarter-page 100mm). Height is no longer
-         a fixed mm value - per request the bottom border should sit right
-         below the last item (14./15. in the left column, which always
-         has one more row than the right column) rather than leaving
-         blank space under shorter records, so the box now auto-sizes to
-         its actual content instead of being sized for the tallest record
-         in the whole dataset. Light-coffee outer frame around the whole
-         sheet (was dark coffee, per request). */
-      width:70.59mm !important; box-sizing:border-box !important;
+         per request (was a clean quarter-page 100mm), then widened again
+         by +1.4mm per a later request - specifically so the numeric
+         .dl2-loc-num column (nowrap, see its own comment) always has
+         enough room within its own flex share and never has to borrow
+         space from .dl2-title-col. Height is no longer a fixed mm value -
+         per request the bottom border should sit right below the last
+         item (14./15. in the left column, which always has one more row
+         than the right column) rather than leaving blank space under
+         shorter records, so the box now auto-sizes to its actual content
+         instead of being sized for the tallest record in the whole
+         dataset. Light-coffee outer frame around the whole sheet (was
+         dark coffee, per request). */
+      width:71.99mm !important; box-sizing:border-box !important;
       border:0.6mm solid #a67c52 !important;
       /* Top padding (the gap between the event-header title and the top
          frame line) tightened to 1.5px per request - much less breathing
@@ -602,6 +623,38 @@
          column sits almost flush against the border); right stays 2px
          (title column edge); bottom stays 1mm since that's what the
          auto-height math elsewhere assumes. */
+      padding:1.5px 2px 1mm 1px !important;
+    }
+    /* "下載多人地標小卡": up to 4 people's cards on one A4 portrait sheet,
+       one per quadrant, evenly dividing the whole printable page into 4
+       equal areas (was 2-per-row, left-aligned, leaving the right side of
+       the sheet blank - per request, changed to actually fill/quarter the
+       full A4 instead). Each card reuses the exact same per-card markup as
+       the single-card flow (buildDl2CardMarkup(), wrapped in its own
+       .dl2-multi-card box here instead of .print-download2 directly) so
+       the two features can never visually drift apart - .print-download3
+       itself is just the grid that lays those boxes out.
+       200mm/287mm = the full printable content box under
+       applyDl2PortraitPage()'s A4-portrait @page (210mm/297mm page minus
+       its 5mm margin on every side) - explicitly sizing the grid to that
+       (rather than leaving it auto/content-sized) is what makes each of
+       the 4 cells a true quarter of the sheet: 100mm x 143.5mm each.
+       justify-items/align-items:center then centers each (much smaller,
+       fixed 71.99mm-wide, content-height) card within its own quarter,
+       instead of packing all 4 toward one corner - with 4 entries this
+       lands one card per quadrant; with fewer, the grid's normal
+       row-major auto-placement (1st cell top-left, 2nd top-right, 3rd
+       bottom-left) just leaves the remaining quadrant(s) blank. */
+    body.dl2-multi-mode .print-download3{
+      display:grid !important; position:static !important; top:auto !important; left:auto !important;
+      visibility:visible !important;
+      width:200mm !important; height:287mm !important;
+      grid-template-columns:1fr 1fr !important; grid-template-rows:1fr 1fr !important;
+      justify-items:center !important; align-items:center !important; gap:0 !important;
+    }
+    body.dl2-multi-mode .dl2-multi-card{
+      width:71.99mm !important; box-sizing:border-box !important;
+      border:0.6mm solid #a67c52 !important;
       padding:1.5px 2px 1mm 1px !important;
     }
     .dl2-scale-wrap{
@@ -616,20 +669,30 @@
          back to plain transform:scale(), with the height-collapse instead
          computed and applied explicitly in buildPrintDownload2()/JS - see
          DL2_SCALE there.)
-         Per request, narrowed slightly further (289mm -> 70.59mm) WITHOUT
+         Per request, narrowed slightly further (289mm -> 287.3mm) WITHOUT
          changing the scale - this trims .dl2-loc's flex-fill share (see
          its flex value below) out of the row entirely instead of letting
          .dl2-title-col grow into the freed space, so the icon/title/loc
          font sizes and the title column's own real size all stay exactly
-         as they were, and only the overall sheet gets narrower. Scale =
-         usable content width (70.59mm box - 2x0.6mm border - 2px+1px
-         left/right padding ≈ 68.60mm) / this content width (287.3mm) -
-         deliberately kept at the same 0.2388 as before this round so nothing
-         else's real/printed size shifts. Must match the DL2_SCALE JS
-         constant. No overflow:hidden here - see .dl2-scale-outer, the
-         actual (non-transformed) clipping boundary that JS sizes to this
-         wrap's scaled height. */
-      width:287.3mm; transform-origin: top left; transform: scale(0.2388);
+         as they were, and only the overall sheet gets narrower.
+         Then widened again, this time to 293.16mm, per a later request:
+         with .dl2-loc-num forced to white-space:nowrap (see that rule),
+         the longest numeric location in the dataset ("186-51") needed
+         ~1.4mm more real/printed width than .dl2-loc's flex share alone
+         provided, which was being taken from .dl2-title-col automatically
+         (safe, since that column tolerates shrinking/wrapping, but not
+         what was wanted) - widening the whole sheet by that same +1.4mm
+         real (287.3mm + 1.4/0.2388 authored-mm) instead means .dl2-loc
+         gets enough of its own room from the wider sheet and doesn't
+         need to borrow from the title column at all for current data.
+         Scale = usable content width (71.99mm box - 2x0.6mm border -
+         2px+1px left/right padding ≈ 70.01mm) / this content width
+         (293.16mm) - deliberately kept at the same 0.2388 as before this
+         round so nothing else's real/printed size shifts. Must match the
+         DL2_SCALE JS constant. No overflow:hidden here - see
+         .dl2-scale-outer, the actual (non-transformed) clipping boundary
+         that JS sizes to this wrap's scaled height. */
+      width:293.16mm; transform-origin: top left; transform: scale(0.2388);
     }
     .dl2-scale-outer{overflow:hidden;}
     /* The shared page-level <header> (event title, spans the full A4
@@ -637,7 +700,7 @@
        quarter box it no longer reads as sitting above the sheet, so this
        block builds its own compact top row instead (see dl2-top-row
        below, built in buildPrintDownload2()). */
-    body.dl2-mode header{display:none !important;}
+    body.dl2-mode header, body.dl2-multi-mode header{display:none !important;}
     /* Both rows live outside .dl2-scale-wrap (see topRowHtml in
        buildPrintDownload2()) so this font-size is the real/final one, not
        shrunk by that wrap's transform:scale(0.346) - matches the ~2mm
@@ -692,7 +755,7 @@
          slightly taller - no separate height-cap change needed. */
       flex:1.0187; min-width:0; white-space:normal;
       overflow-wrap:break-word; word-break:break-word;
-      font-weight:700; font-size:9.21mm !important; color:#2f1f1c; line-height:1.2;
+      font-weight:700; font-size:10.47mm !important; color:#2f1f1c; line-height:1.2;
     }
     .dl2-icon-col{
       /* Width is now driven by the 隊形 caption instead of the icon +
@@ -766,12 +829,24 @@
     }
     /* Per request: fixed real/printed sizes rather than ratios - locations
        with any Chinese text get 2.4mm, plain digit/dash-only locations
-       (e.g. "7-40") get 3.8mm (bumped up again from 3.7mm - CJK stays at
+       (e.g. "7-40") get 4mm (bumped up again from 3.8mm - CJK stays at
        2.4mm this round; sheet width held fixed so only the authored/
        pre-scale mm changes). Authored (pre-scale) mm = target real mm /
-       DL2_SCALE (0.2388): 2.4/0.2388=10.05, 3.8/0.2388=15.91. */
+       DL2_SCALE (0.2388): 2.4/0.2388=10.05, 4/0.2388=16.75. */
     .dl2-loc.dl2-loc-cjk{font-size:10.05mm !important;}
-    .dl2-loc.dl2-loc-num{font-size:15.91mm !important;}
+    /* Per request, plain digit/dash locations (e.g. "17-67") never wrap
+       onto a second line, even if a future record's location string runs
+       longer than anything in the current dataset. min-width:auto
+       overrides the shared .dl2-loc's min-width:0 so this flex item is
+       never shrunk below its own (now unwrappable) content width. The
+       sheet's overall width (.dl2-scale-wrap, see its own comment) was
+       widened by +1.4mm real specifically so this column's own flex
+       share already covers the longest current value ("186-51") without
+       taking any space from .dl2-title-col - min-width:auto here is now
+       a safety net for a future, even-longer value (it would still
+       borrow a little from the title column rather than wrap, same as
+       before this round), not the primary mechanism. */
+    .dl2-loc.dl2-loc-num{font-size:16.75mm !important; white-space:nowrap !important; min-width:auto !important;}
 </style>
 </head>
 <body>
@@ -812,6 +887,13 @@
   <div class="help-modal-box release-modal-box">
     <button id="releaseModalClose" class="help-modal-close" type="button" aria-label="關閉">&times;</button>
     <div class="release-title">版本更新說明</div>
+    <div class="release-entry">
+      <div class="release-header">Date 2026/8/30　Version V16_0830</div>
+      <ol class="release-list">
+        <li>新增「下載多人地標小卡」功能</li>
+      </ol>
+    </div>
+    <hr class="release-sep">
     <div class="release-entry">
       <div class="release-header">Date 2026/8/28　Version V15_0828</div>
       <ol class="release-list">
@@ -978,6 +1060,47 @@
     </div>
   </div>
 </div>
+<div id="multiDl2ModalOverlay" class="help-modal-overlay">
+  <div class="help-modal-box" style="max-width:420px; width:92vw; padding:20px 22px;">
+    <div style="font-weight:700; color:var(--accent); font-size:1rem; margin-bottom:4px; text-align:center;">下載多人地標小卡</div>
+    <div style="color:var(--sub); font-size:0.8rem; margin-bottom:14px; text-align:center;">最多可輸入4人，會印在同一張紙上（沒有的可留空）</div>
+    <div id="multiDl2Rows">
+      <div class="multi-dl2-row">
+        <div class="multi-dl2-row-inputs">
+          <input type="text" class="multi-dl2-id" placeholder="身分證編號(如 1-49)">
+          <input type="text" class="multi-dl2-name" placeholder="姓名(可不填)">
+        </div>
+        <div class="multi-dl2-err"></div>
+      </div>
+      <div class="multi-dl2-row">
+        <div class="multi-dl2-row-inputs">
+          <input type="text" class="multi-dl2-id" placeholder="身分證編號(如 1-49)">
+          <input type="text" class="multi-dl2-name" placeholder="姓名(可不填)">
+        </div>
+        <div class="multi-dl2-err"></div>
+      </div>
+      <div class="multi-dl2-row">
+        <div class="multi-dl2-row-inputs">
+          <input type="text" class="multi-dl2-id" placeholder="身分證編號(如 1-49)">
+          <input type="text" class="multi-dl2-name" placeholder="姓名(可不填)">
+        </div>
+        <div class="multi-dl2-err"></div>
+      </div>
+      <div class="multi-dl2-row">
+        <div class="multi-dl2-row-inputs">
+          <input type="text" class="multi-dl2-id" placeholder="身分證編號(如 1-49)">
+          <input type="text" class="multi-dl2-name" placeholder="姓名(可不填)">
+        </div>
+        <div class="multi-dl2-err"></div>
+      </div>
+    </div>
+    <div id="multiDl2GeneralErr" class="multi-dl2-general-err"></div>
+    <div style="display:flex; gap:10px; justify-content:center; margin-top:8px;">
+      <button id="multiDl2CancelBtn" type="button" style="flex:1; padding:8px 10px; border-radius:8px; border:1px solid var(--line); background:#fff; color:var(--sub); font-weight:600; cursor:pointer;">取消</button>
+      <button id="multiDl2OkBtn" type="button" style="flex:1; padding:8px 10px; border-radius:8px; border:none; background:var(--accent); color:#fff; font-weight:700; cursor:pointer;">產生列印</button>
+    </div>
+  </div>
+</div>
 <div id="ytModalOverlay" class="help-modal-overlay">
   <div class="help-modal-box" style="max-width:640px; width:92vw; padding:16px;">
     <button id="ytModalClose" class="help-modal-close" type="button" aria-label="關閉">&times;</button>
@@ -992,7 +1115,7 @@
       <img class="header-logo" src="images/logo.png" alt="慈濟60周年 一甲子">
       <div class="header-titles">
         <div class="main-title">2026大巨蛋【無量義  法髓頌】經藏演繹</div>
-        <h1>第三聯區 ·  11/13 場 · <span class="header-label-screen">地標對照查詢系統</span><span class="header-label-print">地標單</span> v15_0828</h1>
+        <h1>第三聯區 ·  11/13 場 · <span class="header-label-screen">地標對照查詢系統</span><span class="header-label-print">地標單</span> v16_0830</h1>
       </div>
     </div>
   </header>
@@ -1013,11 +1136,17 @@
     </div>
   </div>
 
+  <div class="multi-dl2-box">
+    <div class="multi-dl2-box-label">多人地標小卡：可輸入多人身分證，一次列印四張地標小卡</div>
+    <button class="print-btn" onclick="openMultiDl2Modal()">下載多人地標小卡</button>
+  </div>
+
   <div id="result"></div>
   <div id="printDual" class="print-dual"></div>
   <div id="printPhase3" class="print-phase3"></div>
   <div id="printPhase4" class="print-phase4"></div>
   <div id="printDownload2" class="print-download2"></div>
+  <div id="printDownload3" class="print-download3"></div>
 
   <footer>
     <div class="footer-left">
@@ -1319,6 +1448,28 @@ function printWithFilename(){
   overlay.classList.add('open');
   setTimeout(() => input.focus(), 0);
 }
+// 行願圖騰/開經偈圖騰/代謝不住圖騰是列印當下才用 innerHTML 塞進 #printPhase3、
+// #printPhase4 的 <img>（現在改用外部圖片路徑後，其實所有列印區塊裡的 <img>
+// 都是非同步載入的），瀏覽器讀取圖片是非同步的；如果緊接著同一輪就呼叫
+// window.print()，圖片有機率還沒載入完成就被印出(尤其是行動裝置瀏覽器的
+// 列印/另存PDF流程)，導致畫面上看得到、但實際列印出來那幾頁圖騰是空白的。
+// 這裡在真正呼叫 window.print() 前，等所有已塞入列印區塊的 <img> 都完成載入
+// (或最多等 timeoutMs，避免圖片真的壞掉/載入失敗時卡住列印按鈕)。
+function waitForPrintImages(timeoutMs){
+  const containers = ['printDual', 'printPhase3', 'printPhase4', 'printDownload2', 'printDownload3']
+    .map(id => document.getElementById(id)).filter(Boolean);
+  const imgs = [];
+  containers.forEach(c => imgs.push.apply(imgs, c.querySelectorAll('img')));
+  const pending = imgs.filter(img => !img.complete);
+  if (pending.length === 0) return Promise.resolve();
+  return Promise.race([
+    Promise.all(pending.map(img => new Promise(resolve => {
+      img.addEventListener('load', resolve, { once: true });
+      img.addEventListener('error', resolve, { once: true });
+    }))),
+    new Promise(resolve => setTimeout(resolve, timeoutMs))
+  ]);
+}
 function doPrintWithName(name){
   const idPart = currentId ? String(currentId).replace(/[\\/:*?"<>|]/g, '_') : '';
   const namePart = name ? String(name).trim().replace(/[\\/:*?"<>|]/g, '_') : '';
@@ -1330,7 +1481,7 @@ function doPrintWithName(name){
     buildPrintPhase4(rec);
   }
   document.title = '地標對照表' + (idPart ? ('_' + idPart) : '') + (namePart ? ('_' + namePart) : '');
-  window.print();
+  waitForPrintImages(3000).then(() => { window.print(); });
 }
 // "下載2": a separate, simplified one-page print - only 名稱(場次標題)/隊形/
 // 地標圖/地標 for every scene across all 3 phases combined, laid out as a
@@ -1360,7 +1511,69 @@ function doPrintDownload2WithName(name){
   document.title = '地標小卡' + (idPart ? ('_' + idPart) : '') + (namePart ? ('_' + namePart) : '');
   document.body.classList.add('dl2-mode');
   applyDl2PortraitPage();
-  window.print();
+  waitForPrintImages(3000).then(() => { window.print(); });
+}
+// "下載多人地標小卡": lets the user type up to 4 people's 身分證編號(+選填
+// 姓名) in one modal, then prints all 4 as separate quarter-page cards on
+// a single A4 portrait sheet (see buildPrintDownload3()/.print-download3
+// CSS). A blank 身分證編號 row is just skipped (fewer than 4 people is
+// fine); a non-blank one that doesn't match any record shows an inline
+// error on that row and blocks printing until it's fixed, same spirit as
+// the "找不到身分證編號" message used elsewhere in the app.
+function openMultiDl2Modal(){
+  const overlay = document.getElementById('multiDl2ModalOverlay');
+  if (!overlay) return;
+  document.querySelectorAll('.multi-dl2-id').forEach((el) => { el.value = ''; });
+  document.querySelectorAll('.multi-dl2-name').forEach((el) => { el.value = ''; });
+  document.querySelectorAll('.multi-dl2-err').forEach((el) => { el.textContent = ''; });
+  const generalErr = document.getElementById('multiDl2GeneralErr');
+  if (generalErr) generalErr.textContent = '';
+  overlay.classList.add('open');
+  setTimeout(() => {
+    const first = document.querySelector('.multi-dl2-id');
+    if (first) first.focus();
+  }, 0);
+}
+function closeMultiDl2Modal(){
+  const overlay = document.getElementById('multiDl2ModalOverlay');
+  if (overlay) overlay.classList.remove('open');
+}
+function confirmMultiDl2(){
+  const rows = Array.from(document.querySelectorAll('#multiDl2Rows .multi-dl2-row'));
+  const generalErr = document.getElementById('multiDl2GeneralErr');
+  if (generalErr) generalErr.textContent = '';
+  let hasError = false;
+  const entries = [];
+  rows.forEach((rowEl) => {
+    const idInput = rowEl.querySelector('.multi-dl2-id');
+    const nameInput = rowEl.querySelector('.multi-dl2-name');
+    const errEl = rowEl.querySelector('.multi-dl2-err');
+    const idVal = idInput.value.trim();
+    if (errEl) errEl.textContent = '';
+    if (!idVal) return;
+    const rec = byId[idVal];
+    if (!rec) {
+      if (errEl) errEl.textContent = '找不到身分證編號「' + idVal + '」';
+      hasError = true;
+      return;
+    }
+    entries.push({ rec: rec, name: nameInput.value.trim() });
+  });
+  if (hasError) return;
+  if (entries.length === 0) {
+    if (generalErr) generalErr.textContent = '請至少輸入一位身分證編號';
+    return;
+  }
+  closeMultiDl2Modal();
+  doPrintMultiDl2(entries);
+}
+function doPrintMultiDl2(entries){
+  const idPart = entries.map((e) => e.rec.id).join('_');
+  document.title = '地標小卡_多人' + (idPart ? ('_' + idPart) : '');
+  buildPrintDownload3(entries);
+  document.body.classList.add('dl2-multi-mode');
+  applyDl2PortraitPage();
+  waitForPrintImages(3000).then(() => { window.print(); });
 }
 // Re-derives the same per-scene field remapping buildScenesHtml() applies
 // (03.行願/05.扛天下米籮/慈誠隊歌/父母恩重難報經/跪羊圖/06.靜思家風), so the
@@ -1469,7 +1682,7 @@ function extractDL2Core(scene, fields){
 // since buildPrintDownload2() also needs it to collapse the wrap's box to
 // its scaled height (see the end of that function).
 var DL2_SCALE = 0.2388;
-function buildPrintDownload2(rec){
+function buildDl2CardMarkup(rec, printName){
   // Same values as badgeColors/badgeBlueRing inside buildScenesHtml (used
   // there for the same numberBadgeSVG() badge on 05/慈誠隊歌/父母恩重難報經/
   // 跪羊圖) - duplicated here rather than shared so this additive feature
@@ -1634,7 +1847,7 @@ function buildPrintDownload2(rec){
   // 名字" - instead of the shared .print-dual-head/.id/.group styling
   // (which stays untouched here since it's also used by the normal
   // 下載PDF flow).
-  const dl2HeadText = [rec.group, rec.id, currentPrintName || ''].filter(Boolean).join(' ');
+  const dl2HeadText = [rec.group, rec.id, printName || ''].filter(Boolean).join(' ');
   // Per request: this compact sheet gets its own top row (the shared
   // page-level <header> is hidden in dl2-mode - see "body.dl2-mode
   // header" - since that one is centered across the full A4 width and no
@@ -1647,7 +1860,7 @@ function buildPrintDownload2(rec){
   // without the two overlapping. Built OUTSIDE dl2-scale-wrap (assembled
   // separately below, as topRowHtml) so the font-size is the real/final
   // size and isn't shrunk by that wrap's transform:scale(), per request.
-  const topRowHtml = '<div class="dl2-top-row"><div class="dl2-event-header">2026大巨蛋【無量義 法髓頌】經藏演繹 · 11/13 場 · 地標單 v15_0828</div></div>';
+  const topRowHtml = '<div class="dl2-top-row"><div class="dl2-event-header">2026大巨蛋【無量義 法髓頌】經藏演繹 · 11/13 場 · 地標單 v16_0830</div></div>';
   let html = '<div class="dl2-head">' + escapeHtml(dl2HeadText) + '</div>';
   html += '<div class="dl2-table">' + rows.map(colHtml).join('') + '</div>';
   // Wrapped in a fixed-width (289mm, same as the other print blocks) scale
@@ -1656,29 +1869,57 @@ function buildPrintDownload2(rec){
   // dl2-quarter-box in the @media print rules, and applyDl2PortraitPage()
   // just below, rather than hand-tuning every font-size for a much
   // narrower column width.
-  document.getElementById('printDownload2').innerHTML = topRowHtml + '<div class="dl2-scale-outer"><div class="dl2-scale-wrap">' + html + '</div></div>';
-  // transform:scale() on .dl2-scale-wrap shrinks it visually but (unlike
-  // zoom, which was tried here and reverted - it rendered noticeably
-  // inconsistent glyph sizes across items, most visible on the 乙舞台
-  // entries, likely a Chromium print-rasterization hinting quirk with
-  // zoom) it does NOT shrink the space that element reserves in normal
-  // layout, so an auto-height ancestor would wrap around the full
-  // unscaled (289mm-wide-authored) content height instead of the much
-  // shorter scaled height actually painted. So .dl2-scale-wrap itself is
-  // left with its natural (unscaled) height, and a separate, NON-
-  // transformed outer wrapper (.dl2-scale-outer) is collapsed to the
-  // scaled height instead and given overflow:hidden - clipping on that
-  // outer element works correctly because it clips the already-painted
-  // (post-transform, i.e. visually shrunk) content of its child, unlike
-  // putting overflow:hidden directly on the transformed element itself,
-  // which clips in that element's own pre-transform coordinate space and
-  // was cutting content off after only a few rows.
-  var dl2ScaleWrapEl = document.querySelector('#printDownload2 .dl2-scale-wrap');
-  var dl2ScaleOuterEl = document.querySelector('#printDownload2 .dl2-scale-outer');
+  return topRowHtml + '<div class="dl2-scale-outer"><div class="dl2-scale-wrap">' + html + '</div></div>';
+}
+// Shared by buildPrintDownload2() (single-card) and buildPrintDownload3()
+// (multi-card, one row per person) - both build a card's markup via
+// buildDl2CardMarkup() above and then call this on the element the markup
+// was injected into to collapse .dl2-scale-outer to the actual scaled
+// height.
+//
+// transform:scale() on .dl2-scale-wrap shrinks it visually but (unlike
+// zoom, which was tried here and reverted - it rendered noticeably
+// inconsistent glyph sizes across items, most visible on the 乙舞台
+// entries, likely a Chromium print-rasterization hinting quirk with
+// zoom) it does NOT shrink the space that element reserves in normal
+// layout, so an auto-height ancestor would wrap around the full
+// unscaled (289mm-wide-authored) content height instead of the much
+// shorter scaled height actually painted. So .dl2-scale-wrap itself is
+// left with its natural (unscaled) height, and a separate, NON-
+// transformed outer wrapper (.dl2-scale-outer) is collapsed to the
+// scaled height instead and given overflow:hidden - clipping on that
+// outer element works correctly because it clips the already-painted
+// (post-transform, i.e. visually shrunk) content of its child, unlike
+// putting overflow:hidden directly on the transformed element itself,
+// which clips in that element's own pre-transform coordinate space and
+// was cutting content off after only a few rows.
+function collapseDl2ScaleHeight(containerEl){
+  var dl2ScaleWrapEl = containerEl.querySelector('.dl2-scale-wrap');
+  var dl2ScaleOuterEl = containerEl.querySelector('.dl2-scale-outer');
   if (dl2ScaleWrapEl && dl2ScaleOuterEl) {
     var dl2NaturalHeightPx = dl2ScaleWrapEl.scrollHeight;
     dl2ScaleOuterEl.style.height = (dl2NaturalHeightPx * DL2_SCALE) + 'px';
   }
+}
+function buildPrintDownload2(rec){
+  var containerEl = document.getElementById('printDownload2');
+  containerEl.innerHTML = buildDl2CardMarkup(rec, currentPrintName);
+  collapseDl2ScaleHeight(containerEl);
+}
+// "下載多人地標小卡": same per-person card markup as buildPrintDownload2()
+// above (via the shared buildDl2CardMarkup()), just up to 4 of them laid
+// out one per quadrant, evenly dividing the whole A4 sheet into 4 equal
+// areas (see .print-download3/.dl2-multi-card CSS) so they print on a
+// single A4 portrait sheet instead of one-per-sheet. entries is an array
+// of up to 4 {rec, name} objects (fewer than 4 just leaves the remaining
+// quadrant(s) empty).
+function buildPrintDownload3(entries){
+  var containerEl = document.getElementById('printDownload3');
+  containerEl.innerHTML = entries.map(function(e){
+    return '<div class="dl2-multi-card">' + buildDl2CardMarkup(e.rec, e.name) + '</div>';
+  }).join('');
+  var cards = containerEl.querySelectorAll('.dl2-multi-card');
+  cards.forEach(function(cardEl){ collapseDl2ScaleHeight(cardEl); });
 }
 // "下載2" prints portrait (unlike the normal 下載PDF's landscape @page), and
 // only into the top-left quarter of the A4 sheet - since @page has no
@@ -1698,6 +1939,14 @@ function applyDl2PortraitPage(){
 function removeDl2PortraitPage(){
   const styleEl = document.getElementById('dl2PageStyle');
   if (styleEl) styleEl.remove();
+  // Defense-in-depth alongside the .print-download2/.print-download3
+  // off-screen idle CSS: also drop the (potentially large) leftover
+  // card HTML so nothing stale lingers in the DOM once dl2-mode/
+  // dl2-multi-mode ends.
+  const dl2El = document.getElementById('printDownload2');
+  if (dl2El) dl2El.innerHTML = '';
+  const dl2El3 = document.getElementById('printDownload3');
+  if (dl2El3) dl2El3.innerHTML = '';
 }
 const PHASE_LABELS = ['一','二','三'];
 const PHASE_NAMES = ['序。慈善。醫療','醫療。教育。人文','功德品。謝幕'];
@@ -2257,7 +2506,7 @@ function buildPrintPhase3(rec){
   const xyImgHtml = (xyEntry && xyEntry.xingyuan)
     ? '<img src="' + xyEntry.xingyuan + '" alt="行願圖騰" style="max-width:100%; max-height:180mm; width:auto; height:auto; display:block; margin:0 auto;">'
     : '<div class="phase-placeholder">無行願圖騰資料</div>';
-  let html = '<header><div class="header-titles"><div class="main-title">2026大巨蛋【無量義  法髓頌】經藏演繹</div><h1>第三聯區 ·  11/13 場 · <span class="header-label-screen">地標對照查詢系統</span><span class="header-label-print">地標單</span> v15_0828</h1></div></header>';
+  let html = '<header><div class="header-titles"><div class="main-title">2026大巨蛋【無量義  法髓頌】經藏演繹</div><h1>第三聯區 ·  11/13 場 · <span class="header-label-screen">地標對照查詢系統</span><span class="header-label-print">地標單</span> v16_0830</h1></div></header>';
   const groupClassP3 = 'group-' + rec.group;
   html += '<div class="print-dual-head"><span class="id">' + escapeHtml(rec.id) + '</span>' + (currentPrintName ? ('<span class="id print-name">' + escapeHtml(currentPrintName) + '</span>') : '') + '<span class="group ' + groupClassP3 + '">' + escapeHtml(rec.group) + '</span></div>';
   html += '<div class="print-dual-cols">';
@@ -2292,7 +2541,7 @@ function buildPrintPhase4(rec){
     ? '<img src="' + WASTE_IMAGES[wasteCode4] + '" alt="代謝不住圖騰" style="max-width:100%; max-height:180mm; width:auto; height:auto; display:block; margin:0 auto;">'
     : '<div class="phase-placeholder">無代謝不住圖騰資料</div>';
 
-  let html = '<header><div class="header-titles"><div class="main-title">2026大巨蛋【無量義  法髓頌】經藏演繹</div><h1>第三聯區 ·  11/13 場 · <span class="header-label-screen">地標對照查詢系統</span><span class="header-label-print">地標單</span> v15_0828</h1></div></header>';
+  let html = '<header><div class="header-titles"><div class="main-title">2026大巨蛋【無量義  法髓頌】經藏演繹</div><h1>第三聯區 ·  11/13 場 · <span class="header-label-screen">地標對照查詢系統</span><span class="header-label-print">地標單</span> v16_0830</h1></div></header>';
   const groupClassP4 = 'group-' + rec.group;
   html += '<div class="print-dual-head"><span class="id">' + escapeHtml(rec.id) + '</span>' + (currentPrintName ? ('<span class="id print-name">' + escapeHtml(currentPrintName) + '</span>') : '') + '<span class="group ' + groupClassP4 + '">' + escapeHtml(rec.group) + '</span></div>';
   html += '<div class="print-dual-cols">';
@@ -2304,7 +2553,7 @@ function buildPrintPhase4(rec){
 
 let baseRootFontPx = null;
 function fitPrintToOnePage(){
-  if (document.body.classList.contains('dl2-mode')) return;
+  if (document.body.classList.contains('dl2-mode') || document.body.classList.contains('dl2-multi-mode')) return;
   const dual = document.getElementById('printDual');
   if (!dual) return;
   if (baseRootFontPx === null) {
@@ -2436,6 +2685,7 @@ window.addEventListener('afterprint', () => {
   document.documentElement.style.fontSize = '';
   document.title = ORIGINAL_TITLE;
   document.body.classList.remove('dl2-mode');
+  document.body.classList.remove('dl2-multi-mode');
   removeDl2PortraitPage();
 });
 
@@ -2565,6 +2815,15 @@ function openWasteModal(code){
   skipBtn.addEventListener('click', () => closeAndPrint(''));
   okBtn.addEventListener('click', () => closeAndPrint(input.value));
   input.addEventListener('keydown', (e) => { if (e.key === 'Enter') closeAndPrint(input.value); });
+  overlay.addEventListener('click', (e) => { if (e.target === overlay) overlay.classList.remove('open'); });
+})();
+(function(){
+  const overlay = document.getElementById('multiDl2ModalOverlay');
+  const cancelBtn = document.getElementById('multiDl2CancelBtn');
+  const okBtn = document.getElementById('multiDl2OkBtn');
+  if (!overlay || !cancelBtn || !okBtn) return;
+  cancelBtn.addEventListener('click', () => closeMultiDl2Modal());
+  okBtn.addEventListener('click', () => confirmMultiDl2());
   overlay.addEventListener('click', (e) => { if (e.target === overlay) overlay.classList.remove('open'); });
 })();
 
