@@ -151,6 +151,10 @@
   .cue-toggle-switch::after{content:''; position:absolute; top:2px; left:2px; width:16px; height:16px; background:#fff; border-radius:50%; transition:left 0.2s; box-shadow:0 1px 3px rgba(0,0,0,0.3);}
   .cue-toggle-label input:checked + .cue-toggle-switch{background:var(--accent2);}
   .cue-toggle-label input:checked + .cue-toggle-switch::after{left:20px;}
+  .cue-toggle-label input:disabled{cursor:not-allowed;}
+  .cue-toggle-label input:disabled ~ .cue-toggle-switch{opacity:0.5;}
+  .cue-toggle-label input:disabled ~ .cue-toggle-text{color:#999;}
+  .cue-toggle-label:has(input:disabled){cursor:not-allowed;}
   body.cue-off .field-cue{display:none !important;}
   .hint{margin-top:6px; font-size:0.8rem; color:var(--sub);}
   .count-badge{
@@ -860,7 +864,7 @@
        normal (unscaled) print layout, so it's re-sized here to fit this
        column properly. Scaled by the same 1.1x as the icon above (four
        times now) so it stays visually consistent with it. */
-    body.dl2-mode .dl2-icon .landmark-line-bar{
+    body.dl2-mode .dl2-icon .landmark-line-bar, body.dl2-multi-mode .dl2-icon .landmark-line-bar{
       /* Needs to out-specificity the existing "body:not(.cue-off)
          .landmark-line-bar" print rule (which also carries !important)
          earlier in the stylesheet - matching its own "body + 2 classes"
@@ -868,7 +872,11 @@
          Width stays the full 17.14mm to match .dl2-icon img/svg's column
          width; height set to exactly half of that (8.57mm) per request -
          a bar, not a full square, but still centered/consistent in the
-         column rather than the earlier not-quite-half 8.79mm value. */
+         column rather than the earlier not-quite-half 8.79mm value.
+         Also applied to body.dl2-multi-mode so the 多人地標小卡 (multi-card)
+         renders this bar identically to the single-card 地標小卡 - this rule
+         was previously dl2-mode-only, so 04.開經偈's icon fell back to the
+         unscaled default .landmark-line-bar size/font in the multi-card. */
       width:17.14mm !important; height:8.57mm !important; margin:0 !important;
       border-radius:1mm !important; font-size:3.96mm !important; line-height:1.1 !important;
     }
@@ -1206,9 +1214,9 @@
     <div class="hint" id="hintText"></div>
     <div class="cue-toggle-row">
       <label class="cue-toggle-label">
-        <input type="checkbox" id="cueToggle" checked>
+        <input type="checkbox" id="cueToggle" disabled>
         <span class="cue-toggle-switch"></span>
-        <span class="cue-toggle-text">顯示「重要拍點」欄位<span class="cue-toggle-subtext">(可以依個人需求決定是否顯示)</span></span>
+        <span class="cue-toggle-text">顯示「重要拍點」欄位<span class="cue-toggle-subtext">(因近期拍點更改許多, 等候新版細流更新再開放重要拍點)</span></span>
       </label>
     </div>
   </div>
@@ -1360,7 +1368,6 @@ const YT_TUTORIAL_VIDEOS = {
 // that specific segment - see the raw.split('/')-based injection in
 // titleHtmlWithTags().
 const YT_SEGMENT_VIDEOS = {
-  '15.能捨一切': { id: 'pu8qEPp-sng' },
   '23.佛告阿難': { id: 'rB_MHSQ5lcU' },
   '25.大愛讓世界亮起來': { id: 'SM7ZEOxHPfI' },
   '26.天空破了洞': { id: 'BXKq16WyqcE' },
@@ -1371,9 +1378,7 @@ const YT_SEGMENT_VIDEOS = {
 // listing the exact display-text substring(s) to attach a button after.
 // Uses the same marker mechanism as YT_SEGMENT_VIDEOS, just matched by a
 // plain substring instead of a "/"-split segment prefix.
-const YT_INLINE_VIDEOS = {
-  '02.生、老、病、死、六度': [ { text: '死', id: 'gx0R8wK_Wkg' } ]
-};
+const YT_INLINE_VIDEOS = {};
 function ytTutorialBtnHtml(id, start){
   return ' <button type="button" class="yt-tutorial-btn" onclick="openYTModal(\'' + id + '\'' + (start ? (', ' + start) : '') + ')" aria-label="示範帶教學影片"><svg class="yt-tutorial-icon" viewBox="0 0 28 20" xmlns="http://www.w3.org/2000/svg"><rect width="28" height="20" rx="4" fill="#e02b2b"/><polygon points="11,5 20,10 11,15" fill="#fff"/></svg><span class="yt-tutorial-label">示範帶</span></button>';
 }
@@ -1394,7 +1399,7 @@ const SCENE_TITLE_OVERRIDES = {
   '25.大愛讓世界亮起來 / 26.天空破了洞 / 27.用鼓掌的雙手做環保': '25.大愛讓世界亮起來[面向甲] / 26.天空破了洞[面甲45°] / 27.法譬如水[面甲45°]',
   '28.代謝不住': '28.代謝不住[面向甲]',
   '20.畢業組曲-成長 / 21.畢業組曲-感恩': '20.畢業-成長[面向甲, 圓弧在兩腳間]/ 21.畢業-感恩[面向乙，腳尖對線]',
-  '30.第三功德': '30.第三功德[面向甲45°]',
+  '30.第三功德': '30.第三功德',
   '34.化城喻手札': '34 菩薩慈悲',
   '35.六瑞相': '35 結尾'
 };
@@ -2975,9 +2980,12 @@ function openHelpModal(tab){
   const toggle = document.getElementById('cueToggle');
   if (!toggle) return;
   const STORAGE_KEY = 'cueEnabled';
-  let saved = null;
-  try { saved = localStorage.getItem(STORAGE_KEY); } catch (e) {}
-  const initial = saved === null ? true : saved === '1';
+  // 重要拍點暫時停用 (因近期拍點更改許多，等候下一版細流後更新再開放) - 開關
+  // 已在 HTML 加上 disabled，這裡強制預設關閉，並暫時忽略 localStorage 裡舊的
+  // 已儲存狀態，避免曾經開啟過的使用者仍看到欄位。change 監聽維持不變（disabled
+  // 的 checkbox 不會觸發 change），之後要重新開放時只需移除 disabled 並把
+  // initial 改回原本依 localStorage 判斷的寫法即可。
+  const initial = false;
   toggle.checked = initial;
   document.body.classList.toggle('cue-off', !initial);
   toggle.addEventListener('change', () => {
