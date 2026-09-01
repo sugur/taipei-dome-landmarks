@@ -589,19 +589,31 @@
     body.dl2-mode .print-dual, body.dl2-mode .print-phase3, body.dl2-mode .print-phase4, body.dl2-mode .print-download3{display:none !important;}
     body.dl2-multi-mode .print-dual, body.dl2-multi-mode .print-phase3, body.dl2-multi-mode .print-phase4, body.dl2-multi-mode .print-download2{display:none !important;}
   }
-  /* Moved out of @media print (but still applies during print too, since
-     nothing here is print-only) so this geometry is already correct BEFORE
-     window.print() is called - buildPrintDownload2() measures scrollHeight
-     synchronously right after building the HTML, well before print media
-     activates, so if these rules were print-gated that measurement would
-     see completely different (unscaled, unwrapped) layout and compute a
-     wildly wrong collapsed height for .dl2-scale-outer - this caused the
-     14./15. row (and everything below wherever the wrong height happened
-     to fall) to be pushed onto extra blank print pages instead of staying
-     on the single quarter-page sheet. */
+  /* display/width/border/padding (everything below EXCEPT position/top/
+     left/visibility) are deliberately kept outside @media print, so this
+     geometry is already correct BEFORE window.print() is called -
+     buildPrintDownload2() measures scrollHeight synchronously right after
+     building the HTML, well before print media activates, so if these
+     rules were print-gated that measurement would see completely
+     different (unscaled, unwrapped) layout and compute a wildly wrong
+     collapsed height for .dl2-scale-outer - this caused the 14./15. row
+     (and everything below wherever the wrong height happened to fall) to
+     be pushed onto extra blank print pages instead of staying on the
+     single quarter-page sheet. BUT position/top/left/visibility stay
+     off-screen here (same -99999px/hidden trick as the default, non-dl2
+     hidden state just below) and only flip to on-page/visible inside
+     @media print (see that rule further down) - display:block + an
+     explicit width is all scrollHeight measurement actually needs;
+     position:static here (i.e. in normal interactive view too, per the
+     comment this replaced) was pulling the card into the live page's
+     normal flow - right above <footer>, since that's where its container
+     div sits in the DOM - for the entire stretch between building the
+     card and the print dialog actually opening (image loading, browser
+     print-dialog latency, or indefinitely if window.print() silently
+     no-ops), which is the "地標小卡有時候會出現在網頁下方" bug. */
     body.dl2-mode .print-download2{
-      display:block !important; position:static !important; top:auto !important; left:auto !important;
-      visibility:visible !important;
+      display:block !important; position:absolute !important; top:-99999px !important; left:-99999px !important;
+      visibility:hidden !important;
       /* Occupy the top-left corner of the (portrait, via
          applyDl2PortraitPage()) A4 page - width narrowed a bit further
          per request (was a clean quarter-page 100mm), then widened again
@@ -648,11 +660,34 @@
        row-major auto-placement (1st cell top-left, 2nd top-right, 3rd
        bottom-left) just leaves the remaining quadrant(s) blank. */
     body.dl2-multi-mode .print-download3{
-      display:grid !important; position:static !important; top:auto !important; left:auto !important;
-      visibility:visible !important;
+      /* Same off-screen-but-measurable trick as body.dl2-mode
+         .print-download2 just above (see its comment) - position/
+         visibility stay off-screen here and only flip to on-page/visible
+         inside @media print, so the multi-card sheet never flashes into
+         the live page's normal flow before/without an actual print. */
+      display:grid !important; position:absolute !important; top:-99999px !important; left:-99999px !important;
+      visibility:hidden !important;
       width:200mm !important; height:287mm !important;
       grid-template-columns:1fr 1fr !important; grid-template-rows:1fr 1fr !important;
       justify-items:center !important; align-items:center !important; gap:0 !important;
+    }
+    /* The single/multi 地標小卡 sheets stay off-screen (position/visibility
+       set above) right up until an actual print is happening - only here,
+       inside @media print, do they move on-page/visible, so they never
+       show up in the live page (e.g. flashing in at the bottom, above
+       <footer>) outside of an actual print. Placed AFTER the off-screen
+       rules above (same selectors, also !important) specifically so this
+       wins the cascade during printing - a @media print rule doesn't
+       out-rank a non-media rule on its own; with equal specificity and
+       both !important, source order is what decides, so this has to come
+       later in the file, not earlier. */
+    @media print{
+      body.dl2-mode .print-download2{
+        position:static !important; top:auto !important; left:auto !important; visibility:visible !important;
+      }
+      body.dl2-multi-mode .print-download3{
+        position:static !important; top:auto !important; left:auto !important; visibility:visible !important;
+      }
     }
     body.dl2-multi-mode .dl2-multi-card{
       width:71.99mm !important; box-sizing:border-box !important;
@@ -2597,7 +2632,6 @@ function buildPrintDual(rec){
   html += '<div class="print-dual-col"><div class="print-dual-col-title">第一階段 ' + escapeHtml(PHASE_NAMES[0]) + '</div>' + buildScenesHtml(rec, 1) + '</div>';
   html += '<div class="print-dual-col"><div class="print-dual-col-title">第二階段 ' + escapeHtml(PHASE_NAMES[1]) + '</div>' + buildScenesHtml(rec, 2) + '</div>';
   html += '</div>';
-  html += '<div class="print-dual-footer">&copy; 2026 唐偲瑋</div>';
   document.getElementById('printDual').innerHTML = html;
 }
 
