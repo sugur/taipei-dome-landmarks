@@ -1104,7 +1104,7 @@
   </div>
 </div>
 <div id="ytModalOverlay" class="help-modal-overlay">
-  <div class="help-modal-box" style="max-width:640px; width:92vw; padding:16px;">
+  <div class="help-modal-box" style="max-width:640px; width:92vw; padding:44px 16px 16px 16px;">
     <button id="ytModalClose" class="help-modal-close" type="button" aria-label="關閉">&times;</button>
     <div style="position:relative; width:100%; padding-top:56.25%;">
       <iframe id="ytModalIframe" src="" style="position:absolute; top:0; left:0; width:100%; height:100%; border:0;" allow="autoplay; encrypted-media; picture-in-picture" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
@@ -1266,6 +1266,43 @@ const STATIC_SCENE_TAGS = {
   '28.代謝不住': { text: ' 開綠燈(口袋)', color: '#3aa655' }
 };
 
+// 場次示範帶教學影片：key 需與 scene.title 完全一致 (合併場次用完整的
+// "A / B / C" 標題)。start 為選填的開始秒數 (YouTube embed 的 &start= 參數)。
+const YT_TUTORIAL_VIDEOS = {
+  '01.序': { id: '9xXoD2XVbNY' },
+  '02.生、老、病、死、六度': { id: 'gZ9C6HM6keg', start: 5 },
+  '05.扛天下米籮': { id: 'xmwAu0XBonE' },
+  '28.代謝不住': { id: '7oX93yKqvuo' }
+};
+// For combined/merged scenes (e.g. "25.大愛讓世界亮起來 / 26.天空破了洞 /
+// 27.法譬如水") that render as multiple sub-title lines under one
+// scene-title, YT_TUTORIAL_VIDEOS above (keyed by the whole raw scene.title
+// and appended once at the very end of the title span) would land the
+// button after the LAST sub-title line only, no matter which sub-title the
+// video is actually for. This map is instead keyed by a single segment's
+// own display text (post SCENE_TITLE_OVERRIDES rename, WITHOUT its
+// trailing "[...]" facing-direction tag) and gets spliced in right after
+// that specific segment - see the raw.split('/')-based injection in
+// titleHtmlWithTags().
+const YT_SEGMENT_VIDEOS = {
+  '15.能捨一切': { id: 'pu8qEPp-sng' },
+  '23.佛告阿難': { id: 'rB_MHSQ5lcU' },
+  '25.大愛讓世界亮起來': { id: 'SM7ZEOxHPfI' },
+  '26.天空破了洞': { id: 'BXKq16WyqcE' },
+  '27.法譬如水': { id: 'UvAfTVN9A2c' }
+};
+// For a video attached to one word WITHIN a title that isn't "/"-separated
+// (e.g. "02.生、老、病、死、六度"'s "死"), keyed by the raw scene.title and
+// listing the exact display-text substring(s) to attach a button after.
+// Uses the same marker mechanism as YT_SEGMENT_VIDEOS, just matched by a
+// plain substring instead of a "/"-split segment prefix.
+const YT_INLINE_VIDEOS = {
+  '02.生、老、病、死、六度': [ { text: '死', id: 'gx0R8wK_Wkg' } ]
+};
+function ytTutorialBtnHtml(id, start){
+  return ' <button type="button" class="yt-tutorial-btn" onclick="openYTModal(\'' + id + '\'' + (start ? (', ' + start) : '') + ')" aria-label="示範帶教學影片"><svg class="yt-tutorial-icon" viewBox="0 0 28 20" xmlns="http://www.w3.org/2000/svg"><rect width="28" height="20" rx="4" fill="#e02b2b"/><polygon points="11,5 20,10 11,15" fill="#fff"/></svg><span class="yt-tutorial-label">示範帶</span></button>';
+}
+
 const SCENE_TITLE_OVERRIDES = {
   '01.序': '01.序 [面向甲, 圓弧在兩腳間]',
   '02.生、老、病、死、六度': '02.生 [面向甲, 圓弧在兩腳間]、老、病、死、六度[面向乙，腳尖對線]',
@@ -1276,7 +1313,7 @@ const SCENE_TITLE_OVERRIDES = {
   '10.地藏經啟航 / 11.船師大船師 / 12.四弘誓願': '10.地藏經啟航[腳尖對線] / 11.船師大船師[腳尖對線] / 12.四弘誓願[腳尖對線]',
   '13.大船師': '13.大醫王',
   '14.骨髓捐贈 / 15.能捨一切諸難捨': '14.骨髓捐贈 / 15.能捨一切[腳尖對齊線]',
-  '16.說法品梵唄 / 17.大慈大悲無量義': '16.說法品梵唄 / 17.大慈大悲',
+  '16.說法品梵唄 / 17.大慈大悲無量義': '16.梵唄 / 17.大慈大悲',
   '23.父母恩重難報經 / 24.跪羊圖': '23.佛告阿難[45°面向法師-合掌] / 24.跪羊圖[45°面向法師-合掌]',
   '18.慈大校歌 / 19.小樹啊!': '18 誓願將心比心 [面向法師, 圓弧在兩腳間] / 19.小樹啊!',
   '25.大愛讓世界亮起來 / 26.天空破了洞 / 27.用鼓掌的雙手做環保': '25.大愛讓世界亮起來[面向甲] / 26.天空破了洞[面甲45°] / 27.法譬如水[面甲45°]',
@@ -1308,6 +1345,31 @@ function displayTitle(title, rec){
 }
 function titleHtmlWithTags(title, rec){
   let raw = displayTitle(title, rec);
+  // Splice per-segment demo-video markers in before any HTML escaping, so a
+  // combined/merged scene (segments joined by " / ", e.g. "25.大愛讓世界亮
+  // 起來[面向甲] / 26.天空破了洞[面甲45°] / 27.法譬如水[面甲45°]") can carry
+  // a separate button after EACH sub-title instead of one button tacked
+  // onto the very end of the whole (possibly multi-line) title - see
+  // YT_SEGMENT_VIDEOS. \u0001 is a control char that can never appear in
+  // real title text, so escapeHtml() below can't mangle the marker; it's
+  // swapped for the real button HTML in one final pass at the bottom of
+  // this function, after all the tag/highlight/line-break processing
+  // (which only expects plain title text) has already run. A no-op for
+  // any title with no "/" or no matching segment.
+  raw = raw.split(/\s*\/\s*/).map(seg => {
+    const prefix = seg.split('[')[0].trim();
+    const vid = YT_SEGMENT_VIDEOS[prefix];
+    return vid ? (seg + '\u0001YTSEG:' + vid.id + ':' + (vid.start || '') + '\u0001') : seg;
+  }).join(' / ');
+  // Same idea for a video attached to one specific word inside a title that
+  // isn't "/"-separated at all (e.g. "死" inside "02.生、老、病、死、六度") -
+  // see YT_INLINE_VIDEOS.
+  const inlineVids = YT_INLINE_VIDEOS[title];
+  if (inlineVids) {
+    inlineVids.forEach(iv => {
+      raw = raw.replace(iv.text, iv.text + '\u0001YTSEG:' + iv.id + ':' + (iv.start || '') + '\u0001');
+    });
+  }
   raw = raw.replace(/([^\s])(\[[^\]]*\])/g, '$1 $2');
   let t = escapeHtml(raw);
   t = t.replace(/\[[^\]]*\]/g, function(m){ return '<span class="title-tag-red">' + m + '</span>'; });
@@ -1319,7 +1381,14 @@ function titleHtmlWithTags(title, rec){
   t = t.replace(/拿燈/g, '<span style="color:#e91e63;font-weight:700;">拿燈</span>');
   // Mobile-only forced line breaks (hidden on desktop via .mobile-break{display:none}),
   // requested for specific long titles that otherwise wrap awkwardly on narrow screens.
-  t = t.replace('老、病、死、六度', '<br>&nbsp;&nbsp;&nbsp;老、病、死、六度');
+  // The "死" demo-video marker (if present, see YT_INLINE_VIDEOS) sits
+  // between "死" and "、六度" at this point (still unresolved - actual
+  // button HTML is spliced in at the very end of this function), so this
+  // match has to tolerate it in the middle rather than requiring the two
+  // halves to be perfectly contiguous.
+  t = t.replace(/老、病、死(\u0001YTSEG:[^\u0001]*\u0001)?、六度/, function(m, marker){
+    return '<br>&nbsp;&nbsp;&nbsp;老、病、死' + (marker || '') + '、六度';
+  });
   if (title === '25.大愛讓世界亮起來 / 26.天空破了洞 / 27.用鼓掌的雙手做環保' ||
       title === '16.說法品梵唄 / 17.大慈大悲無量義' ||
       title === '18.慈大校歌 / 19.小樹啊!' ||
@@ -1335,6 +1404,9 @@ function titleHtmlWithTags(title, rec){
     // hidden only for print.
     t = t.replace(/\s*\/ /g, '<br class="title-break-always"> ');
   }
+  t = t.replace(/\u0001YTSEG:([^:]*):([^\u0001]*)\u0001/g, function(m, id, start){
+    return ytTutorialBtnHtml(id, start);
+  });
   return t;
 }
 
@@ -1791,6 +1863,7 @@ function buildDl2CardMarkup(rec, printName){
     '08.菜市場的五毛錢': '08.五毛錢',
     '13.大船師': '13.大醫王',
     '15.能捨一切諸難捨': '15.能捨一切',
+    '16.說法品梵唄': '16.梵唄',
     '17.大慈大悲無量義': '17.大慈大悲',
     '18.慈大校歌': '18 誓願將心',
     '20.畢業組曲-成長': '20.畢業-成長',
@@ -2120,7 +2193,8 @@ function buildScenesHtml(rec, phase){
     // "-big" size (originally introduced for just 01/02/03, then extended to
     // 04/05/06, and finally requested for all scenes) - always apply it.
     const sceneTitleBigClass = ' scene-title-bigger';
-    const ytBtnHtml = (scene.title === '01.序') ? ' <button type="button" class="yt-tutorial-btn" onclick="openYTModal(\'9xXoD2XVbNY\')" aria-label="示範帶教學影片"><svg class="yt-tutorial-icon" viewBox="0 0 28 20" xmlns="http://www.w3.org/2000/svg"><rect width="28" height="20" rx="4" fill="#e02b2b"/><polygon points="11,5 20,10 11,15" fill="#fff"/></svg><span class="yt-tutorial-label">示範帶</span></button>' : '';
+    const ytVideo = YT_TUTORIAL_VIDEOS[scene.title];
+    const ytBtnHtml = ytVideo ? ytTutorialBtnHtml(ytVideo.id, ytVideo.start) : '';
     html += '<div class="scene"><div class="scene-title' + sceneTitleBigClass + '"><span>' + titleHtmlWithTags(scene.title, rec) + ytBtnHtml + '</span>' + tagHtml + '</div><div class="field-grid' + gridExtraClass + '">';
     fields.forEach((f, fIdx) => {
       const hasValue = f.value !== undefined && f.value !== null && f.value !== '';
@@ -2875,11 +2949,11 @@ function openWasteModal(code){
   overlay.addEventListener('click', (e) => { if (e.target === overlay) overlay.classList.remove('open'); });
 })();
 
-function openYTModal(videoId){
+function openYTModal(videoId, startSec){
   const overlay = document.getElementById('ytModalOverlay');
   const iframe = document.getElementById('ytModalIframe');
   if (!overlay || !iframe) return;
-  iframe.src = 'https://www.youtube.com/embed/' + videoId + '?autoplay=1';
+  iframe.src = 'https://www.youtube.com/embed/' + videoId + '?autoplay=1' + (startSec ? ('&start=' + startSec) : '');
   overlay.classList.add('open');
 }
 (function(){
