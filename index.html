@@ -151,10 +151,6 @@
   .cue-toggle-switch::after{content:''; position:absolute; top:2px; left:2px; width:16px; height:16px; background:#fff; border-radius:50%; transition:left 0.2s; box-shadow:0 1px 3px rgba(0,0,0,0.3);}
   .cue-toggle-label input:checked + .cue-toggle-switch{background:var(--accent2);}
   .cue-toggle-label input:checked + .cue-toggle-switch::after{left:20px;}
-  .cue-toggle-label input:disabled{cursor:not-allowed;}
-  .cue-toggle-label input:disabled ~ .cue-toggle-switch{opacity:0.5;}
-  .cue-toggle-label input:disabled ~ .cue-toggle-text{color:#999;}
-  .cue-toggle-label:has(input:disabled){cursor:not-allowed;}
   body.cue-off .field-cue{display:none !important;}
   .hint{margin-top:6px; font-size:0.8rem; color:var(--sub);}
   .count-badge{
@@ -1214,9 +1210,9 @@
     <div class="hint" id="hintText"></div>
     <div class="cue-toggle-row">
       <label class="cue-toggle-label">
-        <input type="checkbox" id="cueToggle" disabled>
+        <input type="checkbox" id="cueToggle" checked>
         <span class="cue-toggle-switch"></span>
-        <span class="cue-toggle-text">顯示「重要拍點」欄位<span class="cue-toggle-subtext">(因近期拍點更改許多, 等候新版細流更新再開放重要拍點)</span></span>
+        <span class="cue-toggle-text">顯示「重要拍點」欄位<span class="cue-toggle-subtext">(可以依個人需求決定是否顯示)</span></span>
       </label>
     </div>
   </div>
@@ -2978,12 +2974,9 @@ function openHelpModal(tab){
   const toggle = document.getElementById('cueToggle');
   if (!toggle) return;
   const STORAGE_KEY = 'cueEnabled';
-  // 重要拍點暫時停用 (因近期拍點更改許多，等候新版細流更新再開放) - 開關
-  // 已在 HTML 加上 disabled，這裡強制預設關閉，並暫時忽略 localStorage 裡舊的
-  // 已儲存狀態，避免曾經開啟過的使用者仍看到欄位。change 監聽維持不變（disabled
-  // 的 checkbox 不會觸發 change），之後要重新開放時只需移除 disabled 並把
-  // initial 改回原本依 localStorage 判斷的寫法即可。
-  const initial = false;
+  let saved = null;
+  try { saved = localStorage.getItem(STORAGE_KEY); } catch (e) {}
+  const initial = saved === null ? true : saved === '1';
   toggle.checked = initial;
   document.body.classList.toggle('cue-off', !initial);
   toggle.addEventListener('change', () => {
