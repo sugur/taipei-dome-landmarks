@@ -864,15 +864,19 @@
       /* Needs to out-specificity the existing "body:not(.cue-off)
          .landmark-line-bar" print rule (which also carries !important)
          earlier in the stylesheet - matching its own "body + 2 classes"
-         specificity via body.dl2-mode instead of just .dl2-icon.
+         specificity via body.dl2-mode/body.dl2-multi-mode instead of just
+         .dl2-icon. Covers BOTH the single-card (body.dl2-mode) and
+         multi-card (body.dl2-multi-mode - "下載多人地標小卡") print flows;
+         originally only body.dl2-mode was listed here, which meant this
+         sizing silently never applied to the multi-card sheet (it fell
+         back to the much narrower/flatter default .landmark-line-bar print
+         size instead) even though both flows share the exact same
+         buildDl2CardMarkup() markup - per report that 04.開經偈 was still
+         跑版 specifically on the multi-card print.
          Width stays the full 17.14mm to match .dl2-icon img/svg's column
          width; height set to exactly half of that (8.57mm) per request -
          a bar, not a full square, but still centered/consistent in the
-         column rather than the earlier not-quite-half 8.79mm value.
-         Also applied to body.dl2-multi-mode so the 多人地標小卡 (multi-card)
-         renders this bar identically to the single-card 地標小卡 - this rule
-         was previously dl2-mode-only, so 04.開經偈's icon fell back to the
-         unscaled default .landmark-line-bar size/font in the multi-card. */
+         column rather than the earlier not-quite-half 8.79mm value. */
       width:17.14mm !important; height:8.57mm !important; margin:0 !important;
       border-radius:1mm !important; font-size:3.96mm !important; line-height:1.1 !important;
     }
@@ -1250,6 +1254,24 @@ const XY_IMAGES = {"1": {"xingyuan": "images/xy_1_xingyuan.jpg", "kaijing": "ima
 // 代謝不住 seating-diagram screenshots, keyed by the 編號 field's W/B-code
 // (e.g. "W6", "B9"), taken from 第三聯區_代謝不住圖騰對照_v6_0828.pdf.
 const WASTE_IMAGES = {"W5": "images/waste_W5.jpg", "W6": "images/waste_W6.jpg", "W7": "images/waste_W7.jpg", "W4": "images/waste_W4.jpg", "W8": "images/waste_W8.jpg", "W9": "images/waste_W9.jpg", "W10": "images/waste_W10.jpg", "B7": "images/waste_B7.jpg", "B8": "images/waste_B8.jpg", "B9": "images/waste_B9.jpg", "B10": "images/waste_B10.jpg", "B11": "images/waste_B11.jpg", "B12": "images/waste_B12.jpg"};
+// 13.大船師(顯示為「大醫王」) 圖騰 - 依 13.大船師 的「區域」欄位值(例如
+// "船-北50")對照的整頁截圖，取自 第三聯區_大醫王圖騰對照_v2_0902.pdf。只有
+// 區域欄位有寫「船」的記錄(約108/1035筆)才會用到，畫面上點擊該欄位即可看圖
+// (見 buildScenesHtml() 裡的 dyCode 標記 + openDYModal())。per request 這只
+// 出現在畫面上，不放進「下載PDF」的列印頁面。
+// "船-北73" 目前尚無對應圖騰資料(PDF尚未提供)，會維持純文字、不出現可點擊
+// 連結，比照 WASTE_IMAGES 缺碼時的既有處理方式。
+const DY_IMAGES = {"船-北50": "images/dy_bei50.jpg", "船-北西60": "images/dy_beixi60.jpg", "船-北65": "images/dy_bei65.jpg"};
+// 畫面上點擊「區域」欄位打開圖騰 modal 用的標題文字，格式比照 WASTE_LABELS，
+// 內容取自 PDF 各頁自己的頁面標題（"北50. - 男A白" 等）。
+// v2(0902)版更新：圖片內容換成新版PDF，但沿用同一組 DY_IMAGES key(比對
+// DATA 裡「區域」欄位實際存的值，不受 PDF 頁面標題文字影響) - PDF 裡原本
+// "北50"那頁的標題文字改成了"北60"(表格內容不變，只是頁面標題换了)，所以
+// 這裡的顯示文字也跟著換成"北60"，但 DY_IMAGES/DY_LABELS 的 key 仍是
+// "船-北50"，因為 DATA 裡的「區域」值本身沒有改。
+// (第一次上傳的v2檔案「北65」那頁誤用了跟「北60」相同的表格圖，使用者發現
+// 後重新上傳了正確版本，「北65」現在是完全不同的一張獨立名單。)
+const DY_LABELS = {"船-北50": "大醫王-北60 (男A白)", "船-北西60": "大醫王-北西60 (男A藍+女A藍)", "船-北65": "大醫王-北65 (女A白+男A白)"};
 // Display label per code, matching the PDF's own page-title text exactly.
 const WASTE_LABELS = {"W5":"代謝不住-W5 (女B白)","W6":"代謝不住-W6 (A白)","W7":"代謝不住-W7 (男A白)","W4":"代謝不住-W4 (A白+B白)","W8":"代謝不住-W8 (B白)","W9":"代謝不住-W9 (B白)","W10":"主機板-W10 (A白)","B7":"主機板-B7 (A藍+B藍)","B8":"主機板-B8 (A藍+B藍)","B9":"代謝不住-B9 (A藍)","B10":"主機板-B10 (A藍)","B11":"主機板-B11 (A藍)","B12":"代謝不住-B12 (A藍)"};
 // 行願 formation name per group number, taken from the page titles in
@@ -1364,6 +1386,7 @@ const YT_TUTORIAL_VIDEOS = {
 // that specific segment - see the raw.split('/')-based injection in
 // titleHtmlWithTags().
 const YT_SEGMENT_VIDEOS = {
+  '15.能捨一切': { id: 'pu8qEPp-sng' },
   '23.佛告阿難': { id: 'rB_MHSQ5lcU' },
   '25.大愛讓世界亮起來': { id: 'SM7ZEOxHPfI' },
   '26.天空破了洞': { id: 'BXKq16WyqcE' },
@@ -1374,7 +1397,9 @@ const YT_SEGMENT_VIDEOS = {
 // listing the exact display-text substring(s) to attach a button after.
 // Uses the same marker mechanism as YT_SEGMENT_VIDEOS, just matched by a
 // plain substring instead of a "/"-split segment prefix.
-const YT_INLINE_VIDEOS = {};
+const YT_INLINE_VIDEOS = {
+  '02.生、老、病、死、六度': [ { text: '死', id: 'gx0R8wK_Wkg' } ]
+};
 function ytTutorialBtnHtml(id, start){
   return ' <button type="button" class="yt-tutorial-btn" onclick="openYTModal(\'' + id + '\'' + (start ? (', ' + start) : '') + ')" aria-label="示範帶教學影片"><svg class="yt-tutorial-icon" viewBox="0 0 28 20" xmlns="http://www.w3.org/2000/svg"><rect width="28" height="20" rx="4" fill="#e02b2b"/><polygon points="11,5 20,10 11,15" fill="#fff"/></svg><span class="yt-tutorial-label">示範帶</span></button>';
 }
@@ -1395,7 +1420,7 @@ const SCENE_TITLE_OVERRIDES = {
   '25.大愛讓世界亮起來 / 26.天空破了洞 / 27.用鼓掌的雙手做環保': '25.大愛讓世界亮起來[面向甲] / 26.天空破了洞[面甲45°] / 27.法譬如水[面甲45°]',
   '28.代謝不住': '28.代謝不住[面向甲]',
   '20.畢業組曲-成長 / 21.畢業組曲-感恩': '20.畢業-成長[面向甲, 圓弧在兩腳間]/ 21.畢業-感恩[面向乙，腳尖對線]',
-  '30.第三功德': '30.第三功德',
+  '30.第三功德': '30.第三功德[面向甲45°]',
   '34.化城喻手札': '34 菩薩慈悲',
   '35.六瑞相': '35 結尾'
 };
@@ -1544,7 +1569,7 @@ function waveLampTag(scene, rec){
   }
   if (scene.title === '25.大愛讓世界亮起來 / 26.天空破了洞 / 27.用鼓掌的雙手做環保' && rec) {
     const midColor = '#3aa655';
-    const midText = '26破了洞: 開綠燈(口袋)';
+    const midText = '26破了洞: 「啊」→開綠燈(口袋)';
     const lines = [
       { text: '25大愛: 開綠燈(拿燈)', color: '#3aa655' },
       { text: midText, color: midColor },
@@ -2229,6 +2254,13 @@ function buildScenesHtml(rec, phase){
     if (scene.title === '28.代謝不住') {
       fields = fields.map(f => (f.label === '編號' && WASTE_IMAGES[f.value]) ? Object.assign({}, f, { wasteCode: f.value }) : f);
     }
+    if (scene.title === '13.大船師') {
+      // 有寫「船」的區域值(船-北50/船-北西60/船-北65...)才標記 dyCode，比照
+      // 28.代謝不住 wasteCode 的作法：DY_IMAGES 裡沒有對應圖騰的(目前是
+      // 船-北73)就不標記，畫面上只顯示純文字、不出現可點擊的「請點擊看圖騰」
+      // 提示 - 跟 wasteCode 缺碼時的既有行為一致。
+      fields = fields.map(f => (f.label === '區域' && DY_IMAGES[f.value]) ? Object.assign({}, f, { dyCode: f.value }) : f);
+    }
     if (scene.title === '05.扛天下米籮') {
       const basic = fields.find(f => f.label === '基本隊形');
       const landmarkIcon = fields.find(f => f.label === '地標圖');
@@ -2380,6 +2412,11 @@ function buildScenesHtml(rec, phase){
         isXYClickable = true;
         classNames.push('xy-clickable');
         clickAttr = ' onclick="openWasteModal(\'' + f.wasteCode + '\')"';
+      }
+      else if (hasValue && f.dyCode && DY_IMAGES[f.dyCode]) {
+        isXYClickable = true;
+        classNames.push('xy-clickable');
+        clickAttr = ' onclick="openDYModal(\'' + f.dyCode + '\')"';
       }
       const spanClass = classNames.length ? (' class="' + classNames.join(' ') + '"') : '';
       const isBasicFormationIcon = ((scene.title === '05.扛天下米籮' || scene.title.indexOf('慈誠隊歌') !== -1 || scene.title.indexOf('父母恩重難報經') !== -1 || scene.title.indexOf('跪羊圖') !== -1) && f.label === '地標圖' && badgeColors[rec.group]) || f.badgeIcon;
@@ -2662,6 +2699,7 @@ function render(id){
     resultEl.innerHTML = '<div class="not-found">找不到身分證編號「' + escapeHtml(id) + '」，請確認輸入是否正確。</div>';
     document.getElementById('printDual').innerHTML = '';
     document.getElementById('printPhase3').innerHTML = '';
+    document.getElementById('printPhase4').innerHTML = '';
     return;
   }
   let html = '<div class="record-card">';
@@ -3007,6 +3045,17 @@ function openWasteModal(code){
   if (!src) return;
   img.src = src;
   label.textContent = WASTE_LABELS[code] || code;
+  overlay.classList.add('open');
+}
+function openDYModal(code){
+  const overlay = document.getElementById('xyModalOverlay');
+  const img = document.getElementById('xyModalImg');
+  const label = document.getElementById('xyModalLabel');
+  if (!overlay || !img || !label) return;
+  const src = DY_IMAGES[code];
+  if (!src) return;
+  img.src = src;
+  label.textContent = DY_LABELS[code] || code;
   overlay.classList.add('open');
 }
 (function(){
