@@ -2656,11 +2656,12 @@ function buildScenesHtml(rec, phase){
         ];
         const cap2Lines = [
           '第一次「天空!破了洞」→往乙舞台指',
-          '第二次手放轉向自己的主機板方向'
+          '第二次「天空!破了洞」→手放轉向自己主機板方向'
         ];
-        const cap3Lines = [
-          'OS：用鼓掌的雙手「做環保」→ 轉向自己的面向'
-        ];
+        const isBlueCue2527 = rec.group === 'A藍' || rec.group === 'B藍';
+        const cap3Lines = isBlueCue2527
+          ? ['OS：「我們用」鼓掌的手→ 合掌', 'OS：「做環保」→ 轉向自己的面向']
+          : ['OS：「做環保」→ 轉向自己的面向'];
         importantCueHtml = '<span class="value-cue">' +
           cueBadge('大愛世界亮起來') + '<br>' + cap1Lines.map(l => cueBullet + cueText(l)).join('<br>') +
           '<br>' + cueBadge('天空破了洞') + '<br>' + cap2Lines.map(l => cueBullet + cueText(l)).join('<br>') +
@@ -2673,14 +2674,14 @@ function buildScenesHtml(rec, phase){
         const isWalking28 = area28.indexOf('走位') !== -1;
         const cueLines = isWalking28
           ? [
-              'OS : 「有夠讚 」→從甲轉向自己箭頭方向',
-              '佛轉法輪：合掌',
+              'OS : 「五告讚 」→從甲轉向自己箭頭方向',
+              '「佛轉法輪」：合掌',
               '「如是甚深」→合掌、腳停',
               '「無上大乘」→合掌右後轉180°'
             ]
           : [
-              'OS : 「有夠讚 」→從甲轉向自己箭頭方向',
-              '佛轉法輪：合掌',
+              'OS : 「五告讚 」→從甲轉向自己箭頭方向',
+              '「佛轉法輪」：合掌',
               '「如是甚深」→壓腿起.合掌'
             ];
         importantCueHtml = '<span class="value-cue">' + cueLines.map(line => cueBullet + cueText(line)).join('<br>') + '</span>';
