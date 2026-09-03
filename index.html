@@ -1451,7 +1451,7 @@ const SCENE_TITLE_OVERRIDES = {
   '20.畢業組曲-成長 / 21.畢業組曲-感恩': '20.畢業-成長[面向甲, 圓弧在兩腳間]/ 21.畢業-感恩[面向乙，腳尖對線]',
   '31.第三功德': '31.第三功德[面向觀眾45°]',
   '34.第九功德': '34.第九功德[面向觀眾45°]',
-  '35.化城喻手札': '35 菩薩慈悲'
+  '35.化城喻手札': '35. 菩薩慈悲'
 };
 function displayTitle(title, rec){
   if (title === '08.菜市場的五毛錢' && rec) {
@@ -2025,7 +2025,7 @@ function buildDl2CardMarkup(rec, printName){
     '21.畢業組曲-感恩': '21.畢業-感恩',
     '23.父母恩重難報經': '23.佛告阿難',
     '27.用鼓掌的雙手做環保': '27.法譬如水',
-    '35.化城喻手札': '35 菩薩慈悲'
+    '35.化城喻手札': '35. 菩薩慈悲'
   };
   // Per request, each scene is now one horizontal line-item (icon + 場次
   // 標題/隊形 on the left, 地標 enlarged on the right) stacked vertically -
@@ -2562,7 +2562,7 @@ function buildScenesHtml(rec, phase){
           ]},
           { label: '六度', lines: [
             '再說六度波羅「蜜」 →合掌 ' + (isBlueGroup02 ? '右轉' : '左轉'),
-            '再說六度波羅「蜜」 →合掌 ' + (isBlueGroup02 ? '右轉' : '左轉')
+            '「夜深人靜」離宮殿→合掌 內轉向圓心'
           ]}
         ];
         importantCueHtml = '<span class="value-cue">' + cueGroups.map(g =>
@@ -2739,7 +2739,6 @@ function buildScenesHtml(rec, phase){
         const cueLines = area34 === '內'
           ? [
               '廣行善法「          饒有情」→ 轉向甲',
-              '求法 「   立誓」→ 轉向法師',
               '求法「立誓」宏願深→轉向法師45°'
             ]
           : [
