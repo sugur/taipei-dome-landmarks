@@ -2104,7 +2104,7 @@ function buildDl2CardMarkup(rec, printName){
     // per-segment DL2_TITLE_DISPLAY_OVERRIDE split below runs), so it's a
     // no-op for every other row.
     const DL2_MERGED_TITLE_OVERRIDE = {
-      '36.六瑞相 / 37.發心立願 / 38.小行星 / 39.祈禱': '結尾'
+      '36.六瑞相 / 37.發心立願 / 38.小行星 / 39.祈禱': '36.結尾'
     };
     const titleHtml = DL2_MERGED_TITLE_OVERRIDE[e.title] ? escapeHtml(DL2_MERGED_TITLE_OVERRIDE[e.title]) : e.title.split(' / ')
       .map(t => DL2_TITLE_DISPLAY_OVERRIDE[t] || t)
