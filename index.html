@@ -1850,7 +1850,11 @@ function computeRemappedFieldsForDL2(scene, rec, xyGroupNum, xyImagesForGroup){
   }
   if (scene.title === '06.靜思家風') {
     const landmark = fields.find(f => f.label === '最近地標');
-    const hasStage = !!(landmark && landmark.value && landmark.value.indexOf('舞台') !== -1);
+    const landmarkVal = (landmark && landmark.value) || '';
+    // Any landmark that says "舞台" or "第X階" gets the group-colored stage
+    // icon (per stageIconMap, same as the original "舞台"-only rule) rather
+    // than the plain number badge.
+    const hasStage = landmarkVal.indexOf('舞台') !== -1 || /第\d+階/.test(landmarkVal);
     const iconField = hasStage
       ? { label: '地標圖', icon: stageIconMap[rec.group] }
       : { label: '地標圖', badgeIcon: true };
@@ -2377,7 +2381,11 @@ function buildScenesHtml(rec, phase){
     }
     if (scene.title === '06.靜思家風') {
       const landmark = fields.find(f => f.label === '最近地標');
-      const hasStage = !!(landmark && landmark.value && landmark.value.indexOf('舞台') !== -1);
+      const landmarkVal = (landmark && landmark.value) || '';
+      // Any landmark that says "舞台" or "第X階" gets the group-colored
+      // stage icon (per stageIconMap, same as the original "舞台"-only
+      // rule) rather than the plain number badge.
+      const hasStage = landmarkVal.indexOf('舞台') !== -1 || /第\d+階/.test(landmarkVal);
       const iconField = hasStage
         ? { label: '地標圖', icon: stageIconMap[rec.group] }
         : { label: '地標圖', badgeIcon: true };
