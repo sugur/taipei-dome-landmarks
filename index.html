@@ -797,11 +797,13 @@
          reusing .print-dual-head/.id/.group (those keep the colored
          badge styling used by the normal 下載PDF flow). Unlike .dl2-top-row
          above, this element is built as part of `html` inside
-         .dl2-scale-wrap (see buildPrintDownload2()), so its font-size here
-         is the AUTHORED pre-scale value, not the real/final one - actual
-         printed size = authored mm * DL2_SCALE (0.2388). Authored mm =
-         target real mm / 0.2388: 4/0.2388=16.75 (real 4mm, per request). */
-      text-align:center; font-weight:700; color:#000000; font-size:16.75mm;
+         .dl2-scale-wrap (see buildPrintDownload2()), so this font-size is
+         the AUTHORED pre-scale CSS value, not a real/final target mm - per
+         request this round is set directly as a CSS value (11mm), not
+         converted from a target real/printed mm like the round before it.
+         Actual printed size at this CSS value = 11 * DL2_SCALE (0.2388)
+         ≈ 2.63mm. */
+      text-align:center; font-weight:700; color:#000000; font-size:11mm;
       line-height:1.1; margin-bottom:2mm;
     }
     /* 直式（portrait）排版：每個場次一列，由上往下排（01、02、03...），
