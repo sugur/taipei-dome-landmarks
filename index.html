@@ -788,8 +788,8 @@
        real size - text-align:center on a row it has all to itself is what
        lets it sit truly centered above the sheet without colliding with
        the copyright. margin-bottom is the real/final gap down to .dl2-head
-       below (0.6mm, lowered from 1mm per request). */
-    .dl2-top-row{text-align:center; margin-bottom:0.6mm;}
+       below (0.2mm, lowered from 0.6mm per request). */
+    .dl2-top-row{text-align:center; margin-bottom:0.2mm;}
     .dl2-event-header{font-size:2.4mm; color:#222222; font-weight:700; line-height:1.3;}
     .dl2-head{
       /* Plain black bold text ("A白 7-38", or "A白 7-38 名字" when a name
@@ -1994,15 +1994,15 @@ function buildDl2CardMarkup(rec, printName){
   const lm06ForMerge = scene06ForMerge && (scene06ForMerge.fields.find(f => f.label === '最近地標') || {}).value;
   const merge0506 = lm05ForMerge != null && normLmForMerge(lm05ForMerge) === normLmForMerge(lm06ForMerge);
   // 07.點一盞燈 / 08.菜市場的五毛錢 / 09.是諸眾生 merge into one row, but only
-  // for non-A白 performers, and only when all three share the same
-  // landmark (A白 keeps them separate regardless, per request).
+  // for every performer (A白 included, per a later request that dropped
+  // the earlier A白 exclusion), whenever all three share the same landmark.
   const scene07ForMerge = rec.scenes && rec.scenes.find(s => s.title === '07.點一盞燈');
   const scene08ForMerge = rec.scenes && rec.scenes.find(s => s.title === '08.菜市場的五毛錢');
   const scene09ForMerge = rec.scenes && rec.scenes.find(s => s.title === '09.是諸眾生');
   const lm07ForMerge = scene07ForMerge && (scene07ForMerge.fields.find(f => f.label.indexOf('最近地標') !== -1) || {}).value;
   const lm08ForMerge = scene08ForMerge && (scene08ForMerge.fields.find(f => f.label.indexOf('最近地標') !== -1) || {}).value;
   const lm09ForMerge = scene09ForMerge && (scene09ForMerge.fields.find(f => f.label.indexOf('最近地標') !== -1) || {}).value;
-  const merge070809 = rec.group !== 'A白' && lm07ForMerge != null &&
+  const merge070809 = lm07ForMerge != null &&
     normLmForMerge(lm07ForMerge) === normLmForMerge(lm08ForMerge) &&
     normLmForMerge(lm08ForMerge) === normLmForMerge(lm09ForMerge);
   const DL2_MERGE_GROUPS = [
@@ -2107,9 +2107,9 @@ function buildDl2CardMarkup(rec, printName){
       formationStripped = '五大洲';
     }
     // Per request, the merged 07.點一盞燈/08.菜市場的五毛錢/09.是諸眾生 row
-    // (non-A白 performers only, see merge070809/DL2_MERGE_GROUPS above)
-    // shows just "LOGO" instead of whichever of "LOGO 有法船"/"LOGO 無法船"
-    // the first part of the merge happened to carry.
+    // (see merge070809/DL2_MERGE_GROUPS above) shows just "LOGO" instead of
+    // whichever of "LOGO 有法船"/"LOGO 無法船" the first part of the merge
+    // happened to carry.
     if (e.title.indexOf('07.點一盞燈') === 0 && e.title.indexOf('08.菜市場的五毛錢') !== -1) {
       formationStripped = 'LOGO';
     }
@@ -2746,7 +2746,7 @@ function buildScenesHtml(rec, phase){
           return '<span style="display:inline-block; color:#1a3a8f; font-weight:700; border:1.5px solid #1a3a8f; border-radius:4px; padding:0px 5px; margin-bottom:2px;">' + escapeHtml(label) + '</span>';
         };
         const cap1Lines = [
-          'OS：學生能做到「尊師重道」→ 轉向法師，雙腳夾線，開綠燈手放腿邊(燈右手)'
+          '上人:「立大願」→ 轉向法師，雙腳夾線，開綠燈手放腿邊(燈右手)'
         ];
         const cap2Lines = [
           'OS:「2000年慈濟...」→拿花合掌壓縮, 到位轉向法師開燈',
