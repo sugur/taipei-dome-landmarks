@@ -694,12 +694,14 @@
        vs applyDl2PortraitPage()) - explicitly sizing the grid to that
        (rather than leaving it auto/content-sized) is what makes each of
        the 6 cells a true sixth of the sheet: 95.67mm x 100mm each.
-       justify-items/align-items:center then centers each (much smaller,
-       fixed 71.99mm-wide, content-height) card within its own cell,
-       instead of packing all 6 toward one corner - with 6 entries this
+       justify-items:center horizontally centers each (much smaller, fixed
+       71.99mm-wide, content-height) card within its own cell's width,
+       instead of packing all 6 toward one side - with 6 entries this
        lands one card per cell; with fewer, the grid's normal row-major
        auto-placement (1st cell top-left, 2nd top-middle, 3rd top-right...)
-       just leaves the remaining cell(s) blank. */
+       just leaves the remaining cell(s) blank. align-items:start then
+       keeps each card pinned to the TOP of its cell rather than vertically
+       centered, per a later request. */
     body.dl2-multi-mode .print-download3{
       /* Same off-screen-but-measurable trick as body.dl2-mode
          .print-download2 just above (see its comment) - position/
@@ -710,7 +712,10 @@
       visibility:hidden !important;
       width:287mm !important; height:200mm !important;
       grid-template-columns:1fr 1fr 1fr !important; grid-template-rows:1fr 1fr !important;
-      justify-items:center !important; align-items:center !important; gap:0 !important;
+      /* Per request, each card sits at the TOP of its cell (align-items:
+         start) instead of vertically centered, while staying horizontally
+         centered (justify-items:center unchanged). */
+      justify-items:center !important; align-items:start !important; gap:0 !important;
     }
     /* The single/multi 地標小卡 sheets stay off-screen (position/visibility
        set above) right up until an actual print is happening - only here,
@@ -848,13 +853,23 @@
          wrapping onto 3-4 lines instead of the intended 2. Widened again
          to fit the widest such line at the current (bumped up again)
          隊形 font-size (18.83mm at 6.28mm font, plus a small safety
-         margin -> 19.2mm) so those captions keep rendering as exactly
-         two lines. This is a fixed-width column, so growing it only pulls
-         a little space from .dl2-loc/.dl2-title-col's shared flex-fill
-         leftover - the overall sheet width (set elsewhere, explicitly not
-         to move) is unaffected. The icon still centers within this column
-         with breathing room. */
-      flex:0 0 19.2mm; box-sizing:border-box;
+         margin -> 19.2mm, widened to 19.6mm, then 20mm, then 21mm per
+         later requests.
+         Those widenings alone never fixed single-word captions like
+         "主機板"/"五大洲"/"大船師"/"LOGO" (the merged-row overrides in
+         itemHtml()) still wrapping to two lines at the shared 7mm
+         font-size, because .dl2-formation carries its own fixed width
+         independent of this column's - so this column's width was
+         growing with nothing downstream actually using the extra room.
+         Widened again to 22mm together with the .dl2-formation width bump
+         below (19.2mm -> 21.5mm), which is what actually lets those
+         single-word captions land on one line without shrinking the font.
+         This is a fixed-width column, so growing it only pulls a little
+         space from .dl2-loc/.dl2-title-col's shared flex-fill leftover -
+         the overall sheet width (set elsewhere, explicitly not to move)
+         is unaffected. The icon still centers within this column with
+         breathing room. */
+      flex:0 0 22mm; box-sizing:border-box;
       min-width:0; display:flex; flex-direction:column;
       align-items:center; justify-content:center; gap:0.4mm; text-align:center;
     }
@@ -899,9 +914,25 @@
          buildPrintDownload2(), this makes those captions land as exactly
          two lines (e.g. "LOGO" / "有法船") instead of three or four.
          overflow-wrap/word-break kept as a safety net for any longer text
-         not covered by this measurement. */
-      width:19.2mm; overflow-wrap:break-word; word-break:break-word;
+         not covered by this measurement.
+         Widened again, 19.2mm -> 21.5mm: single-word merged-row captions
+         ("主機板"/"五大洲"/"大船師"/plain "LOGO") were still wrapping to a
+         second line at the bumped-up 7mm font-size below even after
+         .dl2-icon-col itself had been widened several times, because this
+         width is fixed independently of that column's - measured in a real
+         browser, 21mm is the exact point those captions stop wrapping at
+         7mm, so 21.5mm keeps a small safety margin. .dl2-icon-col was
+         widened to 22mm in lockstep so it still contains this box with a
+         little room to spare. */
+      width:21.5mm; overflow-wrap:break-word; word-break:break-word;
     }
+    /* Per request, every 隊形 caption that ISN'T one of the forced two-line
+       ones above (see the dl2-formation-2line class below, set in
+       itemHtml()) is bumped to 7mm instead of the shared 6.4mm - and
+       explicitly non-bold either way (matches the shared rule's
+       font-weight:400, restated here for clarity since this was asked for
+       by name). */
+    .dl2-formation:not(.dl2-formation-2line){font-size:7mm !important; font-weight:400;}
     .dl2-loc{
       /* Left-aligned, narrowed again to grow title-col. No more forced
          single-line nowrap/ellipsis - whatever doesn't fit now wraps
@@ -2120,10 +2151,17 @@ function buildDl2CardMarkup(rec, printName){
     // intended word boundary (the space) instead of leaving it to natural
     // wrap - other formation values (e.g. "1 船", "14 海浪") are short
     // enough that they don't need this.
-    const formationBroken = /^(LOGO|五大洲)\s/.test(formationStripped)
+    // Two-line formations come from two different sources: the space-
+    // triggered LOGO/五大洲 break added just below, and a few scenes
+    // (05.扛天下米籮, 慈誠隊歌, 父母恩重難報經/跪羊圖) whose 隊形 field is a
+    // hardcoded "基本\n隊形" value with the newline already embedded - see
+    // the fields-remapping block above buildDl2CardMarkup's rawEntries.
+    const isTwoLineFormation = /^(LOGO|五大洲)\s/.test(formationStripped) || formationStripped.indexOf('\n') !== -1;
+    const formationBroken = isTwoLineFormation
       ? formationStripped.replace(/\s+/, '\n')
       : formationStripped;
     const formationHtml = formationBroken ? escapeHtml(formationBroken).replace(/\n/g, '<br>') : '';
+    const formationColClass = isTwoLineFormation ? ' dl2-formation-2line' : '';
     const locRaw = e.locationValue ? String(e.locationValue).replace(/\s*\([^)]*\)/g, '').replace(/\n/g, ' ').trim() : '';
     // If the location is a "XX舞台" entry, force a line break right after
     // the "舞台" token (so it and whatever follows sit on separate lines).
@@ -2190,7 +2228,7 @@ function buildDl2CardMarkup(rec, printName){
     return '<div class="dl2-item">' +
       '<div class="dl2-icon-col">' +
         '<div class="dl2-icon">' + iconHtml + '</div>' +
-        '<div class="dl2-formation">' + formationHtml + '</div>' +
+        '<div class="dl2-formation' + formationColClass + '">' + formationHtml + '</div>' +
       '</div>' +
       '<div class="dl2-loc' + locSizeClass + '">' + locHtml + '</div>' +
       '<div class="dl2-title-col">' + titleHtml + '</div>' +
