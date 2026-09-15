@@ -2895,12 +2895,15 @@ function buildScenesHtml(rec, phase){
         // Per a later request, a new line was added at the very front:
         // "「生前」大布施→合掌 敬禮" ("大布施"/"敬禮" green, quoted "「生前」"
         // red like the other quotes here, "合掌" left with the normal
-        // orange keyword highlight).
+        // orange keyword highlight). Per a further request, that line only
+        // shows for A白/B白 - A藍/B藍 have it removed again.
+        const isBlue29 = rec.group === 'A藍' || rec.group === 'B藍';
         const line0Html29 = '<span style="color:#e53935">「生前」</span><span style="color:#3aa655;font-weight:700;">大布施</span>→<span style="color:#e07b1a;font-weight:700;">合掌</span>  <span style="color:#3aa655;font-weight:700;">敬禮</span>';
         const line1aHtml29 = '<span style="color:#e53935">「一甲子」</span>→投錢';
         const line1bHtml29 = '<span style="color:#e53935">「又見菩薩」</span><span style="color:#3aa655;font-weight:700;">齊合掌</span> →拿燈 <span style="color:#3aa655;font-weight:700;">敬禮</span>';
         const line2Html29 = '<span style="color:#3aa655;font-weight:700;">千萬偈頌</span><span style="color:#e53935">「讚法王」</span> →<span style="color:#3aa655;font-weight:700;">回正</span>  跪腳雙手上';
-        importantCueHtml = '<span class="value-cue">' + cueBullet + line0Html29 + '<br>' + cueBullet + line1aHtml29 + '<br>' + cueBullet + line1bHtml29 + '<br>' + cueBullet + line2Html29 + '</span>';
+        const cueLines29 = (isBlue29 ? [] : [line0Html29]).concat([line1aHtml29, line1bHtml29, line2Html29]);
+        importantCueHtml = '<span class="value-cue">' + cueLines29.map(l => cueBullet + l).join('<br>') + '</span>';
         importantCueValueClass = '';
       } else if (scene.title === '31.第三功德') {
         importantCueHtml = '<span class="value-cue">' + cueBullet + cueText('「自在度人」顯願力→ 雙手平送到甲外45°') + '</span>';
