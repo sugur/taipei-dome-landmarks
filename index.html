@@ -2694,9 +2694,16 @@ function buildScenesHtml(rec, phase){
         importantCueValueClass = '';
       } else if (scene.title === '06.靜思家風') {
         const isBlueCue = rec.group === 'A藍' || rec.group === 'B藍';
+        // Per request, white groups (A白/B白) whose 最近地標 mentions 舞台 or
+        // a "第X階" step now get a different line here - same 舞台/階 check
+        // as hasStage in computeRemappedFieldsForDL2/buildScenesHtml's own
+        // 06.靜思家風 icon-selection logic above, reused so both stay
+        // consistent with what landmark actually counts as "on the stage".
+        const lm06cue = (scene.fields.find(f => f.label === '最近地標') || {}).value || '';
+        const hasStage06cue = lm06cue.indexOf('舞台') !== -1 || /第\d+階/.test(lm06cue);
         const cueLines = isBlueCue
           ? ['OS:你去煮麵線→舞台的人上舞台，正面向甲', 'OS: 我「認定」這個師父→ 合掌轉向法師(正向)']
-          : ['OS: 「我認定」這個師父→ 合掌轉向法師45°'];
+          : (hasStage06cue ? ['「你去煮麵線」→上舞台跑位, 面法師'] : ['OS: 「我認定」這個師父→ 合掌轉向法師45°']);
         importantCueHtml = '<span class="value-cue">' + cueLines.map(line => cueBullet + cueText(line)).join('<br>') + '</span>';
         importantCueValueClass = '';
       } else if (scene.title === '02.生、老、病、死、六度') {
@@ -2770,18 +2777,12 @@ function buildScenesHtml(rec, phase){
         importantCueHtml = '<span class="value-cue">' + vow12Html + '<br>' + cueLines.map(line => cueBullet + cueText(line)).join('<br>') + '</span>';
         importantCueValueClass = '';
       } else if (scene.title === '13.大船師') {
-        const areaField13 = fields.find(f => f.label === '區域');
-        const boatVal13 = areaField13 ? (areaField13.value || '') : '';
-        const isSpecialBoat13 = boatVal13 === '船-北50' || boatVal13 === '船-北西60';
-        const cueLines = isSpecialBoat13
-          ? [
-              'OS: 「大醫王」→船跑位 面甲(上舞台者先壓縮在第二階)',
-              '「每個病人」→ 舞台的船衝上去'
-            ]
-          : [
-              'OS: 「大醫王」→船跑位 '
-            ];
-        importantCueHtml = '<span class="value-cue">' + cueLines.map(line => cueBullet + cueText(line)).join('<br>') + '</span>';
+        // Per request, the extra "面甲(上舞台者先壓縮在第二階)"/"「每個病人」→
+        // 舞台的船衝上去" lines that used to show for the special-boat
+        // (船-北50/船-北西60) records were removed - every record now gets
+        // just the one plain "OS: 「大醫王」→船跑位" line, so the
+        // isSpecialBoat13/區域 branching this used to need is gone too.
+        importantCueHtml = '<span class="value-cue">' + cueBullet + cueText('OS: 「大醫王」→船跑位') + '</span>';
         importantCueValueClass = '';
       } else if (scene.title === '14.骨髓捐贈 / 15.能捨一切諸難捨') {
         const cueBadge = function(label){
