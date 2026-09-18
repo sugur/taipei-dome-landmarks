@@ -831,6 +831,11 @@
       display:flex; align-items:center; gap:2.2mm;
       padding:1.8mm 0.5mm; border-bottom:0.25mm solid #a89a82;
     }
+    /* Per request, the last row in each column (e.g. "小行星 & 祈禱", the
+       very last merged row) no longer carries its own border-bottom - that
+       line sat right next to the card's own outer border, reading as an
+       unwanted extra gap/double line right before the edge. */
+    .dl2-col .dl2-item:last-child{border-bottom:none;}
     /* Column order per request: 標題(title) → 地標圖(icon, 隊形 caption
        underneath it) → 地標(location) - was icon → title+隊形 → 地標 before. */
     .dl2-title-col{
