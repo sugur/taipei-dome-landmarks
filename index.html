@@ -1017,6 +1017,13 @@
     <button id="releaseModalClose" class="help-modal-close" type="button" aria-label="關閉">&times;</button>
     <div class="release-title">版本更新說明</div>
     <div class="release-entry">
+      <div class="release-header">Date 2026/9/20　Version v20_0920</div>
+      <ol class="release-list">
+        <li>修改「36.六瑞相」「37.發心立願」地標與地標圖，改為圓地標</li>
+      </ol>
+    </div>
+    <hr class="release-sep">
+    <div class="release-entry">
       <div class="release-header">Date 2026/9/15　Version v19_0915</div>
       <ol class="release-list">
         <li>修改「慈誠隊歌」順序與地標</li>
@@ -1288,7 +1295,7 @@
       <img class="header-logo" src="images/logo.png" alt="慈濟60周年 一甲子">
       <div class="header-titles">
         <div class="main-title">2026大巨蛋【無量義  法髓頌】經藏演繹</div>
-        <h1>第三聯區 ·  11/13 場 · <span class="header-label-screen">地標對照查詢系統</span><span class="header-label-print">地標單</span> v19_0915</h1>
+        <h1>第三聯區 ·  11/13 場 · <span class="header-label-screen">地標對照查詢系統</span><span class="header-label-print">地標單</span> v20_0920</h1>
       </div>
     </div>
     <div class="print-page-copyright">&copy; 2026 唐偲瑋</div>
@@ -1522,7 +1529,7 @@ const SCENE_TITLE_OVERRIDES = {
   '32.第八功德': '32.第八功德[面觀眾45°]',
   '33.髻珠喻': '33.髻珠喻 (莫三比克) [面法師45°]',
   '34.第九功德': '34.第九功德[面甲45°]',
-  '35.化城喻手札': '35. 菩薩慈悲[面法師45°]'
+  '35.化城喻手札': '35. 菩薩慈悲[面甲45°]'
 };
 function displayTitle(title, rec){
   if (title === '08.菜市場的五毛錢' && rec) {
@@ -1930,6 +1937,20 @@ function computeRemappedFieldsForDL2(scene, rec, xyGroupNum, xyImagesForGroup){
       { label: '地標', value: loc28cf ? loc28cf.value : '' }
     ];
   }
+  if (scene.title === '36.六瑞相' || scene.title === '37.發心立願') {
+    // Per request, 隊形/地標圖/地標 now mirror 01.序's for the same performer
+    // (same mirroring pattern as 慈誠隊歌/28.代謝不住 above).
+    const scene01cf = (rec.scenes || []).concat(rec.scenesPhase2 || [], rec.scenesPhase3 || [])
+      .find(s => s.title === '01.序');
+    const formation01cf = scene01cf && scene01cf.fields.find(f => f.label.indexOf('隊形') !== -1);
+    const icon01cf = scene01cf && scene01cf.fields.find(f => f.label === '地標圖');
+    const loc01cf = scene01cf && scene01cf.fields.find(f => f.label !== '地標圖' && f.label.indexOf('地標') !== -1);
+    fields = [
+      { label: '隊形', value: formation01cf ? formation01cf.value : '' },
+      { label: '地標圖', icon: icon01cf ? icon01cf.icon : undefined },
+      { label: '地標', value: loc01cf ? loc01cf.value : '' }
+    ];
+  }
   if (scene.title.indexOf('父母恩重難報經') !== -1 || scene.title.indexOf('跪羊圖') !== -1) {
     const basic = fields.find(f => f.label === '基本隊形');
     if (basic) {
@@ -2086,10 +2107,17 @@ function buildDl2CardMarkup(rec, printName){
     ['16.說法品梵唄 / 17.大慈大悲無量義', '18.慈大校歌 / 19.小樹啊!', '20.畢業組曲-成長 / 21.畢業組曲-感恩'],
     ['25.大愛讓世界亮起來 / 26.天空破了洞 / 27.用鼓掌的雙手做環保', '28.代謝不住'],
     ...(merge111215 ? [['10.地藏經啟航 / 11.船師大船師 / 12.四弘誓願', '13.大船師', '14.骨髓捐贈 / 15.能捨一切諸難捨']] : []),
+    // 36/37 removed from this merge group per request - they now mirror
+    // 01.序's 隊形/地標圖/地標 (see computeRemappedFieldsForDL2), which no
+    // longer matches 29-35's shared landmark, so they'd hide 29/31's icon
+    // if folded in here. They're merged into the 38/39 row instead, below -
+    // 01.序's fields happen to already equal 38/39's own raw fields for
+    // virtually every record (both circle back to the same 起始 formation),
+    // so that row stays a true one-landmark merge.
     isTaiwan30ForMerge
-      ? ['31.第三功德', '32.第八功德', '33.髻珠喻', '34.第九功德', '35.化城喻手札', '36.六瑞相', '37.發心立願']
-      : ['29.富中之富A', '30.開經書', '31.第三功德', '32.第八功德', '33.髻珠喻', '34.第九功德', '35.化城喻手札', '36.六瑞相', '37.發心立願'],
-    ['38.慈濟小行星', '39.祈禱']
+      ? ['31.第三功德', '32.第八功德', '33.髻珠喻', '34.第九功德', '35.化城喻手札']
+      : ['29.富中之富A', '30.開經書', '31.第三功德', '32.第八功德', '33.髻珠喻', '34.第九功德', '35.化城喻手札'],
+    ['36.六瑞相', '37.發心立願', '38.慈濟小行星', '39.祈禱']
   ];
   function mergeDl2Entries(list, groups){
     let result = list.slice();
@@ -2243,15 +2271,18 @@ function buildDl2CardMarkup(rec, printName){
     // in a real headless-Chromium print render at the column's fixed
     // width, which doesn't vary by record).
     const DL2_TITLE_FONT_SIZE_OVERRIDE = { '25.大愛讓世界亮起來': '7.6mm' };
-    // Per request, 36/37 and 38/39 now merge into two separate rows (instead
-    // of one combined 36-39 row shown as "36.結尾") and both rows show their
-    // real segment titles - except 38/39, which per a later request shows
-    // "小行星 & 祈禱" (no numbers, "&"-joined, one line) instead of the
-    // default "38.慈濟小行星<br>39.祈禱".
-    const DL2_MERGED_TITLE_OVERRIDE = {
-      '38.慈濟小行星 / 39.祈禱': '小行星 & 祈禱'
-    };
-    const titleHtml = DL2_MERGED_TITLE_OVERRIDE[e.title] ? escapeHtml(DL2_MERGED_TITLE_OVERRIDE[e.title]) : e.title.split(' / ')
+    // Per request, 36/37/38/39 now merge into one combined row (they all
+    // share the same landmark/formation as 01.序 per record - see the
+    // DL2_MERGE_GROUPS comment above), shown as 4 plain stacked lines with
+    // their real numbers/titles (36.六瑞相 / 37.發心立願 / 38.慈濟小行星 /
+    // 39.祈禱), same as every other multi-part merged row - no override
+    // needed, this falls through to the default split(' / ').join('<br>')
+    // path below. (Earlier rounds tried a compact "&"-joined caption here,
+    // first for all 4 then for just 38/39, both since reverted per
+    // request back to the plain per-segment titles.)
+    const DL2_MERGED_TITLE_OVERRIDE = {};
+    const overrideLines = DL2_MERGED_TITLE_OVERRIDE[e.title];
+    const titleHtml = overrideLines ? overrideLines.map(escapeHtml).join('<br>') : e.title.split(' / ')
       .map(t => DL2_TITLE_DISPLAY_OVERRIDE[t] || t)
       .map((t, i, arr) => {
         const origTitle = e.title.split(' / ')[i];
@@ -2293,7 +2324,7 @@ function buildDl2CardMarkup(rec, printName){
   // without the two overlapping. Built OUTSIDE dl2-scale-wrap (assembled
   // separately below, as topRowHtml) so the font-size is the real/final
   // size and isn't shrunk by that wrap's transform:scale(), per request.
-  const topRowHtml = '<div class="dl2-top-row"><div class="dl2-event-header">2026【無量義 法髓頌】經藏演繹 · 11/13 場 · 地標單 v19_0915</div></div>';
+  const topRowHtml = '<div class="dl2-top-row"><div class="dl2-event-header">2026【無量義 法髓頌】經藏演繹 · 11/13 場 · 地標單 v20_0920</div></div>';
   let html = '<div class="dl2-head">' + escapeHtml(dl2HeadText) + '</div>';
   html += '<div class="dl2-table">' + rows.map(colHtml).join('') + '</div>';
   // Wrapped in a fixed-width (289mm, same as the other print blocks) scale
@@ -2521,6 +2552,20 @@ function buildScenesHtml(rec, phase){
         { label: '地標', value: loc28sh ? loc28sh.value : '' }
       ];
     }
+    if (scene.title === '36.六瑞相' || scene.title === '37.發心立願') {
+      // Per request, 隊形/地標圖/地標 now mirror 01.序's for the same
+      // performer (same mirroring pattern as 慈誠隊歌/28.代謝不住 above).
+      const scene01sh = (rec.scenes || []).concat(rec.scenesPhase2 || [], rec.scenesPhase3 || [])
+        .find(s => s.title === '01.序');
+      const formation01sh = scene01sh && scene01sh.fields.find(f => f.label.indexOf('隊形') !== -1);
+      const icon01sh = scene01sh && scene01sh.fields.find(f => f.label === '地標圖');
+      const loc01sh = scene01sh && scene01sh.fields.find(f => f.label !== '地標圖' && f.label.indexOf('地標') !== -1);
+      fields = [
+        { label: '隊形', value: formation01sh ? formation01sh.value : '' },
+        { label: '地標圖', icon: icon01sh ? icon01sh.icon : undefined },
+        { label: '地標', value: loc01sh ? loc01sh.value : '' }
+      ];
+    }
     if (scene.title.indexOf('父母恩重難報經') !== -1 || scene.title.indexOf('跪羊圖') !== -1) {
       const basic = fields.find(f => f.label === '基本隊形');
       if (basic) {
@@ -2693,7 +2738,7 @@ function buildScenesHtml(rec, phase){
         // "開綠燈" can be colored green per request, rather than "現" coming
         // out red like a normal 「...」 quote.
         const line2Html04 = '第二句的<span style="color:#e53935">「彷若實境」</span>再<span style="color:#3aa655;font-weight:700;">「現」</span>→拿燈 <span style="color:#3aa655;font-weight:700;">開綠燈</span>';
-        const line3Html04 = cueText('「我愛人人 人人愛我」→關燈,右轉向甲舞台不合掌');
+        const line3Html04 = cueText('「我愛人人 人人愛我」→關燈, 不合掌');
         importantCueHtml = '<span class="value-cue">' + cueLines04.map(line => cueBullet + cueText(line)).join('<br>') + '<br>' + cueBullet + line2Html04 + '<br>' + cueBullet + line3Html04 + '</span>';
         importantCueValueClass = '';
       } else if (scene.title === '05.扛天下米籮') {
@@ -2916,7 +2961,8 @@ function buildScenesHtml(rec, phase){
         importantCueHtml = '<span class="value-cue">' + cueLines29.map(l => cueBullet + l).join('<br>') + '</span>';
         importantCueValueClass = '';
       } else if (scene.title === '31.第三功德') {
-        importantCueHtml = '<span class="value-cue">' + cueBullet + cueText('「自在度人」顯願力→ 雙手平送到甲外45°') + '</span>';
+        const cueLines31 = ['「自在度人」顯願力→ 雙手平送到甲外45°', '「心大就同 心小則異」→轉向第八功德面向,觀眾45°'];
+        importantCueHtml = '<span class="value-cue">' + cueLines31.map(line => cueBullet + cueText(line)).join('<br>') + '</span>';
         importantCueValueClass = '';
       } else if (scene.title === '32.第八功德') {
         importantCueHtml = '<span class="value-cue">' + cueBullet + cueText('「種種方便」令發心→手放轉向甲45°') + '</span>';
@@ -2935,12 +2981,14 @@ function buildScenesHtml(rec, phase){
           ? [
               '廣行善法「          饒有情」→ 轉向甲',
               '求法「立誓」宏願深→轉向法師45°',
-              '安邦「定國」在印尼→轉向甲45°'
+              '安邦「定國」在印尼→轉向甲45°',
+              '上人將法華經鋪在地上→轉向法師45°'
             ]
           : [
               '廣行善法「          饒有情」→ 轉向甲45°',
               '「任重」  道遠→ 轉向法師45°',
-              '安邦「定國」在印尼→轉向甲45°'
+              '安邦「定國」在印尼→轉向甲45°',
+              '上人將法華經鋪在地上→轉向法師45°'
             ]).filter(line => !isBlue35cue || line.indexOf('安邦') === -1);
         importantCueHtml = '<span class="value-cue">' + cueLines.map(line => cueBullet + cueText(line)).join('<br>') + '</span>';
         importantCueValueClass = '';
@@ -3044,7 +3092,7 @@ function buildPrintPhase3(rec){
   const xyImgHtml = (xyEntry && xyEntry.xingyuan)
     ? '<img src="' + xyEntry.xingyuan + '" alt="行願圖騰" style="max-width:100%; max-height:180mm; width:auto; height:auto; display:block; margin:0 auto;">'
     : '<div class="phase-placeholder">無行願圖騰資料</div>';
-  let html = '<header><div class="header-titles"><div class="main-title">2026大巨蛋【無量義  法髓頌】經藏演繹</div><h1>第三聯區 ·  11/13 場 · <span class="header-label-screen">地標對照查詢系統</span><span class="header-label-print">地標單</span> v19_0915</h1></div>' + PRINT_PAGE_COPYRIGHT_HTML + '</header>';
+  let html = '<header><div class="header-titles"><div class="main-title">2026大巨蛋【無量義  法髓頌】經藏演繹</div><h1>第三聯區 ·  11/13 場 · <span class="header-label-screen">地標對照查詢系統</span><span class="header-label-print">地標單</span> v20_0920</h1></div>' + PRINT_PAGE_COPYRIGHT_HTML + '</header>';
   const groupClassP3 = 'group-' + rec.group;
   html += '<div class="print-dual-head"><span class="id">' + escapeHtml(rec.id) + '</span>' + (currentPrintName ? ('<span class="id print-name">' + escapeHtml(currentPrintName) + '</span>') : '') + '<span class="group ' + groupClassP3 + '">' + escapeHtml(rec.group) + '</span></div>';
   html += '<div class="print-dual-cols">';
@@ -3079,7 +3127,7 @@ function buildPrintPhase4(rec){
     ? '<img src="' + WASTE_IMAGES[wasteCode4] + '" alt="代謝不住圖騰" style="max-width:100%; max-height:180mm; width:auto; height:auto; display:block; margin:0 auto;">'
     : '<div class="phase-placeholder">無代謝不住圖騰資料</div>';
 
-  let html = '<header><div class="header-titles"><div class="main-title">2026大巨蛋【無量義  法髓頌】經藏演繹</div><h1>第三聯區 ·  11/13 場 · <span class="header-label-screen">地標對照查詢系統</span><span class="header-label-print">地標單</span> v19_0915</h1></div>' + PRINT_PAGE_COPYRIGHT_HTML + '</header>';
+  let html = '<header><div class="header-titles"><div class="main-title">2026大巨蛋【無量義  法髓頌】經藏演繹</div><h1>第三聯區 ·  11/13 場 · <span class="header-label-screen">地標對照查詢系統</span><span class="header-label-print">地標單</span> v20_0920</h1></div>' + PRINT_PAGE_COPYRIGHT_HTML + '</header>';
   const groupClassP4 = 'group-' + rec.group;
   html += '<div class="print-dual-head"><span class="id">' + escapeHtml(rec.id) + '</span>' + (currentPrintName ? ('<span class="id print-name">' + escapeHtml(currentPrintName) + '</span>') : '') + '<span class="group ' + groupClassP4 + '">' + escapeHtml(rec.group) + '</span></div>';
   html += '<div class="print-dual-cols">';
