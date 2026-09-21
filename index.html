@@ -2925,13 +2925,13 @@ function buildScenesHtml(rec, phase){
         const isWalking28 = area28.indexOf('走位') !== -1;
         const cueLines = isWalking28
           ? [
-              'OS : 「有夠讚! 」→從甲內轉自己箭頭方向',
+              'OS : 哇!「有夠讚! 」→從甲內轉自己箭頭方向',
               '「佛轉法輪」：合掌',
               '「如是甚深」→合掌、腳停',
               '「無上大乘」→合掌右後轉180°'
             ]
           : [
-              'OS : 「有夠讚! 」→從甲內轉自己箭頭方向',
+              'OS : 哇!「有夠讚! 」→從甲內轉自己箭頭方向',
               '「佛轉法輪」：合掌',
               '「如是甚深」→壓腿起.合掌'
             ];
@@ -2979,16 +2979,16 @@ function buildScenesHtml(rec, phase){
         const isBlue35cue = rec.group === 'A藍' || rec.group === 'B藍';
         const cueLines = (area34 === '內'
           ? [
+              '上人將法華經鋪在地上→轉向法師45°',
               '廣行善法「          饒有情」→ 轉向甲',
               '求法「立誓」宏願深→轉向法師45°',
-              '安邦「定國」在印尼→轉向甲45°',
-              '上人將法華經鋪在地上→轉向法師45°'
+              '安邦「定國」在印尼→轉向甲45°'
             ]
           : [
+              '上人將法華經鋪在地上→轉向法師45°',
               '廣行善法「          饒有情」→ 轉向甲45°',
               '「任重」  道遠→ 轉向法師45°',
-              '安邦「定國」在印尼→轉向甲45°',
-              '上人將法華經鋪在地上→轉向法師45°'
+              '安邦「定國」在印尼→轉向甲45°'
             ]).filter(line => !isBlue35cue || line.indexOf('安邦') === -1);
         importantCueHtml = '<span class="value-cue">' + cueLines.map(line => cueBullet + cueText(line)).join('<br>') + '</span>';
         importantCueValueClass = '';
