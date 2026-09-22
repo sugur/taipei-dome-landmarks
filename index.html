@@ -2860,9 +2860,26 @@ function buildScenesHtml(rec, phase){
           'OS：師父「我們需要你」→合掌 轉演繹方向',
           '「如果你們願意幫助我」→ 開黃燈'
         ];
-        // 屬於「蓮蓬內-浪」區域的人(40筆)，多一條拍點，接在原本拍點後面。
         const area07Field = fields.find(f => f.label === '區域');
-        if (area07Field && area07Field.value === '蓮蓬內-浪') {
+        // 新增「我就永遠不離開花蓮」拍點，依區域顯示不同動作（蓮蓬內-帆、
+        // LOGO下方3 這兩個區域不在這批要求內，維持沒有這條拍點）。
+        const area07Val = area07Field ? area07Field.value : '';
+        if (area07Val === '蓮蓬外框') {
+          cueLines.push('「我就永遠不離開花蓮」→高跪');
+        } else if (area07Val === '蓮蓬內-船') {
+          cueLines.push('「我就永遠不離開花蓮」→POSE手搭起來,弓步低頭');
+        } else if (area07Val === '蓮蓬內-浪') {
+          cueLines.push('「我就永遠不離開花蓮」→手搭');
+        } else if (area07Val === '蓮蓬內-慈濟') {
+          cueLines.push('「我就永遠不離開花蓮」→階梯上高跪');
+        } else if (area07Val === 'LOGO八瓣花瓣3') {
+          cueLines.push('「我就永遠不離開花蓮」→ 跪');
+        } else if (area07Val === 'LOGO下方2' || area07Val === 'LOGO上方2') {
+          cueLines.push('「我就永遠不離開花蓮」→ 高跪 , 合掌');
+        }
+        // 屬於「蓮蓬內-浪」區域的人(40筆)，這條拍點是最後一個，接在「我就
+        // 永遠不離開花蓮」後面。
+        if (area07Val === '蓮蓬內-浪') {
           cueLines.push('音效「噔」→坐跪抬頭');
         }
         importantCueHtml = '<span class="value-cue">' + cueLines.map(line => cueBullet + cueText(line)).join('<br>') + '</span>';
