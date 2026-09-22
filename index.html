@@ -2293,7 +2293,12 @@ function buildDl2CardMarkup(rec, printName){
     // a small safety margin under the measured one-line threshold (~7.9mm
     // in a real headless-Chromium print render at the column's fixed
     // width, which doesn't vary by record).
-    const DL2_TITLE_FONT_SIZE_OVERRIDE = { '26.大愛讓世界亮起來': '7.6mm' };
+    // Keyed by origTitle (raw segment) in the default per-segment path
+    // below, but by the exact override line text for DL2_MERGED_TITLE_
+    // OVERRIDE lines (e.g. "13.貧者省懺自身") - both paths check this same
+    // map, just with a different lookup key, since the two kinds of text
+    // never collide.
+    const DL2_TITLE_FONT_SIZE_OVERRIDE = { '26.大愛讓世界亮起來': '7.6mm', '13.貧者省懺自身': '9.12mm' };
     // Per request, 36/37/38/39 now merge into one combined row (they all
     // share the same landmark/formation as 01.序 per record - see the
     // DL2_MERGE_GROUPS comment above), shown as 4 plain stacked lines with
@@ -2303,9 +2308,24 @@ function buildDl2CardMarkup(rec, printName){
     // path below. (Earlier rounds tried a compact "&"-joined caption here,
     // first for all 4 then for just 38/39, both since reverted per
     // request back to the plain per-segment titles.)
-    const DL2_MERGED_TITLE_OVERRIDE = {};
+    // 10/11/12's merged row needs "13.貧者省懺自身" on its OWN stacked line
+    // (no " / " in front of it) per request - a plain DL2_TITLE_DISPLAY_
+    // OVERRIDE entry can't do that (its per-segment values are escaped as
+    // plain text, so a literal "<br>" inside one would just show up as
+    // text, not a real line break), so this lists the exact stacked lines
+    // for this row instead, covering both possible states of that row's
+    // raw e.title: alone (merge111215 false) or merged with 14/15/16
+    // (merge111215 true) - the two keys below are exactly what
+    // mergeDl2Entries()/DL2_MERGE_GROUPS above would produce for each case.
+    const DL2_MERGED_TITLE_OVERRIDE = {
+      '10.地藏經啟航 / 11.船師大船師 / 12.四弘誓願': ['10.地藏經啟航', '11.四弘誓願', '12.船師大船師', '13.貧者省懺自身'],
+      '10.地藏經啟航 / 11.船師大船師 / 12.四弘誓願 / 14.大船師 / 15.骨髓捐贈 / 16.能捨一切諸難捨': ['10.地藏經啟航', '11.四弘誓願', '12.船師大船師', '13.貧者省懺自身', '14.大醫王', '15.骨髓捐贈', '16.能捨一切']
+    };
     const overrideLines = DL2_MERGED_TITLE_OVERRIDE[e.title];
-    const titleHtml = overrideLines ? overrideLines.map(escapeHtml).join('<br>') : e.title.split(' / ')
+    const titleHtml = overrideLines ? overrideLines.map(function(line){
+      const sz = DL2_TITLE_FONT_SIZE_OVERRIDE[line];
+      return sz ? ('<span style="font-size:' + sz + ';">' + escapeHtml(line) + '</span>') : escapeHtml(line);
+    }).join('<br>') : e.title.split(' / ')
       .map(t => DL2_TITLE_DISPLAY_OVERRIDE[t] || t)
       .map((t, i, arr) => {
         const origTitle = e.title.split(' / ')[i];
