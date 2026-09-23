@@ -2791,15 +2791,15 @@ function buildScenesHtml(rec, phase){
       const isFeitianArea = f.label === '飛天區域';
       // 純文字呈現，不使用圖片：橘色(left)="往外側觀眾飛(←)"，藍色(down)="往
       // 法師方向飛(↓)" - 箭頭符號本身依方向上色，其餘文字維持一般顏色。A藍/B藍
-      // 還有兩個沒有方向箭頭的純文字分類：「坐跪飛天」(sit) 和「往階梯飛」
-      // (stair)，純文字不上色。
-      const FEITIAN_AREA_PLAIN_TEXT = { sit: '坐跪飛天', stair: '往階梯飛', stand: '站著不用走飛天' };
+      // 還有三個沒有方向箭頭的純文字分類：「坐跪飛天」(sit)、「往階梯飛」
+      // (stair)、「外移動三格\n站著不用走飛天」(stand，兩行) - 純文字不上色。
+      const FEITIAN_AREA_PLAIN_TEXT = { sit: '坐跪飛天', stair: '往階梯飛', stand: '外移動三格<br>站著不用走飛天' };
       const isFeitianAreaPlain = isFeitianArea && FEITIAN_AREA_PLAIN_TEXT.hasOwnProperty(f.value);
       const feitianAreaTextPlain = f.value === 'left' ? '往外側觀眾飛' : '往法師方向飛';
       const feitianAreaArrow = f.value === 'left' ? '(←)' : '(↓)';
       const feitianAreaColor = f.value === 'left' ? FEITIAN_AREA_COLOR_LEFT : FEITIAN_AREA_COLOR_DOWN;
       const valueHtml = isFeitianAreaPlain
-        ? ('<span class="value-loc12">' + escapeHtml(FEITIAN_AREA_PLAIN_TEXT[f.value]) + '</span>')
+        ? ('<span class="value-loc12">' + FEITIAN_AREA_PLAIN_TEXT[f.value] + '</span>')
         : isFeitianArea
         ? ('<span class="value-loc12">' + escapeHtml(feitianAreaTextPlain) + '<span style="color:' + feitianAreaColor + ';font-weight:700;">' + escapeHtml(feitianAreaArrow) + '</span></span>')
         : (hasValue
