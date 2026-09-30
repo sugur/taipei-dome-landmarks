@@ -2363,9 +2363,14 @@ function buildDl2CardMarkup(rec, printName){
     // merged with 14/15/16 (merge111215 true) - the two keys below are
     // exactly what mergeDl2Entries()/DL2_MERGE_GROUPS above would produce
     // for each case.
+    // Per request, "13.疫情捨我其誰" shows shortened as just "13.疫情" on
+    // this compact card ONLY (normal screen keeps the full text, via
+    // SCENE_TITLE_OVERRIDES above) - same shortening pattern as the other
+    // DL2_TITLE_DISPLAY_OVERRIDE entries, just listed here instead since
+    // this line comes from DL2_MERGED_TITLE_OVERRIDE, not that map.
     const DL2_MERGED_TITLE_OVERRIDE = {
-      '10.地藏經啟航 / 11.船師大船師 / 12.四弘誓願': ['10.地藏經啟航', '11.四弘誓願', '12.船師大船師', '13.疫情捨我其誰', '14.貧者省懺自身'],
-      '10.地藏經啟航 / 11.船師大船師 / 12.四弘誓願 / 14.大船師 / 15.骨髓捐贈 / 16.能捨一切諸難捨': ['10.地藏經啟航', '11.四弘誓願', '12.船師大船師', '13.疫情捨我其誰', '14.貧者省懺自身', '15.大醫王', '16.骨髓捐贈', '17.能捨一切']
+      '10.地藏經啟航 / 11.船師大船師 / 12.四弘誓願': ['10.地藏經啟航', '11.四弘誓願', '12.船師大船師', '13.疫情', '14.貧者省懺自身'],
+      '10.地藏經啟航 / 11.船師大船師 / 12.四弘誓願 / 14.大船師 / 15.骨髓捐贈 / 16.能捨一切諸難捨': ['10.地藏經啟航', '11.四弘誓願', '12.船師大船師', '13.疫情', '14.貧者省懺自身', '15.大醫王', '16.骨髓捐贈', '17.能捨一切']
     };
     const overrideLines = DL2_MERGED_TITLE_OVERRIDE[e.title];
     const titleHtml = overrideLines ? overrideLines.map(function(line){
