@@ -1017,7 +1017,7 @@
     <button id="releaseModalClose" class="help-modal-close" type="button" aria-label="關閉">&times;</button>
     <div class="release-title">版本更新說明</div>
     <div class="release-entry">
-      <div class="release-header">Date 2026/9/30　Version v21_0930</div>
+      <div class="release-header">Date 2026/10/01　Version v21_1001</div>
       <ol class="release-list">
         <li>刪除「飛天」</li>
         <li>新增「疫情捨我其誰」</li>
@@ -1303,7 +1303,7 @@
       <img class="header-logo" src="images/logo.png" alt="慈濟60周年 一甲子">
       <div class="header-titles">
         <div class="main-title">2026大巨蛋【無量義  法髓頌】經藏演繹</div>
-        <h1>第三聯區 ·  11/13 場 · <span class="header-label-screen">地標對照查詢系統</span><span class="header-label-print">地標單</span> v21_0930</h1>
+        <h1>第三聯區 ·  11/13 場 · <span class="header-label-screen">地標對照查詢系統</span><span class="header-label-print">地標單</span> v21_1001</h1>
       </div>
     </div>
     <div class="print-page-copyright">&copy; 2026 唐偲瑋</div>
@@ -2418,7 +2418,7 @@ function buildDl2CardMarkup(rec, printName){
   // without the two overlapping. Built OUTSIDE dl2-scale-wrap (assembled
   // separately below, as topRowHtml) so the font-size is the real/final
   // size and isn't shrunk by that wrap's transform:scale(), per request.
-  const topRowHtml = '<div class="dl2-top-row"><div class="dl2-event-header">2026【無量義 法髓頌】經藏演繹 · 11/13 場 · 地標單 v21_0930</div></div>';
+  const topRowHtml = '<div class="dl2-top-row"><div class="dl2-event-header">2026【無量義 法髓頌】經藏演繹 · 11/13 場 · 地標單 v21_1001</div></div>';
   let html = '<div class="dl2-head">' + escapeHtml(dl2HeadText) + '</div>';
   html += '<div class="dl2-table">' + rows.map(colHtml).join('') + '</div>';
   // Wrapped in a fixed-width (289mm, same as the other print blocks) scale
@@ -3114,11 +3114,11 @@ function buildScenesHtml(rec, phase){
         importantCueHtml = '<span class="value-cue">' + cueLines31b.map(line => cueBullet + cueText(line)).join('<br>') + '</span>';
         importantCueValueClass = '';
       } else if (scene.title === '32.第三功德') {
-        const cueLines31 = ['「自在度人」顯願力→ 雙手平送到甲外45°', '「雖有生死無畏懼」→合掌轉向甲45°', '「心大就同 心小則異」→轉向第八功德面向,觀眾45°'];
+        const isBlue32 = rec.group === 'A藍' || rec.group === 'B藍';
+        const cueLines31 = isBlue32
+          ? ['「自在度人」顯願力→ 雙手平送到甲45°', '「雖有煩惱」無煩惱→ 合掌', '「2011」→手放']
+          : ['「自在度人」顯願力→ 雙手平送到甲45°', '雖有煩惱「無煩惱」→ 雙手上', '「雖有」生死無畏懼→收腳起身'];
         importantCueHtml = '<span class="value-cue">' + cueLines31.map(line => cueBullet + cueText(line)).join('<br>') + '</span>';
-        importantCueValueClass = '';
-      } else if (scene.title === '33.第八功德') {
-        importantCueHtml = '<span class="value-cue">' + cueBullet + cueText('「種種方便」令發心→手放轉向甲45°') + '</span>';
         importantCueValueClass = '';
       } else if (scene.title === '34.髻珠喻') {
         importantCueHtml = '<span class="value-cue">' + cueBullet + cueText('第三次「譬如髻珠」放光明 →拿燈') + '</span>';
@@ -3242,7 +3242,7 @@ function buildPrintPhase3(rec){
   const xyImgHtml = (xyEntry && xyEntry.xingyuan)
     ? '<img src="' + xyEntry.xingyuan + '" alt="行願圖騰" style="max-width:100%; max-height:180mm; width:auto; height:auto; display:block; margin:0 auto;">'
     : '<div class="phase-placeholder">無行願圖騰資料</div>';
-  let html = '<header><div class="header-titles"><div class="main-title">2026大巨蛋【無量義  法髓頌】經藏演繹</div><h1>第三聯區 ·  11/13 場 · <span class="header-label-screen">地標對照查詢系統</span><span class="header-label-print">地標單</span> v21_0930</h1></div>' + PRINT_PAGE_COPYRIGHT_HTML + '</header>';
+  let html = '<header><div class="header-titles"><div class="main-title">2026大巨蛋【無量義  法髓頌】經藏演繹</div><h1>第三聯區 ·  11/13 場 · <span class="header-label-screen">地標對照查詢系統</span><span class="header-label-print">地標單</span> v21_1001</h1></div>' + PRINT_PAGE_COPYRIGHT_HTML + '</header>';
   const groupClassP3 = 'group-' + rec.group;
   html += '<div class="print-dual-head"><span class="id">' + escapeHtml(rec.id) + '</span>' + (currentPrintName ? ('<span class="id print-name">' + escapeHtml(currentPrintName) + '</span>') : '') + '<span class="group ' + groupClassP3 + '">' + escapeHtml(rec.group) + '</span></div>';
   html += '<div class="print-dual-cols">';
@@ -3277,7 +3277,7 @@ function buildPrintPhase4(rec){
     ? '<img src="' + WASTE_IMAGES[wasteCode4] + '" alt="代謝不住圖騰" style="max-width:100%; max-height:180mm; width:auto; height:auto; display:block; margin:0 auto;">'
     : '<div class="phase-placeholder">無代謝不住圖騰資料</div>';
 
-  let html = '<header><div class="header-titles"><div class="main-title">2026大巨蛋【無量義  法髓頌】經藏演繹</div><h1>第三聯區 ·  11/13 場 · <span class="header-label-screen">地標對照查詢系統</span><span class="header-label-print">地標單</span> v21_0930</h1></div>' + PRINT_PAGE_COPYRIGHT_HTML + '</header>';
+  let html = '<header><div class="header-titles"><div class="main-title">2026大巨蛋【無量義  法髓頌】經藏演繹</div><h1>第三聯區 ·  11/13 場 · <span class="header-label-screen">地標對照查詢系統</span><span class="header-label-print">地標單</span> v21_1001</h1></div>' + PRINT_PAGE_COPYRIGHT_HTML + '</header>';
   const groupClassP4 = 'group-' + rec.group;
   html += '<div class="print-dual-head"><span class="id">' + escapeHtml(rec.id) + '</span>' + (currentPrintName ? ('<span class="id print-name">' + escapeHtml(currentPrintName) + '</span>') : '') + '<span class="group ' + groupClassP4 + '">' + escapeHtml(rec.group) + '</span></div>';
   html += '<div class="print-dual-cols">';
