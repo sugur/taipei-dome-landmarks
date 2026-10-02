@@ -1488,7 +1488,6 @@ const STATIC_SCENE_TAGS = {
   '21.畢業組曲-成長 / 22.畢業組曲-感恩': { text: ' 開綠燈(口袋)', color: '#3aa655' },
   '29.代謝不住': { text: ' 開綠燈(口袋)', color: '#3aa655' },
   '30.富中之富A': { text: ' 開綠燈(拿燈)', color: '#3aa655' },
-  '33.第八功德': { text: ' 開綠燈', color: '#3aa655' },
   '34.髻珠喻': { text: ' 開綠燈(拿燈)', color: '#3aa655' }
 };
 
@@ -1551,7 +1550,7 @@ const SCENE_TITLE_OVERRIDES = {
   '30.富中之富A': '31.富中之富A[面甲45°]',
   '21.畢業組曲-成長 / 22.畢業組曲-感恩': '22.成長[面向甲, 圓弧在兩腳間]/ 23.感恩[面向乙，腳尖對線]',
   '32.第三功德': '33.第三功德[面向觀眾45°]',
-  '33.第八功德': '34.第八功德[面觀眾45°]',
+  '33.第八功德': '34.第八功德[面甲45°]',
   '34.髻珠喻': '35.髻珠喻 (莫三比克) [面法師45°]',
   '35.第九功德': '36.第九功德[面甲45°]',
   '36.化城喻手札': '37. 菩薩慈悲[面甲45°]'
@@ -3109,7 +3108,7 @@ function buildScenesHtml(rec, phase){
         const countryF31 = fields.find(f => f.label === '國家');
         const country31 = countryF31 ? countryF31.value : null;
         const cueLines31b = country31 === '台灣'
-          ? ['「我想到了」→台灣上台', '演完暗場→台灣下台, 到位面觀眾45°']
+          ? ['「我想到了」→台灣上台', '「咚咚咚」→台灣下台, 到位面觀眾45°']
           : ['「我想到了」→開燈', '演完暗場→轉面觀眾45°'];
         importantCueHtml = '<span class="value-cue">' + cueLines31b.map(line => cueBullet + cueText(line)).join('<br>') + '</span>';
         importantCueValueClass = '';
