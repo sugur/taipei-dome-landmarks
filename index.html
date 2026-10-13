@@ -976,6 +976,26 @@
        borrow a little from the title column rather than wrap, same as
        before this round), not the primary mechanism. */
     .dl2-loc.dl2-loc-num{font-size:16.75mm !important; white-space:nowrap !important; min-width:auto !important;}
+
+  /* Per request, the added 00.基本隊形進場 scene is kept as short as possible
+     in the PDF print (page 1 = #printDual) so it doesn't push the one-page
+     auto-fit (see fitPrintToOnePage()) into shrinking everything: smaller
+     numbered badge, 隊形 on a single line ("基本隊形" instead of the
+     two-line "基本/隊形"), and the 重要拍點 cell widened to half the row
+     (地標 only needs one column here) so its long line doesn't wrap into a
+     tall narrow column. Scoped to .print-dual so the on-screen cards are
+     untouched. */
+  /* title / 隊形 / 地標圖 are scaled to 0.8; 地標 and 重要拍點 keep the normal print font size. */
+  .print-dual .scene.scene-00 .scene-title, .print-dual .scene.scene-00 .field-grid .field:nth-child(1), .print-dual .scene.scene-00 .field-grid .field:nth-child(2){zoom:0.8;}
+  .print-dual .scene.scene-00 .scene-title{padding-top:2px !important; padding-bottom:2px !important; line-height:1.3 !important;}
+  .print-dual .scene.scene-00 .field .label{display:none !important;}
+  .print-dual .scene.scene-00 .field-grid > .field{padding-top:2px !important; padding-bottom:1px !important;}
+  .print-dual .scene.scene-00 .field .value .value-12.value-basic2{line-height:1.2 !important;}
+  .print-dual .scene.scene-00 .field .value .value-12{white-space:nowrap !important;}
+  .print-dual .scene.scene-00 .field .value svg.icon-badge{width:20px !important; height:20px !important; max-width:20px !important; max-height:20px !important;}
+  .print-dual .scene.scene-00 .field .value br{display:none !important;}
+  .print-dual .scene.scene-00 .field-grid .field:nth-child(3){grid-column:span 1 !important;}
+  .print-dual .scene.scene-00 .field-grid .field.field-cue{grid-column:span 3 !important;}
 </style>
 </head>
 <body>
@@ -1017,7 +1037,7 @@
     <button id="releaseModalClose" class="help-modal-close" type="button" aria-label="關閉">&times;</button>
     <div class="release-title">版本更新說明</div>
     <div class="release-entry">
-      <div class="release-header">Date 2026/10/05　Version v22_1012</div>
+      <div class="release-header">Date 2026/10/12　Version v22_1012</div>
       <ol class="release-list">
         <li>更新「行願」「開經偈」「大醫王」「代謝不住」圖騰</li>
       </ol>
@@ -1407,6 +1427,23 @@ const V_FORMATION_IMG = 'images/v_formation.jpg';
 
 const byId = {};
 DATA.forEach(r => byId[r.id] = r);
+// Per request, a new "00.進場" scene sits in front of 01.序 whose 隊形/地標/
+// 地標圖 are the same as 05.扛天下米籮's for that performer. It's derived at
+// load time from each record's own 05 scene (基本隊形 + 地標圖) rather than
+// written into the DATA literal above, so DATA itself stays untouched and the
+// two scenes can never drift apart. Shown on the normal screen / 下載PDF only
+// (see the '00.進場' branch in buildScenesHtml()); deliberately left OFF the
+// compact 小卡 (filtered out in buildDl2CardMarkup()), since the 3x2 multi-card
+// sheet has only 100mm per row and the tallest card is already ~96mm.
+DATA.forEach(r => {
+  if (!r.scenes || r.scenes.some(s => s.title === '00.進場')) return;
+  const s05 = r.scenes.find(s => s.title === '05.扛天下米籮');
+  if (!s05) return;
+  r.scenes.unshift({
+    title: '00.進場',
+    fields: s05.fields.filter(f => f.label === '基本隊形' || f.label === '地標圖').map(f => Object.assign({}, f))
+  });
+});
 
 document.getElementById('hintText').textContent = '輸入身分證（例如 1-49），查詢各隊形地標位置與波段區域，共 ' + DATA.length + ' 筆';
 
@@ -1530,9 +1567,10 @@ function ytTutorialBtnHtml(id, start){
 }
 
 const SCENE_TITLE_OVERRIDES = {
-  '01.序': '01.序 [面向甲, 圓弧在兩腳間]',
-  '03.行願': '03.行願[雙腳夾線,面向甲]',
-  '02.生、老、病、死、六度': '02.生 [面向甲, 圓弧在兩腳間]、老、病、死、六度[面向乙，腳尖對線]',
+  '00.進場': '00.基本隊形進場[正向甲舞台]',
+  '01.序': '01.序[面向甲, 雙腳夾線]',
+  '03.行願': '03.行願[面向甲,雙腳夾線]',
+  '02.生、老、病、死、六度': '02.生[面向甲, 雙腳夾線]、老、病、死、六度[面向乙，腳尖對線]',
   '05.扛天下米籮': '05.扛天下米籮 [面甲45°]',
   '06.靜思家風': '06.靜思家風 [面甲45°]',
   '07.點一盞燈': '07.點一盞燈 [正面向甲]',
@@ -2080,7 +2118,7 @@ function buildDl2CardMarkup(rec, printName){
   // 37.飛天 is hidden per request (data/飛天區域 stays intact in DATA, just
   // not rendered) - filtered out here before the merge-row logic below runs,
   // so it's never a candidate for any DL2_MERGE_GROUPS entry.
-  const allScenes = [].concat(rec.scenes || [], rec.scenesPhase2 || [], rec.scenesPhase3 || []).filter(s => s.title !== '37.飛天');
+  const allScenes = [].concat(rec.scenes || [], rec.scenesPhase2 || [], rec.scenesPhase3 || []).filter(s => s.title !== '37.飛天' && s.title !== '00.進場');
   const rawEntries = allScenes.map(scene => {
     const fields = computeRemappedFieldsForDL2(scene, rec, xyGroupNum, xyImagesForGroup);
     const core = extractDL2Core(scene, fields);
@@ -2627,6 +2665,17 @@ function buildScenesHtml(rec, phase){
       // 提示 - 跟 wasteCode 缺碼時的既有行為一致。
       fields = fields.map(f => (f.label === '區域' && DY_IMAGES[f.value]) ? Object.assign({}, f, { dyCode: f.value }) : f);
     }
+    if (scene.title === '00.進場') {
+      const basic00 = fields.find(f => f.label === '基本隊形');
+      const landmarkIcon00 = fields.find(f => f.label === '地標圖');
+      if (basic00 && landmarkIcon00) {
+        fields = [
+          { label: '隊形', value: '基本\n隊形' },
+          landmarkIcon00,
+          { label: '地標', value: basic00.value }
+        ];
+      }
+    }
     if (scene.title === '05.扛天下米籮') {
       const basic = fields.find(f => f.label === '基本隊形');
       const landmarkIcon = fields.find(f => f.label === '地標圖');
@@ -2719,7 +2768,7 @@ function buildScenesHtml(rec, phase){
     const sceneTitleBigClass = ' scene-title-bigger';
     const ytVideo = YT_TUTORIAL_VIDEOS[scene.title];
     const ytBtnHtml = ytVideo ? ytTutorialBtnHtml(ytVideo.id, ytVideo.start) : '';
-    html += '<div class="scene"><div class="scene-title' + sceneTitleBigClass + '"><span>' + titleHtmlWithTags(scene.title, rec) + ytBtnHtml + '</span>' + tagHtml + '</div><div class="field-grid' + gridExtraClass + '">';
+    html += '<div class="scene' + (scene.title === '00.進場' ? ' scene-00' : '') + '"><div class="scene-title' + sceneTitleBigClass + '"><span>' + titleHtmlWithTags(scene.title, rec) + ytBtnHtml + '</span>' + tagHtml + '</div><div class="field-grid' + gridExtraClass + '">';
     fields.forEach((f, fIdx) => {
       const hasValue = f.value !== undefined && f.value !== null && f.value !== '';
       let classNames = [];
@@ -2825,7 +2874,7 @@ function buildScenesHtml(rec, phase){
         clickAttr = ' onclick="openDYModal(\'' + f.dyCode + '\')"';
       }
       const spanClass = classNames.length ? (' class="' + classNames.join(' ') + '"') : '';
-      const isBasicFormationIcon = ((scene.title === '05.扛天下米籮' || scene.title.indexOf('父母恩重難報經') !== -1 || scene.title.indexOf('跪羊圖') !== -1) && f.label === '地標圖' && badgeColors[rec.group]) || f.badgeIcon;
+      const isBasicFormationIcon = ((scene.title === '00.進場' || scene.title === '05.扛天下米籮' || scene.title.indexOf('父母恩重難報經') !== -1 || scene.title.indexOf('跪羊圖') !== -1) && f.label === '地標圖' && badgeColors[rec.group]) || f.badgeIcon;
       const isFeitianArea = f.label === '飛天區域';
       // 純文字呈現，不使用圖片：橘色(left)="往外側觀眾飛(←)"，藍色(down)="往
       // 法師方向飛(↓)" - 箭頭符號本身依方向上色，其餘文字維持一般顏色。A藍/B藍
@@ -2857,7 +2906,11 @@ function buildScenesHtml(rec, phase){
       let importantCueHtml = '';
       let importantCueValueClass = ' value-icon-center';
       const cueBullet = '<span style="color:var(--accent)">◦</span> ';
-      if (scene.title === '01.序') {
+      if (scene.title === '00.進場') {
+        const cueLines00 = ['主持人:...以「莊嚴身心入經藏」→換圓形、面向圓心'];
+        importantCueHtml = '<span class="value-cue">' + cueLines00.map(line => cueBullet + cueText(line)).join('<br>') + '</span>';
+        importantCueValueClass = '';
+      } else if (scene.title === '01.序') {
         const cueLines01 = [
           '聽到巴利文無量義經「拿燈不開燈」',
           '靈山法會「不散」→ 內轉向乙圓心'
