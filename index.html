@@ -3076,8 +3076,13 @@ function buildScenesHtml(rec, phase){
         const cueBadge = function(label){
           return '<span style="display:inline-block; color:#1a3a8f; font-weight:700; border:1.5px solid #1a3a8f; border-radius:4px; padding:0px 5px; margin-bottom:2px;">' + escapeHtml(label) + '</span>';
         };
+        const capFanbei = [
+          '「所發慈悲」→合掌',
+          '「復為說法」→合掌，轉向甲，兩腳夾線'
+        ];
         importantCueHtml = '<span class="value-cue">' +
-          cueBadge('大慈大悲') + '<br>' + cueBullet + cueText('OS：「 哇!」病人呼吸平穩→開綠燈(口袋)、合掌') +
+          cueBadge('梵唄') + '<br>' + capFanbei.map(l => cueBullet + cueText(l)).join('<br>') +
+          '<br>' + cueBadge('大慈大悲') + '<br>' + cueBullet + cueText('OS：「 哇!」病人呼吸平穩→開綠燈(口袋)、合掌') +
           '</span>';
         importantCueValueClass = '';
       } else if (scene.title === '19.慈大校歌 / 20.小樹啊!') {
@@ -3089,7 +3094,7 @@ function buildScenesHtml(rec, phase){
         ];
         const cap2Lines = [
           'OS:「2000年慈濟...」→拿燈合掌壓縮, 到位轉向法師開燈',
-          '演繹結束OS：你們怎麼在「掃廁所啊」→ 收'
+          '你們怎麼在「掃廁所啊」→ 收燈, 轉向甲'
         ];
         importantCueHtml = '<span class="value-cue">' +
           cueBadge('誓願將心') + '<br>' + cap1Lines.map(l => cueBullet + cueText(l)).join('<br>') +
