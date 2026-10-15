@@ -2927,7 +2927,7 @@ function buildScenesHtml(rec, phase){
         importantCueHtml = '<span class="value-cue">' + cueLines04.map(line => cueBullet + cueText(line)).join('<br>') + '<br>' + cueBullet + line2Html04 + '<br>' + cueBullet + line3Html04 + '</span>';
         importantCueValueClass = '';
       } else if (scene.title === '05.扛天下米籮') {
-        importantCueHtml = '<span class="value-cue">' + cueBullet + '<span style="color:#e53935">空襲聲音</span>→ 換扛天下米籮隊形' + '</span>';
+        importantCueHtml = '<span class="value-cue">' + cueBullet + '<span style="color:#e53935">空襲聲音</span>→ 換扛天下米籮隊形' + '<br>' + cueBullet + cueText('OS：「我很震撼」→ 轉甲45') + '</span>';
         importantCueValueClass = '';
       } else if (scene.title === '06.靜思家風') {
         const isBlueCue = rec.group === 'A藍' || rec.group === 'B藍';
@@ -2960,9 +2960,11 @@ function buildScenesHtml(rec, phase){
           ]},
           { label: '死苦', lines: [
             'OS：「生命何義」→ 合掌轉向法師 腳夾圓弧線',
-            '「夜深人靜」離宮殿→合掌 內轉向圓心'
+            '「夜深人靜」離宮殿→合掌 內轉向圓心',
+            'OS：「...尋求解脫之道」→講完暗場轉向甲'
           ]},
           { label: '六度', lines: [
+            '「為應菩薩」大根機→內轉向乙圓心',
             '再說六度波羅蜜 ...OS :「行六度」→合掌 ' + (isBlueGroup02 ? '右轉' : '左轉')
           ]}
         ];
@@ -2973,7 +2975,7 @@ function buildScenesHtml(rec, phase){
       } else if (scene.title === '07.點一盞燈') {
         const cueLines = [
           '「不知是生還是死」… →換LOGO隊形，面向甲',
-          'OS：師父「我們需要你」→合掌 轉演繹方向',
+          '師父「我們需要你」→合掌 轉演繹方向',
           '「如果你們願意幫助我」→ 開黃燈'
         ];
         const area07Field = fields.find(f => f.label === '區域');
@@ -3060,7 +3062,7 @@ function buildScenesHtml(rec, phase){
         } else {
           cap2Lines = ['間奏 : 轉2甲舞台 轉2觀眾'].concat(cap2Lines);
         }
-        cap2Lines = cap2Lines.concat(['「廣淨佛國」→燈舉高']);
+        cap2Lines = cap2Lines.concat(['「廣淨佛國」→燈舉高', 'OS:「喝酒!喝酒!」→換教育圓隊形']);
         const cap1Lines = [
           '三聲鑼響→我願意',
           ' 那個人「就是你」→ 轉向甲，兩腳夾線'
