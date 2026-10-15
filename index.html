@@ -2907,7 +2907,7 @@ function buildScenesHtml(rec, phase){
       let importantCueValueClass = ' value-icon-center';
       const cueBullet = '<span style="color:var(--accent)">◦</span> ';
       if (scene.title === '00.進場') {
-        const cueLines00 = ['主持人:...以「莊嚴身心入經藏」→換圓形、面向圓心'];
+        const cueLines00 = ['主持人:以「莊嚴身心入經藏」→換圓形、面向圓心', '燈光三明三暗→轉面向甲'];
         importantCueHtml = '<span class="value-cue">' + cueLines00.map(line => cueBullet + cueText(line)).join('<br>') + '</span>';
         importantCueValueClass = '';
       } else if (scene.title === '01.序') {
@@ -3011,7 +3011,8 @@ function buildScenesHtml(rec, phase){
         const hasLotus9 = !!(areaField9 && areaField9.value && areaField9.value.indexOf('蓮蓬') !== -1);
         const cueLines = [
           hasLotus9 ? 'OS:「菩薩所緣」→LOGO上舞台，轉向演繹面向' : 'OS:「菩薩所緣」，緣苦眾生→轉向演繹面向。',
-          '一起為「天下」苦難..→開燈'
+          '「但願」將來..→開燈',
+          '「車禍尖叫聲」→換V隊形 , 「再不做來不及」→腳尖對線'
         ];
         importantCueHtml = '<span class="value-cue">' + cueLines.map(line => cueBullet + cueText(line)).join('<br>') + '</span>';
         importantCueValueClass = '';
@@ -3214,13 +3215,13 @@ function buildScenesHtml(rec, phase){
         let cueLines;
         if (num === '1') {
           cueLines = [
-            '鳩摩羅什演繹→ 換行願隊形，先壓縮在第三、二、一階、平地 ，雙腳夾線 看甲舞台',
+            '交響樂→ 換行願隊形，先壓縮在第三、二、一階、平地 ，雙腳夾線 看甲舞台',
             '「 翻譯佛法 佛法永傳」→ 雙腳夾線 看甲舞台',
             '「 不至日本」 → 衝上去到位直接面法師'
           ];
         } else if (['14','12','3','2','4'].indexOf(num) !== -1) {
           cueLines = [
-            '鳩摩羅什演繹暗場→ 換行願隊形，雙腳夾線 看甲舞台',
+            '交響樂→ 換行願隊形，雙腳夾線 看甲舞台',
             '「 翻譯佛法 佛法永傳」→雙腳夾線 看甲舞台',
             '「東傳佛法 佛法永傳」→轉向自己行願面向'
           ];
