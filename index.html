@@ -1533,7 +1533,9 @@ const STATIC_SCENE_TAGS = {
   '21.畢業組曲-成長 / 22.畢業組曲-感恩': { text: ' 開綠燈(口袋)', color: '#3aa655' },
   '29.代謝不住': { text: ' 開綠燈(口袋)', color: '#3aa655' },
   '30.富中之富A': { text: ' 開綠燈(拿燈)', color: '#3aa655' },
-  '34.髻珠喻': { text: ' 開綠燈(拿燈)', color: '#3aa655' }
+  '34.髻珠喻': { text: ' 開綠燈(拿燈)', color: '#3aa655' },
+  '40.慈濟小行星': { text: ' 開綠燈', color: '#3aa655' },
+  '41.祈禱': { text: ' 開黃燈', color: '#f6c945' }
 };
 
 // 場次示範帶教學影片：key 需與 scene.title 完全一致 (合併場次用完整的
@@ -1593,13 +1595,17 @@ const SCENE_TITLE_OVERRIDES = {
   '25.慈誠隊歌': '26.慈誠隊歌',
   '26.大愛讓世界亮起來 / 27.天空破了洞 / 28.用鼓掌的雙手做環保': '27.大愛讓世界亮起來[面向甲] / 28.天空破了洞[面甲45°] / 29.法譬如水[面甲45°]',
   '29.代謝不住': '30.代謝不住[面向甲]',
-  '30.富中之富A': '31.富中之富A[面甲45°]',
+  '30.富中之富A': '31.第一功德[面甲45°] / 32.富中之富A[面甲45°]',
   '21.畢業組曲-成長 / 22.畢業組曲-感恩': '22.成長[面向甲, 圓弧在兩腳間]/ 23.感恩[面向乙，腳尖對線]',
-  '32.第三功德': '33.第三功德[面向觀眾45°]',
-  '33.第八功德': '34.第八功德[面甲45°]',
-  '34.髻珠喻': '35.髻珠喻 (莫三比克) [面法師45°]',
-  '35.第九功德': '36.第九功德[面甲45°]',
-  '36.化城喻手札': '37. 菩薩慈悲[面甲45°]'
+  '32.第三功德': '34.第三功德[面向觀眾45°]',
+  '33.第八功德': '35.第八功德[面甲45°]',
+  '34.髻珠喻': '36.髻珠喻 (莫三比克) [面法師45°]',
+  '35.第九功德': '37.第九功德[面甲45°]',
+  '36.化城喻手札': '38. 菩薩慈悲[面甲45°]',
+  '38.六瑞相': '39.六瑞相',
+  '39.發心立願': '40.發心立願',
+  '40.慈濟小行星': '41.慈濟小行星',
+  '41.祈禱': '42.祈禱'
   // 37.飛天 is hidden per request (separate, earlier edit) and doesn't
   // consume a displayed number either way. 38.六瑞相/39.發心立願/
   // 40.慈濟小行星/41.祈禱 no longer need entries here: the earlier "-1"
@@ -1619,13 +1625,13 @@ function displayTitle(title, rec){
     // Displayed as "32." per request (13.疫情捨我其誰 insertion above shifts
     // this +1) - the underlying title/match condition stays '31.開經書'.
     const isBlue = rec.group === 'A藍' || rec.group === 'B藍';
-    if (isBlue) return '32.開經書 [45°面向乙舞台-合掌]';
+    if (isBlue) return '33.開經書 [45°面向乙舞台-合掌]';
     const scene29 = rec.scenesPhase3 && rec.scenesPhase3.find(s => s.title === '31.開經書');
     const countryF = scene29 && scene29.fields.find(f => f.label === '國家');
     const country = countryF ? countryF.value : null;
-    if (country === '台灣') return '32.開經書';
-    if (country === '美洲') return '32.開經書 [面向美洲的中心]';
-    return '32.開經書 [面向各洲的圓心-拿燈]';
+    if (country === '台灣') return '33.開經書';
+    if (country === '美洲') return '33.開經書 [面向美洲的中心]';
+    return '33.開經書 [面向各洲的圓心-拿燈]';
   }
   return SCENE_TITLE_OVERRIDES[title] || title;
 }
@@ -1682,6 +1688,7 @@ function titleHtmlWithTags(title, rec){
       title === '10.地藏經啟航 / 11.船師大船師 / 12.四弘誓願' ||
       title === '21.畢業組曲-成長 / 22.畢業組曲-感恩' ||
       title === '15.骨髓捐贈 / 16.能捨一切諸難捨' ||
+      title === '30.富中之富A' ||
       title === '38.慈悲利他 / 39.小行星') {
     // Per request, EVERY combined-scene title now breaks onto separate
     // lines on BOTH mobile and desktop screen display (not just mobile),
@@ -2278,13 +2285,17 @@ function buildDl2CardMarkup(rec, printName){
     '27.天空破了洞': '28.天空破了洞',
     '28.用鼓掌的雙手做環保': '29.法譬如水',
     '29.代謝不住': '30.代謝不住',
-    '30.富中之富A': '31.富中之富A',
-    '31.開經書': '32.開經書',
-    '32.第三功德': '33.第三功德',
-    '33.第八功德': '34.第八功德',
-    '34.髻珠喻': '35.髻珠喻',
-    '35.第九功德': '36.第九功德',
-    '36.化城喻手札': '37. 菩薩慈悲'
+    '30.富中之富A': '32.富中之富A',
+    '31.開經書': '33.開經書',
+    '32.第三功德': '34.第三功德',
+    '33.第八功德': '35.第八功德',
+    '34.髻珠喻': '36.髻珠喻',
+    '35.第九功德': '37.第九功德',
+    '36.化城喻手札': '38. 菩薩慈悲',
+    '38.六瑞相': '39.六瑞相',
+    '39.發心立願': '40.發心立願',
+    '40.慈濟小行星': '41.慈濟小行星',
+    '41.祈禱': '42.祈禱'
     // 37.飛天 is hidden (separate, earlier edit). 38.六瑞相/39.發心立願/
     // 40.慈濟小行星/41.祈禱 need no entries here any more: the earlier "-1"
     // (37.飛天 hidden) and this "+1" (13 inserted above) cancel out, so
@@ -2414,6 +2425,9 @@ function buildDl2CardMarkup(rec, printName){
     // DL2_TITLE_DISPLAY_OVERRIDE entries, just listed here instead since
     // this line comes from DL2_MERGED_TITLE_OVERRIDE, not that map.
     const DL2_MERGED_TITLE_OVERRIDE = {
+      // "31.第一功德" is a decorative extra line in front of 富中之富A (same idea as 13.疫情 above).
+      '30.富中之富A': ['31.第一功德', '32.富中之富A'],
+      '30.富中之富A / 31.開經書 / 32.第三功德 / 33.第八功德 / 34.髻珠喻 / 35.第九功德 / 36.化城喻手札': ['31.第一功德', '32.富中之富A', '33.開經書', '34.第三功德', '35.第八功德', '36.髻珠喻', '37.第九功德', '38. 菩薩慈悲'],
       '10.地藏經啟航 / 11.船師大船師 / 12.四弘誓願': ['10.地藏經啟航', '11.四弘誓願', '12.船師大船師', '13.疫情', '14.衣珠喻'],
       '10.地藏經啟航 / 11.船師大船師 / 12.四弘誓願 / 14.大船師 / 15.骨髓捐贈 / 16.能捨一切諸難捨': ['10.地藏經啟航', '11.四弘誓願', '12.船師大船師', '13.疫情', '14.衣珠喻', '15.大醫王', '16.骨髓捐贈', '17.能捨一切']
     };
@@ -2902,13 +2916,16 @@ function buildScenesHtml(rec, phase){
     });
     const scene13HasBoat = scene.title === '14.大船師' && fields.some(f => f.label === '區域' && f.value && f.value.indexOf('船') !== -1);
     const hideCue13 = scene.title === '14.大船師' && !scene13HasBoat;
-    if (scene.title !== '21.畢業組曲-成長 / 22.畢業組曲-感恩' && !hideCue13) {
+    if (!hideCue13) {
       let importantCueHtml = '';
       let importantCueValueClass = ' value-icon-center';
       const cueBullet = '<span style="color:var(--accent)">◦</span> ';
       if (scene.title === '00.進場') {
         const cueLines00 = ['主持人:以「莊嚴身心入經藏」→換圓形、面向圓心', '燈光三明三暗→轉面向甲'];
-        importantCueHtml = '<span class="value-cue">' + cueLines00.map(line => cueBullet + cueText(line)).join('<br>') + '</span>';
+        const GRN00 = 'color:#3aa655;font-weight:700;';
+        importantCueHtml = '<span class="value-cue">' + cueLines00.map(line => cueBullet + (line.indexOf('主持人:') === 0
+          ? '主持人:以<span style="' + GRN00 + '">「莊嚴身心入經藏」</span>→換<span style="' + GRN00 + '">圓形</span>、面向圓心'
+          : cueText(line))).join('<br>') + '</span>';
         importantCueValueClass = '';
       } else if (scene.title === '01.序') {
         const cueLines01 = [
@@ -3016,7 +3033,10 @@ function buildScenesHtml(rec, phase){
           '「但願」將來..→開燈',
           '「車禍尖叫聲」→換V隊形 , 「再不做來不及」→腳尖對線'
         ];
-        importantCueHtml = '<span class="value-cue">' + cueLines.map(line => cueBullet + cueText(line)).join('<br>') + '</span>';
+        const GRN9 = 'color:#3aa655;font-weight:700;';
+        importantCueHtml = '<span class="value-cue">' + cueLines.map(line => cueBullet + (line.indexOf('「車禍尖叫聲」') === 0
+          ? '<span style="' + GRN9 + '">「車禍尖叫聲」</span>→換<span style="' + GRN9 + '">V隊形</span>' + cueText(' , 「再不做來不及」→腳尖對線')
+          : cueText(line))).join('<br>') + '</span>';
         importantCueValueClass = '';
       } else if (scene.title === '10.地藏經啟航 / 11.船師大船師 / 12.四弘誓願') {
         const isWhiteCue = rec.group === 'A白' || rec.group === 'B白';
@@ -3062,14 +3082,16 @@ function buildScenesHtml(rec, phase){
         } else {
           cap2Lines = ['間奏 : 轉2甲舞台 轉2觀眾'].concat(cap2Lines);
         }
-        cap2Lines = cap2Lines.concat(['「廣淨佛國」→燈舉高', 'OS:「喝酒!喝酒!」→換教育圓隊形']);
+        cap2Lines = cap2Lines.concat(['「廣淨佛國」→燈舉高']);
+        const GRN16 = 'color:#3aa655;font-weight:700;';
+        const lastLine16 = 'OS:<span style="' + GRN16 + '">「喝酒!喝酒!」</span>→換教育<span style="' + GRN16 + '">圓隊形</span>';
         const cap1Lines = [
           '三聲鑼響→我願意',
           ' 那個人「就是你」→ 轉向甲，兩腳夾線'
         ];
         importantCueHtml = '<span class="value-cue">' +
           cueBadge('骨捐') + '<br>' + cap1Lines.map(l => cueBullet + cueText(l)).join('<br>') +
-          '<br>' + cueBadge('能捨') + '<br>' + cap2Lines.map(l => cueBullet + cueText(l)).join('<br>') +
+          '<br>' + cueBadge('能捨') + '<br>' + cap2Lines.map(l => cueBullet + cueText(l)).join('<br>') + '<br>' + cueBullet + lastLine16 +
           '</span>';
         importantCueValueClass = '';
       } else if (scene.title === '17.說法品梵唄 / 18.大慈大悲無量義') {
@@ -3083,6 +3105,14 @@ function buildScenesHtml(rec, phase){
         importantCueHtml = '<span class="value-cue">' +
           cueBadge('梵唄') + '<br>' + capFanbei.map(l => cueBullet + cueText(l)).join('<br>') +
           '<br>' + cueBadge('大慈大悲') + '<br>' + cueBullet + cueText('OS：「 哇!」病人呼吸平穩→開綠燈(口袋)、合掌') +
+          '</span>';
+        importantCueValueClass = '';
+      } else if (scene.title === '21.畢業組曲-成長 / 22.畢業組曲-感恩') {
+        const cueBadge = function(label){
+          return '<span style="display:inline-block; color:#1a3a8f; font-weight:700; border:1.5px solid #1a3a8f; border-radius:4px; padding:0px 5px; margin-bottom:2px;">' + escapeHtml(label) + '</span>';
+        };
+        importantCueHtml = '<span class="value-cue">' +
+          cueBadge('感恩') + '<br>' + cueBullet + 'OS:<span style="color:#3aa655;font-weight:700;">「慈濟世界.」</span>→換<span style="color:#3aa655;font-weight:700;">基本隊形</span>' +
           '</span>';
         importantCueValueClass = '';
       } else if (scene.title === '19.慈大校歌 / 20.小樹啊!') {
@@ -3101,16 +3131,40 @@ function buildScenesHtml(rec, phase){
           '<br>' + cueBadge('小樹啊') + '<br>' + cap2Lines.map(l => cueBullet + cueText(l)).join('<br>') +
           '</span>';
         importantCueValueClass = '';
+      } else if (scene.title === '40.慈濟小行星') {
+        importantCueHtml = '<span class="value-cue">' + cueBullet + cueText('上人 :「 真的很感恩」→開綠燈合掌拿燈') + '</span>';
+        importantCueValueClass = '';
+      } else if (scene.title === '39.發心立願') {
+        const cueLines39 = [
+          '「咚1 」→合掌內轉法師 , 「咚2」→合掌大聲唸佛心師志',
+          '「咚2」→手放 跑, 「噹」→合掌',
+          '演繹結束→轉甲, 看小行星'
+        ];
+        importantCueHtml = '<span class="value-cue">' + cueLines39.map(line => cueBullet + cueText(line)).join('<br>') + '</span>';
+        importantCueValueClass = '';
+      } else if (scene.title === '41.祈禱') {
+        const YEL41 = '#d9a400', GRN41 = '#3aa655';
+        const line2Html41 = '求平安吉祥' +
+          '<span style="color:' + YEL41 + ';font-weight:700;">「滿人」</span>' +
+          '<span style="color:' + GRN41 + ';font-weight:700;">「間」</span>' +
+          '→ <span style="color:' + YEL41 + ';font-weight:700;">右轉90°</span> ' +
+          '<span style="color:' + GRN41 + ';font-weight:700;">右轉90°</span>';
+        importantCueHtml = '<span class="value-cue">' +
+          cueBullet + cueText('前奏→轉乙舞台，合掌拿燈') + '<br>' +
+          cueBullet + line2Html41 +
+          '</span>';
+        importantCueValueClass = '';
       } else if (scene.title === '23.父母恩重難報經 / 24.跪羊圖') {
         const cueLines = [
           'OS ：「 在平時」...→ 合掌內轉向法師45°',
           '法師說話：「對父母要知恩、...」→合掌'
         ];
-        importantCueHtml = '<span class="value-cue">' + cueLines.map(line => cueBullet + cueText(line)).join('<br>') + '</span>';
+        const GRN2324 = 'color:#3aa655;font-weight:700;';
+        const lastLine2324 = '演繹結束→ 先轉甲, <span style="' + GRN2324 + '">七月鬼門關</span>→<span style="' + GRN2324 + '">換主機板隊形</span>';
+        importantCueHtml = '<span class="value-cue">' + cueLines.map(line => cueBullet + cueText(line)).join('<br>') + '<br>' + cueBullet + lastLine2324 + '</span>';
         importantCueValueClass = '';
       } else if (scene.title === '25.慈誠隊歌') {
         const cueLines25 = [
-          '「目犍連(七月是吉祥月)」→換主機板隊形',
           '聽到OS→需上台的慈誠上台',
           '嗶嗶聲→轉演繹方向'
         ];
@@ -3123,7 +3177,9 @@ function buildScenesHtml(rec, phase){
         const cap1Lines = [
           'OS: 「為時代作見證 」→ 從甲轉向自己箭頭方向',
           'OS: 「為人類寫歷史 」→ 合掌拿燈',
-          '結束→ 轉甲45°，看優人演出，燈放口袋'
+          '結束→ 轉甲45°，看優人演出，燈放口袋',
+          '「咔嚓」→ 轉向乙舞台',
+          '「咔嚓 咔嚓」：收、轉甲45°'
         ];
         const cap2Lines = [
           '「啊~~」→面向乙舞台圓心指',
@@ -3131,8 +3187,8 @@ function buildScenesHtml(rec, phase){
         ];
         const isBlueCue2527 = rec.group === 'A藍' || rec.group === 'B藍';
         const cap3Lines = isBlueCue2527
-          ? ['OS：「我們要用鼓掌的雙手」→ 合掌', 'OS：「做環保」→ 轉自己面向']
-          : ['OS：「做環保」→ 轉自己面向'];
+          ? ['OS：「我們要用鼓掌的雙手」→ 合掌', 'OS：「做環保」→ 轉自己面向', '「鏗鏗鏘鏘」→回正 ,轉甲45°', '「環保磚」→ 轉自己面向']
+          : ['OS：「做環保」→ 轉自己面向', '「鏗鏗鏘鏘」→回正 ,轉甲45°', '「環保磚」→ 轉自己面向'];
         importantCueHtml = '<span class="value-cue">' +
           cueBadge('大愛世界亮起來') + '<br>' + cap1Lines.map(l => cueBullet + cueText(l)).join('<br>') +
           '<br>' + cueBadge('天空破了洞') + '<br>' + cap2Lines.map(l => cueBullet + cueText(l)).join('<br>') +
@@ -3146,16 +3202,17 @@ function buildScenesHtml(rec, phase){
         const cueLines = isWalking28
           ? [
               'OS : 哇!「有夠讚! 」→從甲內轉自己箭頭方向',
-              '「佛轉法輪」：合掌',
-              '「如是甚深」→合掌、腳停',
-              '「無上大乘」→合掌右後轉180°'
+              '「佛轉法輪」：合掌  ; 「無上大乘」→合掌右後轉180°',
+              '「如是甚深」→合掌、腳停'
             ]
           : [
               'OS : 哇!「有夠讚! 」→從甲內轉自己箭頭方向',
               '「佛轉法輪」：合掌',
               '「如是甚深」→壓腿起.合掌'
             ];
-        importantCueHtml = '<span class="value-cue">' + cueLines.map(line => cueBullet + cueText(line)).join('<br>') + '</span>';
+        const GRN29 = 'color:#3aa655;font-weight:700;';
+        const lastLine29 = '京劇<span style="' + GRN29 + '">「濟貧教富」</span>→換<span style="' + GRN29 + '">五大洲</span>隊形';
+        importantCueHtml = '<span class="value-cue">' + cueLines.map(line => cueBullet + cueText(line)).join('<br>') + '<br>' + cueBullet + lastLine29 + '</span>';
         importantCueValueClass = '';
       } else if (scene.title === '30.富中之富A') {
         // Built by hand (instead of via cueText) so "齊合掌"/"敬禮" on line 2
@@ -3178,7 +3235,7 @@ function buildScenesHtml(rec, phase){
         const country31 = countryF31 ? countryF31.value : null;
         const cueLines31b = country31 === '台灣'
           ? ['「我想到了」→台灣上台', '「咚咚咚」→台灣下台, 到位面觀眾45°']
-          : ['「我想到了」→開燈', '「咚咚咚」→轉面觀眾45°'];
+          : [(rec.group === 'A藍' || rec.group === 'B藍') ? '「我想到了」→開燈, 合掌' : '「我想到了」→開燈, 拿燈', '「咚咚咚( 鼓聲七秒)」→轉面觀眾45°'];
         importantCueHtml = '<span class="value-cue">' + cueLines31b.map(line => cueBullet + cueText(line)).join('<br>') + '</span>';
         importantCueValueClass = '';
       } else if (scene.title === '32.第三功德') {
@@ -3187,6 +3244,9 @@ function buildScenesHtml(rec, phase){
           ? ['「自在度人」顯願力→ 雙手平送到甲45°', '「雖有煩惱」無煩惱→ 合掌', '「2011」→手放']
           : ['「自在度人」顯願力→ 雙手平送到甲45°', '「雖有」生死無畏懼→收腳起身'];
         importantCueHtml = '<span class="value-cue">' + cueLines31.map(line => cueBullet + cueText(line)).join('<br>') + '</span>';
+        importantCueValueClass = '';
+      } else if (scene.title === '33.第八功德') {
+        importantCueHtml = '<span class="value-cue">' + cueBullet + cueText('OS：「歷史上最重要的時刻」→轉法師45°,開燈放口袋') + '</span>';
         importantCueValueClass = '';
       } else if (scene.title === '34.髻珠喻') {
         importantCueHtml = '<span class="value-cue">' + ['第三次「譬如髻珠」放光明 →拿燈', '上人：「我真的很開心」→轉甲45°, 拿燈', '師父的「黑珍珠」→關燈,收燈'].map(line => cueBullet + cueText(line)).join('<br>') + '</span>';
@@ -3203,15 +3263,18 @@ function buildScenesHtml(rec, phase){
               '「上人將法華經」鋪在地上→轉向法師45°',
               '廣行善法「          饒有情」→ 轉向甲',
               '求法「立誓」宏願深→轉向法師45°',
-              '安邦「定國」在印尼→轉向甲45°'
+              '安邦「定國」在印尼→轉向甲45° , 「咚咚」→ 換圓隊形'
             ]
           : [
               '「上人將法華經」鋪在地上→轉向法師45°',
               '廣行善法「          饒有情」→ 轉向甲45°',
               '「任重」  道遠→ 轉向法師45°',
-              '安邦「定國」在印尼→轉向甲45°'
+              '安邦「定國」在印尼→轉向甲45° , 「咚咚」→ 換圓隊形'
             ]).filter(line => !isBlue35cue || line.indexOf('安邦') === -1);
-        importantCueHtml = '<span class="value-cue">' + cueLines.map(line => cueBullet + cueText(line)).join('<br>') + '</span>';
+        const GRN36 = 'color:#3aa655;font-weight:700;';
+        importantCueHtml = '<span class="value-cue">' + cueLines.map(line => cueBullet + (line.indexOf('安邦「定國」') === 0
+          ? cueText('安邦「定國」在印尼→轉向甲45° , ') + '<span style="' + GRN36 + '">「咚咚」</span>→ 換<span style="' + GRN36 + '">圓隊形</span>'
+          : cueText(line))).join('<br>') + '</span>';
         importantCueValueClass = '';
       } else if (scene.title === '03.行願') {
         // Uses the "編號" field from scene 04.開經偈 (same record) to decide
