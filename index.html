@@ -1037,6 +1037,14 @@
     <button id="releaseModalClose" class="help-modal-close" type="button" aria-label="關閉">&times;</button>
     <div class="release-title">版本更新說明</div>
     <div class="release-entry">
+      <div class="release-header">Date 2026/10/20　Version v23_1020</div>
+      <ol class="release-list">
+        <li>更新「行願」「開經偈」「大醫王」「代謝不住」圖騰</li>
+        <li>更新換隊形拍點</li>
+      </ol>
+    </div>
+    <hr class="release-sep">
+    <div class="release-entry">
       <div class="release-header">Date 2026/10/12　Version v22_1014</div>
       <ol class="release-list">
         <li>更新「行願」「開經偈」「大醫王」「代謝不住」圖騰</li>
@@ -1330,7 +1338,7 @@
       <img class="header-logo" src="images/logo.png" alt="慈濟60周年 一甲子">
       <div class="header-titles">
         <div class="main-title">2026大巨蛋【無量義  法髓頌】經藏演繹</div>
-        <h1>第三聯區 ·  11/13 場 · <span class="header-label-screen">地標對照查詢系統</span><span class="header-label-print">地標單</span> v22_1014</h1>
+        <h1>第三聯區 ·  11/13 場 · <span class="header-label-screen">地標對照查詢系統</span><span class="header-label-print">地標單</span> v23_1020</h1>
       </div>
     </div>
     <div class="print-page-copyright">&copy; 2026 唐偲瑋</div>
@@ -2477,7 +2485,7 @@ function buildDl2CardMarkup(rec, printName){
   // without the two overlapping. Built OUTSIDE dl2-scale-wrap (assembled
   // separately below, as topRowHtml) so the font-size is the real/final
   // size and isn't shrunk by that wrap's transform:scale(), per request.
-  const topRowHtml = '<div class="dl2-top-row"><div class="dl2-event-header">2026【無量義 法髓頌】經藏演繹 · 11/13 場 · 地標單 v22_1014</div></div>';
+  const topRowHtml = '<div class="dl2-top-row"><div class="dl2-event-header">2026【無量義 法髓頌】經藏演繹 · 11/13 場 · 地標單 v23_1020</div></div>';
   let html = '<div class="dl2-head">' + escapeHtml(dl2HeadText) + '</div>';
   html += '<div class="dl2-table">' + rows.map(colHtml).join('') + '</div>';
   // Wrapped in a fixed-width (289mm, same as the other print blocks) scale
@@ -2990,12 +2998,15 @@ function buildScenesHtml(rec, phase){
         ).join('<br>') + '</span>';
         importantCueValueClass = '';
       } else if (scene.title === '07.點一盞燈') {
+        const area07Field = fields.find(f => f.label === '區域');
+        // 「轉法師方向」/「開黃燈,轉演繹方向」只有區域含「蓮蓬內」(但不含「蓮蓬內-慈濟」)的人才用，
+        // 其他區域(蓮蓬外框、LOGO...)維持原本的「轉演繹方向」/「開黃燈」。
+        const isLotusInner07 = !!(area07Field && area07Field.value && String(area07Field.value).indexOf('蓮蓬內') !== -1 && String(area07Field.value).indexOf('慈濟') === -1);
         const cueLines = [
           '「不知是生還是死」… →換LOGO隊形，面向甲',
-          '師父「我們需要你」→合掌 轉演繹方向',
-          '「如果你們願意幫助我」→ 開黃燈'
+          isLotusInner07 ? '師父「我們需要你」→合掌 轉法師方向' : '師父「我們需要你」→合掌 轉演繹方向',
+          isLotusInner07 ? '「如果你們願意幫助我」→ 開黃燈,轉演繹方向' : '「如果你們願意幫助我」→ 開黃燈'
         ];
-        const area07Field = fields.find(f => f.label === '區域');
         // 新增「我就永遠不離開花蓮」拍點，依區域顯示不同動作（蓮蓬內-帆、
         // LOGO下方3 這兩個區域不在這批要求內，維持沒有這條拍點）。
         const area07Val = area07Field ? area07Field.value : '';
@@ -3017,7 +3028,9 @@ function buildScenesHtml(rec, phase){
         if (area07Val === '蓮蓬內-浪') {
           cueLines.push('音效「噔」→坐跪抬頭');
         }
-        importantCueHtml = '<span class="value-cue">' + cueLines.map(line => cueBullet + cueText(line)).join('<br>') + '</span>';
+        importantCueHtml = '<span class="value-cue">' + cueLines.map(line => cueBullet + (line.indexOf('師父「我們需要你」') === 0
+          ? '<span style="color:#e07b1a;font-weight:700;">師父</span>' + cueText(line.slice(2))
+          : cueText(line))).join('<br>') + '</span>';
         importantCueValueClass = '';
       } else if (scene.title === '08.菜市場的五毛錢') {
         const cueLines = [
@@ -3049,7 +3062,7 @@ function buildScenesHtml(rec, phase){
         const VOW12_IDS = ['2-48','1-49','2-49','1-50','2-50','1-51','2-51','1-52','2-52','1-53','2-53','1-54','2-54','1-55','2-55','1-56','2-56','1-57','8-38','7-38','8-39','7-39','8-40','7-40','8-41','7-41','8-42','7-42','8-43','7-43'];
         const isVow12 = VOW12_IDS.indexOf(rec.id) !== -1;
         const vow12Html = isVow12
-          ? (cueBadge('四弘誓願') + '<br>' + cueBullet + cueText('OS：我們「怎麼做」→ 上舞台跑位') + '<br>' + cueBullet + cueText('「心血澆灌而成」→講完 , 收') + '<br>' + cueBadge('衣珠喻') + '<br>' + cueBullet + cueText('「連體嬰說話」→開綠燈') + '<br>' + cueBullet + cueText('「尋得」寶珠現光明→拿燈'))
+          ? (cueBadge('四弘誓願') + '<br>' + cueBullet + cueText('我們「怎麼做」→ 上舞台跑位,轉向甲') + '<br>' + cueBullet + cueText('心血「澆灌而成」→講完 , 舞台上跑回V') + '<br>' + cueBadge('衣珠喻') + '<br>' + cueBullet + cueText('「連體嬰說話」→開綠燈') + '<br>' + cueBullet + cueText('「尋得」寶珠現光明→拿燈'))
           : cueBadge('四弘誓願');
         importantCueHtml = isVow12
           ? ('<span class="value-cue">' + vow12Html + '</span>')
@@ -3112,7 +3125,7 @@ function buildScenesHtml(rec, phase){
           return '<span style="display:inline-block; color:#1a3a8f; font-weight:700; border:1.5px solid #1a3a8f; border-radius:4px; padding:0px 5px; margin-bottom:2px;">' + escapeHtml(label) + '</span>';
         };
         importantCueHtml = '<span class="value-cue">' +
-          cueBadge('感恩') + '<br>' + cueBullet + 'OS:<span style="color:#3aa655;font-weight:700;">「慈濟世界.」</span>→換<span style="color:#3aa655;font-weight:700;">基本隊形</span>' +
+          cueBadge('感恩') + '<br>' + cueBullet + '<span style="color:#3aa655;font-weight:700;">「慈濟世界是佛燈」</span>→換<span style="color:#3aa655;font-weight:700;">基本隊形</span>' +
           '</span>';
         importantCueValueClass = '';
       } else if (scene.title === '19.慈大校歌 / 20.小樹啊!') {
@@ -3136,22 +3149,23 @@ function buildScenesHtml(rec, phase){
         importantCueValueClass = '';
       } else if (scene.title === '39.發心立願') {
         const cueLines39 = [
-          '「咚1 」→合掌內轉法師 , 「咚2」→合掌大聲唸佛心師志',
-          '「咚3」→手放 跑, 「噹」→合掌',
+          '「咚1 」→合掌內轉法師 , 「咚2」→合掌大聲唸佛心師志 ,「咚3」→手放 跑, 「噹」→合掌',
           '演繹結束→轉甲, 看小行星'
         ];
         importantCueHtml = '<span class="value-cue">' + cueLines39.map(line => cueBullet + cueText(line)).join('<br>') + '</span>';
         importantCueValueClass = '';
       } else if (scene.title === '41.祈禱') {
         const YEL41 = '#d9a400', GRN41 = '#3aa655';
-        const line2Html41 = '求平安吉祥' +
+        const GRN_41 = GRN41;
+        const line2Html41 = '平安吉祥' +
           '<span style="color:' + YEL41 + ';font-weight:700;">「滿人」</span>' +
           '<span style="color:' + GRN41 + ';font-weight:700;">「間」</span>' +
           '→ <span style="color:' + YEL41 + ';font-weight:700;">右轉90°</span> ' +
           '<span style="color:' + GRN41 + ';font-weight:700;">右轉90°</span>';
         importantCueHtml = '<span class="value-cue">' +
-          cueBullet + cueText('前奏→轉乙舞台，合掌拿燈') + '<br>' +
-          cueBullet + line2Html41 +
+          cueBullet + cueText('前奏→轉乙舞台，開燈拿燈') + '<br>' +
+          cueBullet + line2Html41 + '<br>' +
+          cueBullet + '<span style="color:' + GRN_41 + ';font-weight:700;">「感恩入經藏菩薩」</span>→回<span style="color:' + GRN_41 + ';font-weight:700;">基本隊形</span>' +
           '</span>';
         importantCueValueClass = '';
       } else if (scene.title === '23.父母恩重難報經 / 24.跪羊圖') {
@@ -3160,7 +3174,7 @@ function buildScenesHtml(rec, phase){
           '法師說話：「對父母要知恩、...」→合掌'
         ];
         const GRN2324 = 'color:#3aa655;font-weight:700;';
-        const lastLine2324 = '演繹結束→ 先轉甲, <span style="' + GRN2324 + '">七月鬼門關</span>→<span style="' + GRN2324 + '">換主機板隊形</span>';
+        const lastLine2324 = '演繹結束→ 先轉甲, <span style="' + GRN2324 + '">七月鬼門關</span>(台語)→<span style="' + GRN2324 + '">換主機板隊形</span>';
         importantCueHtml = '<span class="value-cue">' + cueLines.map(line => cueBullet + cueText(line)).join('<br>') + '<br>' + cueBullet + lastLine2324 + '</span>';
         importantCueValueClass = '';
       } else if (scene.title === '25.慈誠隊歌') {
@@ -3187,8 +3201,8 @@ function buildScenesHtml(rec, phase){
         ];
         const isBlueCue2527 = rec.group === 'A藍' || rec.group === 'B藍';
         const cap3Lines = isBlueCue2527
-          ? ['OS：「我們要用鼓掌的雙手」→ 合掌', 'OS：「做環保」→ 轉自己面向', '「鏗鏗鏘鏘」→回正 ,轉甲45°', '「環保磚」→ 轉自己面向']
-          : ['OS：「做環保」→ 轉自己面向', '「鏗鏗鏘鏘」→回正 ,轉甲45°', '「環保磚」→ 轉自己面向'];
+          ? ['OS：「我們要用鼓掌的雙手」→ 合掌', 'OS：「做環保」→ 轉自己面向', '「鏗鏗鏘鏘」→回正 ,轉甲45°', '「好神奇」→ 轉自己面向']
+          : ['OS：「做環保」→ 轉自己面向', '「鏗鏗鏘鏘」→回正 ,轉甲45°', '「好神奇」→ 轉自己面向'];
         importantCueHtml = '<span class="value-cue">' +
           cueBadge('大愛世界亮起來') + '<br>' + cap1Lines.map(l => cueBullet + cueText(l)).join('<br>') +
           '<br>' + cueBadge('天空破了洞') + '<br>' + cap2Lines.map(l => cueBullet + cueText(l)).join('<br>') +
@@ -3236,7 +3250,10 @@ function buildScenesHtml(rec, phase){
         const cueLines31b = country31 === '台灣'
           ? ['「我想到了」→台灣上台', '「咚咚咚」→台灣下台, 到位面觀眾45°']
           : [(rec.group === 'A藍' || rec.group === 'B藍') ? '「我想到了」→開燈, 合掌' : '「我想到了」→開燈, 拿燈', '「咚咚咚( 鼓聲七秒)」→轉面觀眾45°'];
-        importantCueHtml = '<span class="value-cue">' + cueLines31b.map(line => cueBullet + cueText(line)).join('<br>') + '</span>';
+        const GRN31 = 'color:#3aa655;font-weight:700;';
+        importantCueHtml = '<span class="value-cue">' + cueLines31b.map(line => cueBullet + (line.indexOf('「咚咚咚」→台灣下台') === 0
+          ? '<span style="' + GRN31 + '">「咚咚咚」</span>→<span style="' + GRN31 + '">台灣下台</span>' + cueText(', 到位面觀眾45°')
+          : cueText(line))).join('<br>') + '</span>';
         importantCueValueClass = '';
       } else if (scene.title === '32.第三功德') {
         const isBlue32 = rec.group === 'A藍' || rec.group === 'B藍';
@@ -3373,7 +3390,7 @@ function buildPrintPhase3(rec){
   const xyImgHtml = (xyEntry && xyEntry.xingyuan)
     ? '<img src="' + xyEntry.xingyuan + '" alt="行願圖騰" style="max-width:100%; max-height:180mm; width:auto; height:auto; display:block; margin:0 auto;">'
     : '<div class="phase-placeholder">無行願圖騰資料</div>';
-  let html = '<header><div class="header-titles"><div class="main-title">2026大巨蛋【無量義  法髓頌】經藏演繹</div><h1>第三聯區 ·  11/13 場 · <span class="header-label-screen">地標對照查詢系統</span><span class="header-label-print">地標單</span> v22_1014</h1></div>' + PRINT_PAGE_COPYRIGHT_HTML + '</header>';
+  let html = '<header><div class="header-titles"><div class="main-title">2026大巨蛋【無量義  法髓頌】經藏演繹</div><h1>第三聯區 ·  11/13 場 · <span class="header-label-screen">地標對照查詢系統</span><span class="header-label-print">地標單</span> v23_1020</h1></div>' + PRINT_PAGE_COPYRIGHT_HTML + '</header>';
   const groupClassP3 = 'group-' + rec.group;
   html += '<div class="print-dual-head"><span class="id">' + escapeHtml(rec.id) + '</span>' + (currentPrintName ? ('<span class="id print-name">' + escapeHtml(currentPrintName) + '</span>') : '') + '<span class="group ' + groupClassP3 + '">' + escapeHtml(rec.group) + '</span></div>';
   html += '<div class="print-dual-cols">';
@@ -3408,7 +3425,7 @@ function buildPrintPhase4(rec){
     ? '<img src="' + WASTE_IMAGES[wasteCode4] + '" alt="代謝不住圖騰" style="max-width:100%; max-height:180mm; width:auto; height:auto; display:block; margin:0 auto;">'
     : '<div class="phase-placeholder">無代謝不住圖騰資料</div>';
 
-  let html = '<header><div class="header-titles"><div class="main-title">2026大巨蛋【無量義  法髓頌】經藏演繹</div><h1>第三聯區 ·  11/13 場 · <span class="header-label-screen">地標對照查詢系統</span><span class="header-label-print">地標單</span> v22_1014</h1></div>' + PRINT_PAGE_COPYRIGHT_HTML + '</header>';
+  let html = '<header><div class="header-titles"><div class="main-title">2026大巨蛋【無量義  法髓頌】經藏演繹</div><h1>第三聯區 ·  11/13 場 · <span class="header-label-screen">地標對照查詢系統</span><span class="header-label-print">地標單</span> v23_1020</h1></div>' + PRINT_PAGE_COPYRIGHT_HTML + '</header>';
   const groupClassP4 = 'group-' + rec.group;
   html += '<div class="print-dual-head"><span class="id">' + escapeHtml(rec.id) + '</span>' + (currentPrintName ? ('<span class="id print-name">' + escapeHtml(currentPrintName) + '</span>') : '') + '<span class="group ' + groupClassP4 + '">' + escapeHtml(rec.group) + '</span></div>';
   html += '<div class="print-dual-cols">';
