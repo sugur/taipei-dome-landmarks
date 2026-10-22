@@ -2948,11 +2948,11 @@ function buildScenesHtml(rec, phase){
         // "開綠燈" can be colored green per request, rather than "現" coming
         // out red like a normal 「...」 quote.
         const line2Html04 = '第二句的<span style="color:#e53935">「彷若實境」</span>再<span style="color:#3aa655;font-weight:700;">「現」</span>→<span style="color:#e53935">拿燈</span> <span style="color:#3aa655;font-weight:700;">開綠燈</span>';
-        const line3Html04 = '<span style="color:#e53935">「我愛人人 人人愛我」</span>→關燈, <span style="color:#1a1a1a">不合掌</span>';
+        const line3Html04 = '結束 →關燈,轉向甲, <span style="color:#1a1a1a">不合掌</span>';
         importantCueHtml = '<span class="value-cue">' + cueLines04.map(line => cueBullet + cueText(line)).join('<br>') + '<br>' + cueBullet + line2Html04 + '<br>' + cueBullet + line3Html04 + '</span>';
         importantCueValueClass = '';
       } else if (scene.title === '05.扛天下米籮') {
-        importantCueHtml = '<span class="value-cue">' + cueBullet + '<span style="color:#e53935">空襲聲音</span>→ 換扛天下米籮隊形' + '<br>' + cueBullet + cueText('OS：「我很震撼」→ 轉甲45') + '</span>';
+        importantCueHtml = '<span class="value-cue">' + cueBullet + '<span style="color:#3aa655;font-weight:700;">空襲聲音</span>→ 換<span style="color:#3aa655;font-weight:700;">基本隊形</span>' + '<br>' + cueBullet + cueText('OS：「我很震撼」→ 轉甲45') + '</span>';
         importantCueValueClass = '';
       } else if (scene.title === '06.靜思家風') {
         const isBlueCue = rec.group === 'A藍' || rec.group === 'B藍';
@@ -2993,8 +2993,12 @@ function buildScenesHtml(rec, phase){
             '再說六度波羅蜜 ...OS :「行六度」→合掌 ' + (isBlueGroup02 ? '右轉' : '左轉')
           ]}
         ];
+        const RED02 = '<span style="color:#e53935">';
         importantCueHtml = '<span class="value-cue">' + cueGroups.map(g =>
-          cueBadge(g.label) + '<br>' + g.lines.map(l => cueBullet + cueText(l)).join('<br>')
+          cueBadge(g.label) + '<br>' + g.lines.map(l => cueBullet + (l.indexOf('再說六度波羅蜜') === 0
+            // 「行六度」與「左轉/右轉」都用紅字(合掌維持橘色)
+            ? cueText('再說六度波羅蜜 ...OS :') + RED02 + '「行六度」</span>→' + cueText('合掌 ') + RED02 + (isBlueGroup02 ? '右轉' : '左轉') + '</span>'
+            : cueText(l))).join('<br>')
         ).join('<br>') + '</span>';
         importantCueValueClass = '';
       } else if (scene.title === '07.點一盞燈') {
@@ -3005,7 +3009,7 @@ function buildScenesHtml(rec, phase){
         const cueLines = [
           '「不知是生還是死」… →換LOGO隊形，面向甲',
           isLotusInner07 ? '師父「我們需要你」→合掌 轉法師方向' : '師父「我們需要你」→合掌 轉演繹方向',
-          isLotusInner07 ? '「如果你們願意幫助我」→ 開黃燈,轉演繹方向' : '「如果你們願意幫助我」→ 開黃燈'
+          isLotusInner07 ? '「如果」你們願意幫助我→ 開黃燈,轉演繹方向' : '「如果」你們願意幫助我→ 開黃燈'
         ];
         // 新增「我就永遠不離開花蓮」拍點，依區域顯示不同動作（蓮蓬內-帆、
         // LOGO下方3 這兩個區域不在這批要求內，維持沒有這條拍點）。
@@ -3044,11 +3048,11 @@ function buildScenesHtml(rec, phase){
         const cueLines = [
           hasLotus9 ? 'OS:「菩薩所緣」→LOGO上舞台，轉向演繹面向' : 'OS:「菩薩所緣」，緣苦眾生→轉向演繹面向。',
           '「但願」將來..→開燈',
-          '「車禍尖叫聲」→換V隊形 , 「再不做來不及」→腳尖對線'
+          '結束演繹「車禍尖叫聲」→換V隊形 , 「再不做來不及」→腳尖對線'
         ];
         const GRN9 = 'color:#3aa655;font-weight:700;';
-        importantCueHtml = '<span class="value-cue">' + cueLines.map(line => cueBullet + (line.indexOf('「車禍尖叫聲」') === 0
-          ? '<span style="' + GRN9 + '">「車禍尖叫聲」</span>→換<span style="' + GRN9 + '">V隊形</span>' + cueText(' , 「再不做來不及」→腳尖對線')
+        importantCueHtml = '<span class="value-cue">' + cueLines.map(line => cueBullet + (line.indexOf('結束演繹「車禍尖叫聲」') === 0
+          ? '結束演繹<span style="' + GRN9 + '">「車禍尖叫聲」</span>→換<span style="' + GRN9 + '">V隊形</span>' + cueText(' , 「再不做來不及」→腳尖對線')
           : cueText(line))).join('<br>') + '</span>';
         importantCueValueClass = '';
       } else if (scene.title === '10.地藏經啟航 / 11.船師大船師 / 12.四弘誓願') {
@@ -3062,11 +3066,11 @@ function buildScenesHtml(rec, phase){
         const VOW12_IDS = ['2-48','1-49','2-49','1-50','2-50','1-51','2-51','1-52','2-52','1-53','2-53','1-54','2-54','1-55','2-55','1-56','2-56','1-57','8-38','7-38','8-39','7-39','8-40','7-40','8-41','7-41','8-42','7-42','8-43','7-43'];
         const isVow12 = VOW12_IDS.indexOf(rec.id) !== -1;
         const vow12Html = isVow12
-          ? (cueBadge('四弘誓願') + '<br>' + cueBullet + cueText('我們「怎麼做」→ 上舞台跑位,轉向甲') + '<br>' + cueBullet + cueText('心血「澆灌而成」→講完 , 舞台上跑回V') + '<br>' + cueBadge('衣珠喻') + '<br>' + cueBullet + cueText('「連體嬰說話」→開綠燈') + '<br>' + cueBullet + cueText('「尋得」寶珠現光明→拿燈'))
+          ? (cueBadge('四弘誓願') + '<br>' + cueBullet + cueText('我們「怎麼做」→ 上舞台跑位,轉向甲') + '<br>' + cueBullet + cueText(cueLines[0]) + '<br>' + cueBullet + cueText('心血「澆灌而成」→講完 , 舞台上跑回V') + '<br>' + cueBadge('衣珠喻') + '<br>' + cueBullet + cueText('「連體嬰說話 菲律賓os」→開綠燈') + '<br>' + cueBullet + cueText('「尋得」寶珠現光明→拿燈'))
           : cueBadge('四弘誓願');
         importantCueHtml = isVow12
           ? ('<span class="value-cue">' + vow12Html + '</span>')
-          : ('<span class="value-cue">' + vow12Html + '<br>' + cueLines.map(line => cueBullet + cueText(line)).join('<br>') + '<br>' + cueBullet + cueText('「心血澆灌而成」→講完 , 收') + '<br>' + cueBadge('衣珠喻') + '<br>' + cueBullet + cueText('「連體嬰說話」→開綠燈') + '<br>' + cueBullet + cueText('「尋得」寶珠現光明→拿燈') + '</span>');
+          : ('<span class="value-cue">' + vow12Html + '<br>' + cueLines.map(line => cueBullet + cueText(line)).join('<br>') + '<br>' + cueBullet + cueText('「心血澆灌而成」→講完 , 收') + '<br>' + cueBadge('衣珠喻') + '<br>' + cueBullet + cueText('「連體嬰說話 菲律賓os」→開綠燈') + '<br>' + cueBullet + cueText('「尋得」寶珠現光明→拿燈') + '</span>');
         importantCueValueClass = '';
       } else if (scene.title === '14.大船師') {
         // Per request, the extra "面甲(上舞台者先壓縮在第二階)"/"「每個病人」→
@@ -3169,8 +3173,11 @@ function buildScenesHtml(rec, phase){
           '</span>';
         importantCueValueClass = '';
       } else if (scene.title === '23.父母恩重難報經 / 24.跪羊圖') {
+        // 編號 1-XX ~ 9-XX(前面的數字是 1~9)的人，第一個拍點後面多一句「高跪」。
+        const idPrefix2324 = parseInt(String(rec.id).split('-')[0], 10);
+        const isPrefix1to9 = idPrefix2324 >= 1 && idPrefix2324 <= 9;
         const cueLines = [
-          'OS ：「 在平時」...→ 合掌內轉向法師45°',
+          isPrefix1to9 ? '「 在平時」...→ 合掌內轉向法師45° , 「...的回報父母恩」→高跪' : '「 在平時」...→ 合掌內轉向法師45°',
           '法師說話：「對父母要知恩、...」→合掌'
         ];
         const GRN2324 = 'color:#3aa655;font-weight:700;';
